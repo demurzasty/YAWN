@@ -1,0 +1,134 @@
+#version 460
+
+//######################//
+//###### Defines #######//
+//######################//
+
+#define PI 3.14159265359
+
+//######################//
+//##### Structures #####//
+//######################//
+
+struct GlobalData {
+    mat4 Projection;
+    mat4 View;
+    mat4 ProjectionView;
+    mat4 LastProjectionView;
+    mat4 InvertedProjectionView;
+    vec4 CameraPosition;
+    vec4 CameraFrustum;
+    int CameraEnvironmentId;
+    int InstanceCount;
+    int LightCount;
+    float Time;
+};
+
+struct InstanceData {
+    mat4 Transform;
+    int MeshID;
+    int MaterialId;
+    int Visible;
+};
+
+struct MeshData {
+    int VertexOffset;
+    int VertexCount;
+    int IndexOffset;
+    int IndexCount;
+};
+
+struct DrawCommandData {
+	uint IndexCount;
+	uint InstanceCount;
+	uint FirstIndex;
+	int VertexOffset;
+	uint FirstInstance;
+};
+
+//######################//
+//### Input Layouts ####//
+//######################//
+
+layout (std140, binding = 0) uniform GlobalUniform {
+    GlobalData Data;
+} uGlobal;
+
+layout (std430, binding = 1) readonly buffer InstanceBuffer {
+    InstanceData Data[];
+} uInstances;
+
+layout (std430, binding = 2) readonly buffer MeshBuffer {
+    MeshData Data[];
+} uMeshes;
+
+layout (std430, binding = 4) writeonly buffer DrawCommandBuffer {
+    DrawCommandData Data[];
+} uDrawCommands;
+
+//######################//
+//####### Shared #######//
+//######################//
+
+shared vec3 sCameraData;
+
+//######################//
+//### Output Layouts ###//
+//######################//
+
+layout(local_size_x = 64, local_size_y = 1, local_size_z = 1) in;
+
+bool IsVisible(in vec3 center, in float radius) {
+    return center.z * uGlobal.Data.CameraFrustum.y - abs(center.x) * uGlobal.Data.CameraFrustum.x > -radius &&
+        center.z * uGlobal.Data.CameraFrustum.w - abs(center.y) * uGlobal.Data.CameraFrustum.z > -radius &&
+        center.z > -sCameraData.z - radius && center.z < sCameraData.y + radius;
+}
+
+void main() {
+	uint instanceId = uint(gl_GlobalInvocationID.x);
+
+    if (instanceId < uGlobal.Data.InstanceCount) {
+	    if (gl_LocalInvocationIndex == 0) {
+            sCameraData.x = 2.0 * atan(1.0 / uGlobal.Data.Projection[1][1]) * 180.0 / PI;
+            sCameraData.y = uGlobal.Data.Projection[3][2] / (uGlobal.Data.Projection[2][2] - 1.0);
+            sCameraData.z = uGlobal.Data.Projection[3][2] / (uGlobal.Data.Projection[2][2] + 1.0);
+        }
+
+        int meshID = uInstances.Data[instanceId].MeshID;
+        if (meshID > -1 &&
+            uInstances.Data[instanceId].Visible > 0 &&
+            uMeshes.Data[meshID].VertexCount > 0 &&
+            uMeshes.Data[meshID].IndexCount > 0) {
+            
+            uDrawCommands.Data[instanceId].IndexCount = uMeshes.Data[meshID].IndexCount;
+            uDrawCommands.Data[instanceId].InstanceCount = 1;
+            uDrawCommands.Data[instanceId].FirstIndex = uMeshes.Data[meshID].IndexOffset;
+            uDrawCommands.Data[instanceId].VertexOffset = uMeshes.Data[meshID].VertexOffset;
+            uDrawCommands.Data[instanceId].FirstInstance = 0;
+        } else {
+            uDrawCommands.Data[instanceId].InstanceCount = 0;
+        }
+
+//        int meshId = uInstances.Data[instanceId].MeshID;
+//        if (meshId > -1 && uInstances.Data[instanceId].Visible > 0) {
+//            vec4 boundingSphere = uMeshes.Data[meshId].BoundingSphere;
+//            vec4 worldBoundingSphereCenter = (uInstances.Data[instanceId].Transform * vec4(boundingSphere.xyz, 1.0));
+//            vec3 viewBoundingSpherePosition = (uGlobal.Data.View * worldBoundingSphereCenter).xyz;
+//            float worldRadius = length(( uInstances.Data[instanceId].Transform * vec4(boundingSphere.w, 0.0, 0.0, 0.0)).xyz);
+//
+//            if (IsVisible(viewBoundingSpherePosition, worldRadius)) {
+//                int lodIndex = clamp(int(max((abs(viewBoundingSpherePosition.z) - worldRadius), 0.0)  / 10.0), 0, 3);
+//
+//                uDrawCommands.Data[instanceId].IndexCount = uMeshes.Data[meshId].LodsSizes[lodIndex];
+//                uDrawCommands.Data[instanceId].InstanceCount = 1;
+//                uDrawCommands.Data[instanceId].FirstIndex = uMeshes.Data[meshId].IndexOffset + uMeshes.Data[meshId].LodsOffsets[lodIndex];
+//                uDrawCommands.Data[instanceId].VertexOffset = uMeshes.Data[meshId].VertexOffset;
+//                uDrawCommands.Data[instanceId].FirstInstance = 0;
+//            } else {
+//                uDrawCommands.Data[instanceId].InstanceCount = 0;
+//            }
+//        } else {
+//            uDrawCommands.Data[instanceId].InstanceCount = 0;
+//        }
+    }
+}

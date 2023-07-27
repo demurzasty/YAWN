@@ -1,0 +1,7 @@
+.vs/
+.vscode/
+out/
+build/
+
+Source/**/*.Generated.*
+Source/**/Generated
