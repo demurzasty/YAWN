@@ -16,11 +16,15 @@ void Window::Initialize() {
 void Window::Release() {
     ExclusiveLock lock(sMutex);
 
+    YAWN_ASSERT(sDriver);
+
     sDriver.Reset();
 }
 
 void Window::PollEvents() {
     ExclusiveLock lock(sMutex);
+
+    YAWN_ASSERT(sDriver);
 
     sDriver->PollEvents();
 }
@@ -28,11 +32,15 @@ void Window::PollEvents() {
 bool Window::IsOpen() {
     ExclusiveLock lock(sMutex);
 
+    YAWN_ASSERT(sDriver);
+
     return sDriver->IsOpen();
 }
 
 void Window::SwapBuffers() {
     ExclusiveLock lock(sMutex);
+
+    YAWN_ASSERT(sDriver);
 
     sDriver->SwapBuffers();
 }

@@ -63,6 +63,7 @@
 #include "Runtime/Loader.hpp"
 #include "Runtime/Main.hpp"
 #include "Runtime/Object.hpp"
+#include "Runtime/OID.hpp"
 #include "Runtime/Pool.hpp"
 #include "Runtime/Reactive.hpp"
 #include "Runtime/Reference.hpp"
@@ -73,6 +74,7 @@
 #include "Runtime/YTXT.hpp"
 
 #include "Scene/Components/Camera.hpp"
+#include "Scene/Components/Geometry.hpp"
 #include "Scene/Actor.hpp"
 #include "Scene/Component.hpp"
 #include "Scene/Scene.hpp"

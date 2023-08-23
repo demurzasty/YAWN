@@ -11,6 +11,8 @@ void Camera::Register(Meta<Camera>& meta) {
 
 void Camera::Enter() {
     GetOwner()->GetTransformUpdateSignal().Connect<&Camera::OnTransformUpdate>(this);
+
+    OnTransformUpdate(GetOwner());
 }
 
 void Camera::Exit() {

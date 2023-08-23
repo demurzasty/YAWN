@@ -5,6 +5,7 @@
 #include "../Runtime/Arena.hpp"
 #include "Texture.hpp"
 #include "Vertex.hpp"
+#include "Color.hpp"
 
 namespace YAWN {
     class RendererDriver : public Reference {
@@ -23,6 +24,8 @@ namespace YAWN {
     public:
         virtual ~RendererDriver() = default;
 
+        virtual void SetClearColor(const Color& color);
+
         virtual void SetCameraProjection(const Matrix4& projection) = 0;
 
         virtual void SetCameraTransform(const Matrix4& transform) = 0;
@@ -32,6 +35,14 @@ namespace YAWN {
         virtual void DestroyTexture(int id);
 
         virtual bool IsTextureValid(int id);
+
+        virtual int CreateMesh(int vertexCount, int indexCount);
+
+        virtual void DestroyMesh(int id);
+
+        virtual bool IsMeshValid(int id);
+
+        virtual void SetMeshData(int id, const ArrayView<const Vertex3D>& vertices, const ArrayView<const int>& indices);
 
         virtual int CreateInstance();
 
@@ -99,6 +110,8 @@ namespace YAWN {
         };
 
     protected:
+        Color mClearColor = Color::CornflowerBlue;
+
         Pool mInstancePool;
         Pool mMeshPool;
         Pool mTexturePool;

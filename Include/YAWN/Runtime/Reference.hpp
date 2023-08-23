@@ -27,25 +27,27 @@ namespace YAWN {
     public:
         Ref() = default;
 
+        constexpr Ref(decltype(nullptr)) : mReference(nullptr) {}
+
         Ref(TReference* reference)
-            : _reference(reference) {
+            : mReference(reference) {
             IncRef();
         }
 
         Ref(const Ref<TReference>& ref)
-            : _reference(ref._reference) {
+            : mReference(ref.mReference) {
             IncRef();
         }
 
         template<typename TDerived>
         Ref(const Ref<TDerived>& derived)
-            : _reference(derived._reference) {
+            : mReference(derived.mReference) {
             IncRef();
         }
 
         Ref(Ref<TReference>&& ref) noexcept
-            : _reference(ref._reference) {
-            ref._reference = nullptr;
+            : mReference(ref.mReference) {
+            ref.mReference = nullptr;
         }
 
         ~Ref() {
@@ -54,15 +56,15 @@ namespace YAWN {
 
         Ref<TReference>& operator=(const Ref<TReference>& ref) {
             DecRef();
-            _reference = ref._reference;
+            mReference = ref.mReference;
             IncRef();
             return *this;
         }
 
         Ref<TReference>& operator=(Ref<TReference>&& ref) noexcept {
             DecRef();
-            _reference = ref._reference;
-            ref._reference = nullptr;
+            mReference = ref.mReference;
+            ref.mReference = nullptr;
             return *this;
         }
 
@@ -71,48 +73,48 @@ namespace YAWN {
         }
 
         bool HasReference() const {
-            return _reference != nullptr;
+            return mReference != nullptr;
         }
 
         TReference& operator*() {
-            return *_reference;
+            return *mReference;
         }
 
         TReference* operator->() const {
-            return _reference;
+            return mReference;
         }
 
         TReference* Get() const {
-            return _reference;
+            return mReference;
         }
 
         operator TReference* () const {
-            return _reference;
+            return mReference;
         }
 
         bool operator==(const Ref<TReference>& ref) const {
-            return _reference == ref._reference;
+            return mReference == ref.mReference;
         }
 
         bool operator!=(const Ref<TReference>& ref) const {
-            return _reference != ref._reference;
+            return mReference != ref.mReference;
         }
 
     private:
         void IncRef() {
-            if (_reference) {
-                _reference->IncRef();
+            if (mReference) {
+                mReference->IncRef();
             }
         }
 
         void DecRef() {
-            if (_reference) {
-                _reference->DecRef();
+            if (mReference) {
+                mReference->DecRef();
             }
         }
 
     private:
-        TReference* _reference = nullptr;
+        TReference* mReference = nullptr;
     };
 
     template<typename TTo, typename TFrom>

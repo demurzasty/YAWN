@@ -20,9 +20,9 @@ Vector3 Matrix4::ExtractEuler(const Matrix4& matrix) {
 
     const float m12 = matrix[6];
 
+#if 1
     if (m12 < (1.0f - Math::Epsilon)) {
         if (m12 > -(1.0f - Math::Epsilon)) {
-            // is this a pure X rotation?
             if (matrix[4] == 0.0f && matrix[1] == 0.0f && matrix[2] == 0.0f && matrix[8] == 0.0f && matrix[0] == 1.0f) {
                 euler.X = Math::Atan2(-m12, matrix[5]);
                 euler.Y = 0.0f;
@@ -32,16 +32,17 @@ Vector3 Matrix4::ExtractEuler(const Matrix4& matrix) {
                 euler.Y = Math::Atan2(matrix[2], matrix[10]);
                 euler.Z = Math::Atan2(matrix[4], matrix[5]);
             }
-        } else { // m12 == -1
+        } else {
             euler.X = Math::PI * 0.5f;
             euler.Y = Math::Atan2(matrix[1], matrix[0]);
             euler.Z = 0.0f;
         }
-    } else { // m12 == 1
+    } else { 
         euler.X = -Math::PI * 0.5f;
         euler.Y = -Math::Atan2(matrix[1], matrix[0]);
         euler.Z = 0.0f;
     }
+#endif
 
 #if 0
     euler.X = Math::Atan2(matrix[6], matrix[10]);

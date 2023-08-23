@@ -112,3 +112,7 @@ float Math::Log(float v) {
 int Math::Align(int size, int align) {
     return (size + align - 1) & ~(align - 1);
 }
+
+int Math::FastFloatToInt(float value) {
+    return lrintf(value);
+}

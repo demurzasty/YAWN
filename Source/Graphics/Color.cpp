@@ -1,0 +1,23 @@
+#include <YAWN/Graphics/Color.hpp>
+
+using namespace YAWN;
+
+const Color Color::White = Color(1.0f, 1.0f, 1.0f);
+
+const Color Color::Black = Color(0.0f, 0.0f, 0.0f);
+
+const Color Color::Red = Color(1.0f, 0.0f, 0.0f);
+
+const Color Color::Green = Color(0.0f, 1.0f, 0.0f);
+
+const Color Color::Blue = Color(0.0f, 0.0f, 1.0f);
+
+const Color Color::CornflowerBlue = Color(100.0f / 255.0f, 149.0f / 255.0f, 237.0f / 255.0f);
+
+Color::Color(float r, float g, float b)
+    : R(r), G(g), B(b), A(1.0f) {
+}
+
+Color::Color(float r, float g, float b, float a)
+    : R(r), G(g), B(b), A(a) {
+}

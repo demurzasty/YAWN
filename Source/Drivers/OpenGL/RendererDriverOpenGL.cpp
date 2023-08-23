@@ -6,7 +6,7 @@
 #include "Shaders/Generated/Forward.vert.h"
 #include "Shaders/Generated/Forward.frag.h"
 
-#include <stddef.h>
+#include <stddef.h> // offsetof
 
 using namespace YAWN;
 
@@ -109,6 +109,16 @@ void RendererDriverOpenGL::DestroyTexture(int id) {
     RendererDriver::DestroyTexture(id);
 }
 
+int RendererDriverOpenGL::CreateMesh(int vertexCount, int indexCount) {
+    int id = RendererDriver::CreateMesh(vertexCount, indexCount);
+
+    return id;
+}
+
+void RendererDriverOpenGL::DestroyMesh(int id) {
+    RendererDriver::DestroyMesh(id);
+}
+
 int RendererDriverOpenGL::CreateInstance() {
     int id = RendererDriver::CreateInstance();
 
@@ -131,7 +141,7 @@ void RendererDriverOpenGL::Present() {
     mGlobalData->CameraPosition = Vector4(0.0f, 0.0f, 10.0f, 0.0f);
     mGlobalData->InstanceCount = mInstancePool.GetSize();
 
-    YAWN_GL_CHECK(glClearColor(100.0f / 255.0f, 149.0f / 255.0f, 237.0f / 255.0f, 1.0f));
+    YAWN_GL_CHECK(glClearColor(mClearColor.R, mClearColor.G, mClearColor.B, mClearColor.A));
     YAWN_GL_CHECK(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 
     YAWN_GL_CHECK(glBindProgramPipeline(mCullingProgramId));

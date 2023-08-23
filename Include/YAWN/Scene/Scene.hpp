@@ -15,7 +15,7 @@ namespace YAWN {
 
         static void FixedUpdate(float timeStep);
 
-        const Ref<Actor>& GetRoot();
+        static const Ref<Actor>& GetRoot();
 
     private:
         static void Update(const Ref<Actor>& actor, float timeStep);

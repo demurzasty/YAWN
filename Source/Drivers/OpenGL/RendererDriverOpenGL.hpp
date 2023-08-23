@@ -39,6 +39,10 @@ namespace YAWN {
 
         void DestroyTexture(int id) override;
 
+        int CreateMesh(int vertexCount, int indexCount) override;
+
+        void DestroyMesh(int id) override;
+
         int CreateInstance() override;
 
         void DestroyInstance(int id) override;
