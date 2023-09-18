@@ -247,7 +247,7 @@ Array<String> String::Tokenize(const ArrayView<const wchar_t>& splitters, const 
 Array<char> String::ToUTF8() const {
     mbstate_t state = mbstate_t();
 
-    const wchar_t* wstr = mString;
+    const wchar_t* wstr = GetData();
     Array<char> output(int(wcsrtombs(nullptr, &wstr, 0, &state)) + 1);
 
     wcsrtombs(output.GetData(), &wstr, size_t(output.GetSize()), &state);
@@ -267,7 +267,7 @@ bool String::IsNumeric() const {
 
 bool String::IsDecimal() const {
     for (int i = 0; i < mSize; ++i) {
-        if ((mString[i] < '0' || mString[i] > '9') && mString[i] != '.') {
+        if ((mString[i] < L'0' || mString[i] > L'9') && mString[i] != L'.') {
             return false;
         }
     }

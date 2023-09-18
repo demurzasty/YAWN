@@ -19,6 +19,8 @@ add_subdirectory ("inih-r56")
 
 add_subdirectory ("jsmn-1.1.0")
 
+add_subdirectory ("json-c-0.17")
+
 add_subdirectory ("meshoptimizer-0.18")
 
 add_subdirectory ("miniz-3.0.2")

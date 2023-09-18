@@ -70,6 +70,7 @@ set (SRC
 	"Source/Runtime/Application.cpp"
 	"Source/Runtime/Buffer.cpp"
 	"Source/Runtime/Console.cpp"
+	"Source/Runtime/JSON.cpp"
 	"Source/Runtime/Main.cpp"
 	"Source/Runtime/Object.cpp"
 	"Source/Runtime/Pool.cpp"
@@ -79,10 +80,10 @@ set (SRC
 	"Source/Runtime/Settings.cpp"
 	"Source/Runtime/Variant.cpp"
 	"Source/Runtime/YTXT.cpp"
-	"Source/Scene/Components/Camera.cpp"
-	"Source/Scene/Components/Geometry.cpp"
-	"Source/Scene/Actor.cpp"
-	"Source/Scene/Component.cpp"
+	"Source/Scene/Camera3D.cpp"
+	"Source/Scene/Geometry3D.cpp"
+	"Source/Scene/Node.cpp"
+	"Source/Scene/Node3D.cpp"
 	"Source/Scene/Scene.cpp"
 	"Source/Threading/ConditionVariable.cpp"
 	"Source/Threading/ExclusiveLock.cpp"
@@ -109,7 +110,7 @@ endif ()
 add_library (YAWN STATIC ${SRC})
 target_compile_features (YAWN PUBLIC cxx_std_20)
 target_include_directories (YAWN PUBLIC "Include")
-target_link_libraries (YAWN PRIVATE miniz imgui meshoptimizer rgbcx cgltf stb glew glfw)
+target_link_libraries (YAWN PRIVATE json-c miniz imgui meshoptimizer rgbcx cgltf stb glew glfw)
 add_dependencies (YAWN Shaders)
 
 if (MSVC)

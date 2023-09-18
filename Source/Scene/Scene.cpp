@@ -2,10 +2,10 @@
 
 using namespace YAWN;
 
-Ref<Actor> Scene::sRoot;
+Ref<Node> Scene::sRoot;
 
 void Scene::Initialize() {
-    sRoot = new Actor();
+    sRoot = new Node();
 }
 
 void Scene::Release() {
@@ -24,30 +24,30 @@ void Scene::FixedUpdate(float timeStep) {
     FixedUpdate(sRoot, timeStep);
 }
 
-void Scene::Update(const Ref<Actor>& actor, float timeStep) {
-    actor->Update(timeStep);
+void Scene::Update(const Ref<Node>& node, float timeStep) {
+    node->Update(timeStep);
 
-    for (const Ref<Actor>& child : actor->GetChildren()) {
+    for (const Ref<Node>& child : node->GetChildren()) {
         Update(child, timeStep);
     }
 }
 
-void Scene::LateUpdate(const Ref<Actor>& actor, float timeStep) {
-    actor->LateUpdate(timeStep);
+void Scene::LateUpdate(const Ref<Node>& node, float timeStep) {
+    node->LateUpdate(timeStep);
 
-    for (const Ref<Actor>& child : actor->GetChildren()) {
+    for (const Ref<Node>& child : node->GetChildren()) {
         LateUpdate(child, timeStep);
     }
 }
 
-void Scene::FixedUpdate(const Ref<Actor>& actor, float timeStep) {
-    actor->FixedUpdate(timeStep);
+void Scene::FixedUpdate(const Ref<Node>& node, float timeStep) {
+    node->FixedUpdate(timeStep);
 
-    for (const Ref<Actor>& child : actor->GetChildren()) {
+    for (const Ref<Node>& child : node->GetChildren()) {
         FixedUpdate(child, timeStep);
     }
 }
 
-const Ref<Actor>& Scene::GetRoot() {
+const Ref<Node>& Scene::GetRoot() {
     return sRoot;
 }

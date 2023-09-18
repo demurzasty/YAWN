@@ -3,6 +3,9 @@
 #include "../Core/Map.hpp"
 #include "../Core/Array.hpp"
 #include "../Core/String.hpp"
+#include "../Math/Vector2.hpp"
+#include "../Math/Vector3.hpp"
+#include "../Math/Vector4.hpp"
 #include "Reference.hpp"
 
 namespace YAWN {
@@ -12,18 +15,75 @@ namespace YAWN {
     class Reference;
 
     enum class VariantType {
+        /**
+         * @brief Hold nothing.
+         */
         Null,
+
+        /**
+         * @brief Hold bool.
+         */
         Boolean,
+
+        /**
+         * @brief Holds long long (int64).
+         */
         Integer,
+
+        /**
+         * @brief Holds double.
+         */
         FloatingPoint,
+
+        /**
+         * @brief Hold String.
+         */
         String,
+
+        /**
+         * @brief Holds Array<Variant>.
+         */
         Array,
+
+        /**
+         * @brief Holds Map<String, Variant>.
+         */
         Map,
-        Object
+
+        /**
+         * @brief Holds Ref<Reference>.
+         */
+        Object,
+
+        /**
+         * @brief Holds Vector2.
+         */
+        Vector2,
+
+        /**
+         * @brief Holds Vector3.
+         */
+        Vector3,
+
+        /**
+         * @brief Holds Vector4.
+         */
+        Vector4
     };
 
     class Variant {
-        static constexpr int MaxSize = MaxTypesSize<bool, long long, double, String, Array<Variant>, Map<String, Variant>, Ref<Reference>>::Value;
+        static constexpr int MaxSize = MaxTypesSize<
+            bool,
+            long long,
+            double,
+            String,
+            Array<Variant>,
+            Map<String, Variant>,
+            Ref<Reference>,
+            Vector2,
+            Vector3,
+            Vector4
+        >::Value;
 
     public:
         static Variant MakeArray();
@@ -40,7 +100,7 @@ namespace YAWN {
 
         Variant(float value);
 
-        Variant(double  value);
+        Variant(double value);
 
         Variant(const String& value);
 
@@ -55,6 +115,15 @@ namespace YAWN {
         Variant(Map<String, Variant>&& value) noexcept;
 
         Variant(const Ref<Reference>& value);
+
+        template<typename TReference>
+        Variant(const Ref<TReference>& value) : Variant(Ref<Reference>(value.Get())) { }
+
+        Variant(const Vector2& value);
+
+        Variant(const Vector3& value);
+
+        Variant(const Vector4& value);
 
         Variant(const Variant& variant);
 
@@ -86,6 +155,12 @@ namespace YAWN {
 
         operator const Map<String, Variant>& () const;
 
+        operator const Vector2& () const;
+
+        operator const Vector3& () const;
+
+        operator const Vector4& () const;
+
         bool AsBool() const;
 
         int AsInt() const;
@@ -106,7 +181,15 @@ namespace YAWN {
 
         const Map<String, Variant>& AsMap() const;
 
+        Ref<Reference>& AsObject();
+
         const Ref<Reference>& AsObject() const;
+
+        const Vector2& AsVector2() const;
+
+        const Vector3& AsVector3() const;
+
+        const Vector4& AsVector4() const;
 
         VariantType GetType() const;
 

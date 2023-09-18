@@ -60,6 +60,7 @@
 #include "Runtime/Arena.hpp"
 #include "Runtime/Console.hpp"
 #include "Runtime/Delegate.hpp"
+#include "Runtime/JSON.hpp"
 #include "Runtime/Loader.hpp"
 #include "Runtime/Main.hpp"
 #include "Runtime/Object.hpp"
@@ -73,10 +74,10 @@
 #include "Runtime/Settings.hpp"
 #include "Runtime/YTXT.hpp"
 
-#include "Scene/Components/Camera.hpp"
-#include "Scene/Components/Geometry.hpp"
-#include "Scene/Actor.hpp"
-#include "Scene/Component.hpp"
+#include "Scene/Camera3D.hpp"
+#include "Scene/Geometry3D.hpp"
+#include "Scene/Node.hpp"
+#include "Scene/Node3D.hpp"
 #include "Scene/Scene.hpp"
 
 #include "Threading/ConditionVariable.hpp"

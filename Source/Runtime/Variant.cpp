@@ -68,6 +68,18 @@ Variant::Variant(const Ref<Reference>& value) : mType(VariantType::Object) {
     Memory::Construct((Ref<Reference>*)mData, value);
 }
 
+Variant::Variant(const Vector2& value) : mType(VariantType::Vector2) {
+    Memory::Construct((Vector2*)mData, value);
+}
+
+Variant::Variant(const Vector3& value) : mType(VariantType::Vector3) {
+    Memory::Construct((Vector3*)mData, value);
+}
+
+Variant::Variant(const Vector4& value) : mType(VariantType::Vector4) {
+    Memory::Construct((Vector4*)mData, value);
+}
+
 Variant::Variant(const Variant& variant) : mData() {
     Construct(variant);
 }
@@ -140,6 +152,18 @@ Variant::operator const Map<String, Variant>& () const {
     return AsMap();
 }
 
+Variant::operator const Vector2& () const {
+    return AsVector2();
+}
+
+Variant::operator const Vector3& () const {
+    return AsVector3();
+}
+
+Variant::operator const Vector4& () const {
+    return AsVector4();
+}
+
 bool Variant::AsBool() const {
     YAWN_ASSERT(mType == VariantType::Boolean);
 
@@ -196,10 +220,34 @@ const Map<String, Variant>& Variant::AsMap() const {
     return *(const Map<String, Variant>*)mData;
 }
 
+Ref<Reference>& Variant::AsObject() {
+    YAWN_ASSERT(mType == VariantType::Object);
+
+    return *(Ref<Reference>*)mData;
+}
+
 const Ref<Reference>& Variant::AsObject() const {
     YAWN_ASSERT(mType == VariantType::Object);
 
     return *(const Ref<Reference>*)mData;
+}
+
+const Vector2& Variant::AsVector2() const {
+    YAWN_ASSERT(mType == VariantType::Vector2);
+
+    return *(const Vector2*)mData;
+}
+
+const Vector3& Variant::AsVector3() const {
+    YAWN_ASSERT(mType == VariantType::Vector3);
+
+    return *(const Vector3*)mData;
+}
+
+const Vector4& Variant::AsVector4() const {
+    YAWN_ASSERT(mType == VariantType::Vector4);
+
+    return *(const Vector4*)mData;
 }
 
 VariantType Variant::GetType() const {
@@ -231,6 +279,15 @@ void Variant::Construct(const Variant& variant) {
     case VariantType::Object:
         Memory::Construct((Ref<Reference>*)mData, variant.AsObject());
         break;
+    case VariantType::Vector2:
+        Memory::Construct((Vector2*)mData, variant.AsVector2());
+        break;
+    case VariantType::Vector3:
+        Memory::Construct((Vector3*)mData, variant.AsVector3());
+        break;
+    case VariantType::Vector4:
+        Memory::Construct((Vector4*)mData, variant.AsVector4());
+        break;
     }
 }
 
@@ -256,6 +313,15 @@ void Variant::Destroy() {
         break;
     case VariantType::Object:
         Memory::Destroy((Ref<Reference>*)mData);
+        break;
+    case VariantType::Vector2:
+        Memory::Destroy((Vector2*)mData);
+        break;
+    case VariantType::Vector3:
+        Memory::Destroy((Vector3*)mData);
+        break;
+    case VariantType::Vector4:
+        Memory::Destroy((Vector4*)mData);
         break;
     }
 

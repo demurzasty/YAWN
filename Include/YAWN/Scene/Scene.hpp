@@ -1,6 +1,6 @@
 #pragma once 
 
-#include "Actor.hpp"
+#include "Node.hpp"
 
 namespace YAWN {
     class Scene {
@@ -15,16 +15,16 @@ namespace YAWN {
 
         static void FixedUpdate(float timeStep);
 
-        static const Ref<Actor>& GetRoot();
+        static const Ref<Node>& GetRoot();
 
     private:
-        static void Update(const Ref<Actor>& actor, float timeStep);
+        static void Update(const Ref<Node>& node, float timeStep);
 
-        static void LateUpdate(const Ref<Actor>& actor, float timeStep);
+        static void LateUpdate(const Ref<Node>& node, float timeStep);
 
-        static void FixedUpdate(const Ref<Actor>& actor, float timeStep);
+        static void FixedUpdate(const Ref<Node>& node, float timeStep);
 
     private:
-        static Ref<Actor> sRoot;
+        static Ref<Node> sRoot;
     };
 }

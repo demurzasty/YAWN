@@ -55,6 +55,16 @@ namespace YAWN {
             return &mArray[index].Value;
         }
 
+        template<typename TFunc>
+        TValue* TryGet(TFunc func) {
+            for (int i = 0; i < mArray.GetSize(); ++i) {
+                if (func(mArray[i].Value)) {
+                    return &mArray[i].Value;
+                }
+            }
+            return nullptr;
+        }
+
         void Remove(const TKey& key) {
             int index = BinarySearch(key);
             if (index < mArray.GetSize() && mArray[index].Key == key) {

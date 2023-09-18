@@ -25,3 +25,7 @@ Variant Field::Get(const void* instance) const {
     Get(instance, value);
     return value;
 }
+
+bool Field::IsAssignable() const {
+    return mSetter;
+}

@@ -10,6 +10,8 @@
 
 #include <stdio.h>
 
+// TODO: Use JSON instead of YTXT.
+
 using namespace YAWN;
 
 Array<Ref<Importer>> Editor::sImporters;

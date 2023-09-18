@@ -23,9 +23,10 @@ void Application::Setup() {
 
     Types::Register<TextureLoader>();
 
-    Types::Register<Actor>();
-    Types::Register<Component>();
-    Types::Register<Camera>();
+    Types::Register<Node>();
+    Types::Register<Node3D>();
+    Types::Register<Camera3D>();
+    Types::Register<Geometry3D>();
 
 #if !YAWN_PROD_BUILD
     Types::Register<TextureImporter>();

@@ -23,7 +23,7 @@ Ref<Resource> TextureLoader::Load(const Path& path) {
     file.Read(data.GetData(), data.GetSize());
 
     Ref<Texture> texture = new Texture(width, height, TextureFormat::RGBA8, TextureFilter::Anisotropic, TextureWrapping::Repeat, 1);
-
+    
     return texture;
 }
 

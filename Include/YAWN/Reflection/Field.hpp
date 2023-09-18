@@ -15,6 +15,8 @@ namespace YAWN {
 
         Variant Get(const void* instance) const;
 
+        bool IsAssignable() const;
+
     private:
         void (*mSetter)(void*, const Variant&) = nullptr;
         void (*mGetter)(const void*, Variant&) = nullptr;

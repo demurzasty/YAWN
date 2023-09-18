@@ -36,6 +36,8 @@ namespace YAWN {
 
         static Type& GetType(int id);
 
+        static Type* GetTypeByName(const String& name);
+
         template<typename T>
         static void EnumerateTypesOfBase(const Delegate<void(const Type&)>& delegate) {
             constexpr int hash = TypeID::Hash<T>();

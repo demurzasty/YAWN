@@ -6,6 +6,9 @@
     public: \
         using Base = TBase; \
         static constexpr wchar_t TypeName[] = L#TSelf; \
+        virtual const wchar_t* GetTypeName() const { \
+            return L#TSelf; \
+        } \
         virtual int GetTypeId() const override { \
             return YAWN::TypeID::Hash<TSelf>(); \
         } \
@@ -18,6 +21,8 @@ namespace YAWN {
     class Object {
     public:
         virtual ~Object() = default;
+
+        virtual const wchar_t* GetTypeName() const;
 
         virtual int GetTypeId() const;
 

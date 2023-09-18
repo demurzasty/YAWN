@@ -2,6 +2,10 @@
 
 using namespace YAWN;
 
+const wchar_t* Object::GetTypeName() const {
+    return L"Object";
+}
+
 int Object::GetTypeId() const {
     return TypeID::Hash<Object>();
 }
