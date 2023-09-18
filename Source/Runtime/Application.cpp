@@ -29,8 +29,9 @@ void Application::Setup() {
     Types::Register<Geometry3D>();
 
 #if !YAWN_PROD_BUILD
-    Types::Register<TextureImporter>();
     Types::Register<ModelImporter>();
+    Types::Register<PrefabImporter>();
+    Types::Register<TextureImporter>();
 #endif
 }
 

@@ -7,6 +7,7 @@ void Node::Register(Meta<Node>& meta) {
     meta.SetName(L"Node");
     meta.SetConstructable();
     meta.AddField<&Node::SetName, &Node::GetName>(L"Name");
+    meta.AddField<&Node::SetChildren, &Node::GetChildren>(L"Children");
 }
 
 Node::~Node() {
@@ -55,4 +56,12 @@ void Node::OnEnter() {
 }
 
 void Node::OnExit() {
+}
+
+void Node::SetChildren(const Array<Ref<Node>>& children) {
+    mChildren.Clear();
+
+    for (const Ref<Node>& child : children) {
+        AddChild(child);
+    }
 }

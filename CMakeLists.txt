@@ -40,6 +40,7 @@ set (SRC
 	"Source/Core/StringBuilder.cpp"
 	"Source/Core/Unicode.cpp"
 	"Source/Editor/Importers/ModelImporter.cpp"
+	"Source/Editor/Importers/PrefabImporter.cpp"
 	"Source/Editor/Importers/TextureImporter.cpp"
 	"Source/Editor/Editor.cpp"
 	"Source/Graphics/Color.cpp"

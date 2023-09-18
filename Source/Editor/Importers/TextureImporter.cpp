@@ -18,7 +18,6 @@ void TextureImporter::Import(const Path& inputPath, const Path& outputPath, cons
 
     File file;
     file.Open(outputPath, FileModeFlags::Write);
-    printf("%s\n", outputPath.ToString().ToUTF8().GetData());
     YAWN_ASSERT(file.IsOpen());
 
     file.Write32(image->GetInfo().GetWidth());

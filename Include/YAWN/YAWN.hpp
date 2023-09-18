@@ -19,6 +19,7 @@
 
 #if !YAWN_PROD_BUILD
 #   include "Editor/Importers/ModelImporter.hpp"
+#   include "Editor/Importers/PrefabImporter.hpp"
 #   include "Editor/Importers/TextureImporter.hpp"
 #   include "Editor/Editor.hpp"
 #   include "Editor/Importer.hpp"

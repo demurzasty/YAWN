@@ -164,6 +164,10 @@ Variant::operator const Vector4& () const {
     return AsVector4();
 }
 
+Variant::operator const Ref<Reference>& () const {
+    return AsObject();
+}
+
 bool Variant::AsBool() const {
     YAWN_ASSERT(mType == VariantType::Boolean);
 

@@ -110,6 +110,26 @@ namespace YAWN {
 
         Variant(Array<Variant>&& value) noexcept;
 
+        template<typename T>
+        Variant(const Array<T>& value) : mType(VariantType::Array) {
+            Array<Variant> data;
+            for (const T& element : value) {
+                data.Add(element);
+            }
+
+            Memory::Construct((Array<Variant>*)mData, data);
+        }
+
+        template<typename T>
+        Variant(const ArrayView<T>& value) : mType(VariantType::Array) {
+            Array<Variant> data;
+            for (const T& element : value) {
+                data.Add(element);
+            }
+
+            Memory::Construct((Array<Variant>*)mData, data);
+        }
+
         Variant(const Map<String, Variant>& value);
 
         Variant(Map<String, Variant>&& value) noexcept;
@@ -153,6 +173,15 @@ namespace YAWN {
 
         operator const Array<Variant>&() const;
 
+        template<typename T>
+        operator const Array<T>() const {
+            Array<T> data;
+            for (const Variant& value : AsArray()) {
+                data.Add(value);
+            }
+            return data;
+        }
+
         operator const Map<String, Variant>& () const;
 
         operator const Vector2& () const;
@@ -160,6 +189,14 @@ namespace YAWN {
         operator const Vector3& () const;
 
         operator const Vector4& () const;
+
+        operator const Ref<Reference>& () const;
+
+        template<typename T>
+        operator const Ref<T> () const {
+            // TODO: Fix up casting.
+            return (T*)(AsObject().Get());
+        }
 
         bool AsBool() const;
 

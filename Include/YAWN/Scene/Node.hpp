@@ -55,6 +55,9 @@ namespace YAWN {
         virtual void OnExit();
 
     private:
+        void SetChildren(const Array<Ref<Node>>& children);
+
+    private:
         //////////////////////////
         ///////// Basic //////////
         //////////////////////////

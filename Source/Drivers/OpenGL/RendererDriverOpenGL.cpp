@@ -70,12 +70,12 @@ RendererDriverOpenGL::RendererDriverOpenGL() {
 }
 
 RendererDriverOpenGL::~RendererDriverOpenGL() {
-    glUnmapNamedBuffer(mIndexBufferId);
-    glUnmapNamedBuffer(mVertexBufferId);
-    glUnmapNamedBuffer(mSamplerBufferId);
-    glUnmapNamedBuffer(mMeshBufferId);
-    glUnmapNamedBuffer(mInstanceBufferId);
-    glUnmapNamedBuffer(mGlobalBufferId);
+    YAWN_GL_CHECK(glUnmapNamedBuffer(mIndexBufferId));
+    YAWN_GL_CHECK(glUnmapNamedBuffer(mVertexBufferId));
+    YAWN_GL_CHECK(glUnmapNamedBuffer(mSamplerBufferId));
+    YAWN_GL_CHECK(glUnmapNamedBuffer(mMeshBufferId));
+    YAWN_GL_CHECK(glUnmapNamedBuffer(mInstanceBufferId));
+    YAWN_GL_CHECK(glUnmapNamedBuffer(mGlobalBufferId));
 
     YAWN_GL_CHECK(glDeleteProgramPipelines(1, &mForwardProgramId));
     YAWN_GL_CHECK(glDeleteProgramPipelines(1, &mCullingProgramId));
@@ -138,7 +138,6 @@ void RendererDriverOpenGL::SetInstanceTransform(int id, const Matrix4& transform
 void RendererDriverOpenGL::Present() {
     mGlobalData->ProjectionView = mGlobalData->Projection * mGlobalData->View;
     mGlobalData->InvertedProjectionView = Matrix4::Invert(mGlobalData->ProjectionView);
-    mGlobalData->CameraPosition = Vector4(0.0f, 0.0f, 10.0f, 0.0f);
     mGlobalData->InstanceCount = mInstancePool.GetSize();
 
     YAWN_GL_CHECK(glClearColor(mClearColor.R, mClearColor.G, mClearColor.B, mClearColor.A));
