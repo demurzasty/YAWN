@@ -50,9 +50,9 @@ namespace YAWN {
         //////// Events //////////
         //////////////////////////
 
-        virtual void OnEnter();
+        virtual void Enter();
 
-        virtual void OnExit();
+        virtual void Exit();
 
     private:
         void SetChildren(const Array<Ref<Node>>& children);

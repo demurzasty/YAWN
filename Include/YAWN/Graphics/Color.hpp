@@ -22,4 +22,12 @@ namespace YAWN {
 
         float R, G, B, A;
     };
+
+    struct Color4 {
+        Color4() = default;
+
+        Color4(const Color& color);
+
+        unsigned char R, G, B, A;
+    };
 }

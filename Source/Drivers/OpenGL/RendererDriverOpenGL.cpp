@@ -66,9 +66,9 @@ RendererDriverOpenGL::RendererDriverOpenGL() {
     YAWN_GL_CHECK(glEnableVertexArrayAttrib(mCanvasVertexArrayObjectId, 1));
     YAWN_GL_CHECK(glEnableVertexArrayAttrib(mCanvasVertexArrayObjectId, 2));
 
-    YAWN_GL_CHECK(glVertexArrayAttribFormat(mCanvasVertexArrayObjectId, 0, 3, GL_FLOAT, GL_FALSE, offsetof(Vertex2D, Position)));
+    YAWN_GL_CHECK(glVertexArrayAttribFormat(mCanvasVertexArrayObjectId, 0, 2, GL_FLOAT, GL_FALSE, offsetof(Vertex2D, Position)));
     YAWN_GL_CHECK(glVertexArrayAttribFormat(mCanvasVertexArrayObjectId, 1, 2, GL_FLOAT, GL_FALSE, offsetof(Vertex2D, UV)));
-    YAWN_GL_CHECK(glVertexArrayAttribFormat(mCanvasVertexArrayObjectId, 2, 4, GL_FLOAT, GL_FALSE, offsetof(Vertex2D, Color)));
+    YAWN_GL_CHECK(glVertexArrayAttribFormat(mCanvasVertexArrayObjectId, 2, 4, GL_UNSIGNED_BYTE, GL_TRUE, offsetof(Vertex2D, Color)));
 
     YAWN_GL_CHECK(glVertexArrayAttribBinding(mCanvasVertexArrayObjectId, 0, 0));
     YAWN_GL_CHECK(glVertexArrayAttribBinding(mCanvasVertexArrayObjectId, 1, 0));
@@ -130,27 +130,27 @@ void RendererDriverOpenGL::SetCameraTransform(const Matrix4& transform) {
 }
 
 int RendererDriverOpenGL::CreateTexture(int width, int height, TextureFormat format, TextureFilter filter, TextureWrapping wrapping, int mipmapCount) {
-    int id = RendererDriver::CreateTexture(width, height, format, filter, wrapping, mipmapCount);
+    int id = Base::CreateTexture(width, height, format, filter, wrapping, mipmapCount);
 
     return id;
 }
 
 void RendererDriverOpenGL::DestroyTexture(int id) {
-    RendererDriver::DestroyTexture(id);
+    Base::DestroyTexture(id);
 }
 
 int RendererDriverOpenGL::CreateMesh(int vertexCount, int indexCount) {
-    int id = RendererDriver::CreateMesh(vertexCount, indexCount);
+    int id = Base::CreateMesh(vertexCount, indexCount);
 
     return id;
 }
 
 void RendererDriverOpenGL::DestroyMesh(int id) {
-    RendererDriver::DestroyMesh(id);
+    Base::DestroyMesh(id);
 }
 
 int RendererDriverOpenGL::CreateInstance() {
-    int id = RendererDriver::CreateInstance();
+    int id = Base::CreateInstance();
 
     mInstances[id] = GPUInstanceData();
 
@@ -165,29 +165,95 @@ void RendererDriverOpenGL::SetInstanceTransform(int id, const Matrix4& transform
     mInstances[id].Transform = transform;
 }
 
-void RendererDriverOpenGL::Draw2D(Topology topology, const ArrayView<const Vertex2D>& vertices, const ArrayView<const int>& indices) {
-    CanvasDrawCommand command = CanvasDrawCommand();
-    command.Topology = topology;
-    command.VertexOffset = mGlobalCanvasVertexOffset;
-    command.VertexCount = vertices.GetSize();
-    command.IndexOffset = mGlobalCanvasIndexOffset;
-    command.IndexCount = indices.GetSize();
-    mCanvasDrawCommands.Add(command);
+int RendererDriverOpenGL::CreateCanvasItem() {
+    int id = Base::CreateCanvasItem();
 
-    mCanvasVertices = (Vertex2D*)glMapNamedBuffer(mCanvasVertexBufferId, GL_READ_WRITE);
-    mCanvasIndices = (GLint*)glMapNamedBuffer(mCanvasIndexBufferId, GL_READ_WRITE);
+    mCanvasItems.Expand(id + 1);
+    mCanvasVertexBuffers.Expand(id + 1);
+    mCanvasIndexBuffers.Expand(id + 1);
 
-    Memory::Copy(mCanvasVertices + mGlobalCanvasVertexOffset, vertices.GetData(), vertices.GetSizeInBytes());
-    Memory::Copy(mCanvasIndices + mGlobalCanvasIndexOffset, indices.GetData(), indices.GetSizeInBytes());
+    mCanvasItems[id] = GPUCanvasItemData();
+    mCanvasVertexBuffers[id] = 0;
+    mCanvasIndexBuffers[id] = 0;
 
-    YAWN_GL_CHECK(glUnmapNamedBuffer(mCanvasIndexBufferId));
-    YAWN_GL_CHECK(glUnmapNamedBuffer(mCanvasVertexBufferId));
-
-    mGlobalCanvasVertexOffset += command.VertexCount;
-    mGlobalCanvasIndexOffset += command.IndexCount;
+    return id;
 }
 
-void RendererDriverOpenGL::Present() {
+void RendererDriverOpenGL::DestroyCanvasItem(int id) {
+    YAWN_GL_CHECK(glDeleteBuffers(1, &mCanvasIndexBuffers[id]));
+    YAWN_GL_CHECK(glDeleteBuffers(1, &mCanvasVertexBuffers[id]));
+
+    mCanvasItems[id] = GPUCanvasItemData();
+
+    Base::DestroyCanvasItem(id);
+}
+
+void RendererDriverOpenGL::SetCanvasItemData(int id, const ArrayView<const Vertex2D>& vertices, const ArrayView<const int>& indices) {
+    GPUCanvasItemData& canvasItem = mCanvasItems[id];
+
+    canvasItem.VertexOffset = 0;
+    canvasItem.IndexOffset = 0;
+    canvasItem.VertexCount = vertices.GetSize();
+    canvasItem.IndexCount = indices.GetSize();
+
+    if (!mCanvasVertexBuffers[id] || vertices.GetSize() > canvasItem.VertexCapacity) {
+        YAWN_GL_CHECK(glDeleteBuffers(1, &mCanvasVertexBuffers[id]));
+        YAWN_GL_CHECK(glCreateBuffers(1, &mCanvasVertexBuffers[id]));
+
+        YAWN_GL_CHECK(glNamedBufferStorage(mCanvasVertexBuffers[id], vertices.GetSizeInBytes(), vertices.GetData(), GL_MAP_COHERENT_BIT | GL_MAP_PERSISTENT_BIT | GL_MAP_READ_BIT | GL_MAP_WRITE_BIT | GL_DYNAMIC_STORAGE_BIT));
+        
+        canvasItem.VertexCapacity = canvasItem.VertexCount;
+    } else {
+        YAWN_GL_CHECK(glNamedBufferSubData(mCanvasVertexBuffers[id], 0, vertices.GetSizeInBytes(), vertices.GetData()));
+    }
+
+    if (!mCanvasIndexBuffers[id] || vertices.GetSize() > canvasItem.IndexCapacity) {
+        YAWN_GL_CHECK(glDeleteBuffers(1, &mCanvasIndexBuffers[id]));
+        YAWN_GL_CHECK(glCreateBuffers(1, &mCanvasIndexBuffers[id]));
+
+        YAWN_GL_CHECK(glNamedBufferStorage(mCanvasIndexBuffers[id], indices.GetSizeInBytes(), indices.GetData(), GL_MAP_COHERENT_BIT | GL_MAP_PERSISTENT_BIT | GL_MAP_READ_BIT | GL_MAP_WRITE_BIT | GL_DYNAMIC_STORAGE_BIT));
+        
+        canvasItem.IndexCapacity = canvasItem.IndexCount;
+    } else {
+        YAWN_GL_CHECK(glNamedBufferSubData(mCanvasIndexBuffers[id], 0, indices.GetSizeInBytes(), indices.GetData()));
+    }
+}
+
+void RendererDriverOpenGL::SetCanvasItemTexture(int id, int textureId) {
+}
+
+void RendererDriverOpenGL::DrawCanvasItem(int id, int vertexOffset, int indexOffset, int indexCount) {
+    CanvasDrawCommand command;
+    command.CanvasItemId = id;
+    command.VertexOffset = vertexOffset;
+    command.IndexOffset = indexOffset;
+    command.IndexCount = indexCount;
+    mCanvasDrawCommands.Add(command);
+}
+
+//void RendererDriverOpenGL::Draw2D(int textureId, const ArrayView<const Vertex2D>& vertices, const ArrayView<const int>& indices) {
+    //CanvasDrawCommand command = CanvasDrawCommand();
+    //command.Topology = topology;
+    //command.VertexOffset = mGlobalCanvasVertexOffset;
+    //command.VertexCount = vertices.GetSize();
+    //command.IndexOffset = mGlobalCanvasIndexOffset;
+    //command.IndexCount = indices.GetSize();
+    //mCanvasDrawCommands.Add(command);
+
+    //mCanvasVertices = (Vertex2D*)glMapNamedBuffer(mCanvasVertexBufferId, GL_READ_WRITE);
+    //mCanvasIndices = (GLint*)glMapNamedBuffer(mCanvasIndexBufferId, GL_READ_WRITE);
+
+    //Memory::Copy(mCanvasVertices + mGlobalCanvasVertexOffset, vertices.GetData(), vertices.GetSizeInBytes());
+    //Memory::Copy(mCanvasIndices + mGlobalCanvasIndexOffset, indices.GetData(), indices.GetSizeInBytes());
+
+    //YAWN_GL_CHECK(glUnmapNamedBuffer(mCanvasIndexBufferId));
+    //YAWN_GL_CHECK(glUnmapNamedBuffer(mCanvasVertexBufferId));
+
+    //mGlobalCanvasVertexOffset += command.VertexCount;
+    //mGlobalCanvasIndexOffset += command.IndexCount;
+//}
+
+void RendererDriverOpenGL::Render() {
     mGlobalData->ProjectionView = mGlobalData->Projection * mGlobalData->View;
     mGlobalData->InvertedProjectionView = Matrix4::Invert(mGlobalData->ProjectionView);
     mGlobalData->InstanceCount = mInstancePool.GetSize();
@@ -217,12 +283,32 @@ void RendererDriverOpenGL::Present() {
 
     YAWN_GL_CHECK(glBindVertexArray(mCanvasVertexArrayObjectId));
 
-    for (const CanvasDrawCommand& command : mCanvasDrawCommands) {
-        YAWN_GL_CHECK(glDrawElementsBaseVertex(GL_TRIANGLES, GLsizei(command.IndexCount), GL_UNSIGNED_INT, (void*)(command.IndexOffset), GLint(command.VertexOffset)));
-    }
-
     mGlobalCanvasVertexOffset = 0;
     mGlobalCanvasIndexOffset = 0;
+}
+
+void RendererDriverOpenGL::LLSetVertexBufferData2D(const ArrayView<const Vertex2D>& vertices) {
+    mCanvasVertices = (Vertex2D*)glMapNamedBuffer(mCanvasVertexBufferId, GL_WRITE_ONLY);
+
+    Memory::Copy(mCanvasVertices + mGlobalCanvasVertexOffset, vertices.GetData(), vertices.GetSizeInBytes());
+
+    YAWN_GL_CHECK(glUnmapNamedBuffer(mCanvasVertexBufferId));
+}
+
+void RendererDriverOpenGL::LLSetIndexBufferData2D(const ArrayView<const int>& indices) {
+    mCanvasIndices = (GLint*)glMapNamedBuffer(mCanvasIndexBufferId, GL_WRITE_ONLY);
+
+    Memory::Copy(mCanvasIndices + mGlobalCanvasIndexOffset, indices.GetData(), indices.GetSizeInBytes());
+
+    YAWN_GL_CHECK(glUnmapNamedBuffer(mCanvasIndexBufferId));
+}
+
+void RendererDriverOpenGL::LLSetTexture2D(int textureId) {
+    // TODO: Implement.
+}
+
+void RendererDriverOpenGL::LLDraw2D(int vertexOffset, int indexOffset, int indexCount) {
+    glDrawElementsBaseVertex(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, (void*)(intptr_t)(indexOffset * sizeof(int)), vertexOffset);
 }
 
 GLuint RendererDriverOpenGL::CompileShader(ArrayView<const char> vertexCode, ArrayView<const char> fragmentCode) {
@@ -335,4 +421,7 @@ void RendererDriverOpenGL::CheckError(const wchar_t* path, int line, const wchar
         Console::Write(L"An internal OpenGL call failed in %s:%d.\n  Expression:\n    %s\n  Description:\n    %s\n    %s\n\n",
             filename, line, expression, error, description);
     }
+}
+
+void RendererDriverOpenGL::DefragmentateCanvasItemData() {
 }

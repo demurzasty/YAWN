@@ -20,13 +20,13 @@ const Ref<Mesh>& Geometry3D::GetMesh() const {
     return mMesh;
 }
 
-void Geometry3D::OnEnter() {
+void Geometry3D::Enter() {
     if (mId == Pool::None) {
         mId = Renderer::CreateInstance();
     }
 }
 
-void Geometry3D::OnExit() {
+void Geometry3D::Exit() {
     if (mId != Pool::None) {
         Renderer::DestroyInstance(mId);
         mId = Pool::None;

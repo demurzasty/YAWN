@@ -77,6 +77,7 @@
 
 #include "Scene/Camera3D.hpp"
 #include "Scene/Geometry3D.hpp"
+#include "Scene/ImGui2D.hpp"
 #include "Scene/Node.hpp"
 #include "Scene/Node2D.hpp"
 #include "Scene/Node3D.hpp"

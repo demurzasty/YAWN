@@ -8,11 +8,11 @@ namespace YAWN {
     struct Vertex2D {
         Vertex2D() = default;
 
-        Vertex2D(const Vector2& position, const Vector2& uv, const Color& color);
+        Vertex2D(const Vector2& position, const Vector2& uv, const Color4& color);
 
         Vector2 Position;
         Vector2 UV;
-        Color Color;
+        Color4 Color;
     };
 
     struct Vertex3D {

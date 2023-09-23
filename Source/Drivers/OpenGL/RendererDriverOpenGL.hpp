@@ -27,9 +27,8 @@ namespace YAWN {
         };
 
         struct CanvasDrawCommand {
-            Topology Topology;
+            int CanvasItemId;
             int VertexOffset;
-            int VertexCount;
             int IndexOffset;
             int IndexCount;
         };
@@ -57,9 +56,26 @@ namespace YAWN {
 
         void SetInstanceTransform(int id, const Matrix4& transform) override;
 
-        void Draw2D(Topology topology, const ArrayView<const Vertex2D>& vertices, const ArrayView<const int>& indices) override;
+        int CreateCanvasItem() override;
 
-        void Present() override;
+        void DestroyCanvasItem(int id) override;
+
+        void SetCanvasItemData(int id, const ArrayView<const Vertex2D>& vertices, const ArrayView<const int>& indices) override;
+
+        void SetCanvasItemTexture(int id, int textureId) override;
+
+        void DrawCanvasItem(int id, int vertexOffset, int indexOffset, int indexCount) override;
+
+        void Render() override;
+
+    public:
+        void LLSetVertexBufferData2D(const ArrayView<const Vertex2D>& vertices) override;
+
+        void LLSetIndexBufferData2D(const ArrayView<const int>& indices) override;
+
+        void LLSetTexture2D(int textureId) override;
+
+        void LLDraw2D(int vertexOffset, int indexOffset, int indexCount) override;
 
     private:
         GLuint CompileShader(ArrayView<const char> vertexCode, ArrayView<const char> fragmentCode);
@@ -69,6 +85,8 @@ namespace YAWN {
         void TestShader(GLuint shaderProgram);
 
         void CheckError(const wchar_t* path, int line, const wchar_t* expression);
+
+        void DefragmentateCanvasItemData();
 
     private:
         GLuint mGlobalBufferId = 0;
@@ -101,6 +119,10 @@ namespace YAWN {
         int mGlobalIndexOffset = 0;
         int mGlobalCanvasVertexOffset = 0;
         int mGlobalCanvasIndexOffset = 0;
+
+        Array<GPUCanvasItemData> mCanvasItems;
+        Array<GLuint> mCanvasVertexBuffers;
+        Array<GLuint> mCanvasIndexBuffers;
 
         Array<CanvasDrawCommand> mCanvasDrawCommands;
     };

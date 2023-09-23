@@ -84,6 +84,7 @@ set (SRC
 	"Source/Runtime/YTXT.cpp"
 	"Source/Scene/Camera3D.cpp"
 	"Source/Scene/Geometry3D.cpp"
+	"Source/Scene/ImGui2D.cpp"
 	"Source/Scene/Node.cpp"
 	"Source/Scene/Node2D.cpp"
 	"Source/Scene/Node3D.cpp"

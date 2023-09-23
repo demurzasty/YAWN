@@ -121,18 +121,58 @@ void Renderer::SetInstanceTransform(int id, const Matrix4& transform) {
     ExclusiveLock lock(sMutex);
 
     YAWN_ASSERT(sDriver);
-
-    YAWN_ASSERT(IsInstanceValid(id));
+    YAWN_ASSERT(sDriver->IsInstanceValid(id));
 
     sDriver->SetInstanceTransform(id, transform);
 }
 
-void Renderer::Draw2D(Topology topology, const ArrayView<const Vertex2D>& vertices, const ArrayView<const int>& indices) {
+int Renderer::CreateCanvasItem() {
     ExclusiveLock lock(sMutex);
 
     YAWN_ASSERT(sDriver);
 
-    sDriver->Draw2D(topology, vertices, indices);
+    return sDriver->CreateCanvasItem();
+}
+
+void Renderer::DestroyCanvasItem(int id) {
+    ExclusiveLock lock(sMutex);
+
+    YAWN_ASSERT(sDriver);
+
+    sDriver->DestroyCanvasItem(id);
+}
+
+bool Renderer::IsCanvasItemValid(int id) {
+    ExclusiveLock lock(sMutex);
+
+    return sDriver->IsCanvasItemValid(id);
+}
+
+void Renderer::SetCanvasItemData(int id, const ArrayView<const Vertex2D>& vertices, const ArrayView<const int>& indices) {
+    ExclusiveLock lock(sMutex);
+
+    YAWN_ASSERT(sDriver);
+    YAWN_ASSERT(sDriver->IsCanvasItemValid(id));
+
+    sDriver->SetCanvasItemData(id, vertices, indices);
+}
+
+void Renderer::SetCanvasItemTexture(int id, int textureId) {
+    ExclusiveLock lock(sMutex);
+
+    YAWN_ASSERT(sDriver);
+    YAWN_ASSERT(IsCanvasItemValid(id));
+
+    sDriver->SetCanvasItemTexture(id, textureId);
+}
+
+void Renderer::DrawCanvasItem(int id, int vertexOffset, int indexOffset, int indexCount) {
+    ExclusiveLock lock(sMutex);
+
+    YAWN_ASSERT(sDriver);
+    YAWN_ASSERT(IsCanvasItemValid(id));
+
+    sDriver->DrawCanvasItem(id, vertexOffset, indexOffset, indexCount);
 }
 
 void Renderer::Release() {
@@ -143,10 +183,42 @@ void Renderer::Release() {
     sDriver.Reset();
 }
 
-void Renderer::Present() {
+void Renderer::Render() {
     ExclusiveLock lock(sMutex);
 
     YAWN_ASSERT(sDriver);
 
-    sDriver->Present();
+    sDriver->Render();
+}
+
+void Renderer::LLSetVertexBufferData2D(const ArrayView<const Vertex2D>& vertices) {
+    ExclusiveLock lock(sMutex);
+
+    YAWN_ASSERT(sDriver);
+
+    sDriver->LLSetVertexBufferData2D(vertices);
+}
+
+void Renderer::LLSetIndexBufferData2D(const ArrayView<const int>& indices) {
+    ExclusiveLock lock(sMutex);
+
+    YAWN_ASSERT(sDriver);
+
+    sDriver->LLSetIndexBufferData2D(indices);
+}
+
+void Renderer::LLSetTexture2D(int textureId) {
+    ExclusiveLock lock(sMutex);
+
+    YAWN_ASSERT(sDriver);
+
+    sDriver->LLSetTexture2D(textureId);
+}
+
+void Renderer::LLDraw2D(int vertexOffset, int indexOffset, int indexCount) {
+    ExclusiveLock lock(sMutex);
+
+    YAWN_ASSERT(sDriver);
+
+    sDriver->LLDraw2D(vertexOffset, indexOffset, indexCount);
 }

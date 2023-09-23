@@ -11,6 +11,9 @@ void Node::Register(Meta<Node>& meta) {
 }
 
 Node::~Node() {
+    for (const Ref<Node>& child : mChildren) {
+        child->Exit();
+    }
 }
 
 void Node::Update(float timeStep) {
@@ -43,6 +46,8 @@ void Node::AddChild(const Ref<Node>& node) {
 
     node->mParent = this;
     mChildren.Add(node);
+
+    node->Enter();
 }
 
 void Node::AddSibling(const Ref<Node>& node) {
@@ -55,10 +60,10 @@ ArrayView<const Ref<Node>> Node::GetChildren() const {
     return mChildren;
 }
 
-void Node::OnEnter() {
+void Node::Enter() {
 }
 
-void Node::OnExit() {
+void Node::Exit() {
 }
 
 void Node::SetChildren(const Array<Ref<Node>>& children) {

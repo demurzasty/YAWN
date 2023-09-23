@@ -19,9 +19,9 @@ namespace YAWN {
         const Ref<Mesh>& GetMesh() const;
 
     protected:
-        virtual void OnEnter() override;
+        virtual void Enter() override;
 
-        virtual void OnExit() override;
+        virtual void Exit() override;
 
     private:
         virtual void OnTransformUpdate() override;

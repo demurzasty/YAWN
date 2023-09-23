@@ -14,5 +14,5 @@ out gl_PerVertex {
 void main() {
     vUV = iUV;
     vColor = iColor;
-    gl_Position = vec4(iPosition, 0.0, 1.0);
+    gl_Position = vec4((iPosition / vec2(1280.0, 720.0)) * 2.0 - 1.0, 0.0, 1.0);
 }

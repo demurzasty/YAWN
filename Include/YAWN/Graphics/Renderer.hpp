@@ -38,9 +38,28 @@ namespace YAWN {
 
         static void SetInstanceTransform(int id, const Matrix4& transform);
 
-        static void Draw2D(Topology topology, const ArrayView<const Vertex2D>& vertices, const ArrayView<const int>& indices);
+        static int CreateCanvasItem();
 
-        static void Present();
+        static void DestroyCanvasItem(int id);
+
+        static bool IsCanvasItemValid(int id);
+
+        static void SetCanvasItemData(int id, const ArrayView<const Vertex2D>& vertices, const ArrayView<const int>& indices);
+
+        static void SetCanvasItemTexture(int id, int textureId);
+
+        static void DrawCanvasItem(int id, int vertexOffset, int indexOffset, int indexCount);
+
+        static void Render();
+
+    public:
+        static void LLSetVertexBufferData2D(const ArrayView<const Vertex2D>& vertices);
+
+        static void LLSetIndexBufferData2D(const ArrayView<const int>& indices);
+
+        static void LLSetTexture2D(int textureId);
+
+        static void LLDraw2D(int vertexOffset, int indexOffset, int indexCount);
 
     private:
         static Ref<RendererDriver> sDriver;

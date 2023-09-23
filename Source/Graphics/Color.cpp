@@ -1,4 +1,5 @@
 #include <YAWN/Graphics/Color.hpp>
+#include <YAWN/Math/Math.hpp>
 
 using namespace YAWN;
 
@@ -20,4 +21,11 @@ Color::Color(float r, float g, float b)
 
 Color::Color(float r, float g, float b, float a)
     : R(r), G(g), B(b), A(a) {
+}
+
+Color4::Color4(const Color& color)
+    : R(Math::FastFloatToInt(color.R * 255.0f))
+    , G(Math::FastFloatToInt(color.G * 255.0f))
+    , B(Math::FastFloatToInt(color.B * 255.0f))
+    , A(Math::FastFloatToInt(color.A * 255.0f)) {
 }

@@ -193,7 +193,7 @@ namespace YAWN {
             mSize = 0;
         }
 
-        void Resize(int newSize) {
+        void Resize(int newSize, const T& fillValue = T()) {
             YAWN_ASSERT(newSize >= 0);
 
             for (int i = newSize; i < mSize; ++i) {
@@ -203,10 +203,18 @@ namespace YAWN {
             EnsureCapacity(newSize);
 
             for (int i = mSize; i < newSize; ++i) {
-                Memory::Construct(&mData[i]);
+                Memory::Construct(&mData[i], fillValue);
             }
 
             mSize = newSize;
+        }
+
+        void Expand(int newSize, const T& fillValue = T()) {
+            YAWN_ASSERT(newSize >= 0);
+
+            if (newSize > mSize) {
+                Resize(newSize, fillValue);
+            }
         }
 
         void Reserve(int newCapacity) {

@@ -15,7 +15,7 @@
     protected: \
         virtual bool _IsInstanceOf(int id) const override { \
             return id == YAWN::TypeID::Hash<TSelf>() || TBase::_IsInstanceOf(id); \
-        }
+        } 
 
 namespace YAWN {
     class Object {

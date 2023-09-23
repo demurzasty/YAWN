@@ -2,7 +2,7 @@
 
 using namespace YAWN;
 
-Vertex2D::Vertex2D(const Vector2& position, const Vector2& uv, const YAWN::Color& color)
+Vertex2D::Vertex2D(const Vector2& position, const Vector2& uv, const Color4& color)
     : Position(position), UV(uv), Color(color) {
 }
 

@@ -57,9 +57,28 @@ namespace YAWN {
 
         virtual void SetInstanceTransform(int id, const Matrix4& transform) = 0;
 
-        virtual void Draw2D(Topology topology, const ArrayView<const Vertex2D>& vertices, const ArrayView<const int>& indices) = 0;
+        virtual int CreateCanvasItem();
 
-        virtual void Present() = 0;
+        virtual void DestroyCanvasItem(int id);
+
+        virtual bool IsCanvasItemValid(int id);
+
+        virtual void SetCanvasItemData(int id, const ArrayView<const Vertex2D>& vertices, const ArrayView<const int>& indices) = 0;
+
+        virtual void SetCanvasItemTexture(int id, int textureId) = 0;
+
+        virtual void DrawCanvasItem(int id, int vertexOffset, int indexOffset, int indexCount) = 0;
+
+        virtual void Render() = 0;
+
+    public:
+        virtual void LLSetVertexBufferData2D(const ArrayView<const Vertex2D>& vertices) = 0;
+
+        virtual void LLSetIndexBufferData2D(const ArrayView<const int>& indices) = 0;
+
+        virtual void LLSetTexture2D(int textureId) = 0;
+
+        virtual void LLDraw2D(int vertexOffset, int indexOffset, int indexCount) = 0;
 
     protected:
         struct GPUTextureData {
@@ -116,6 +135,15 @@ namespace YAWN {
             int MaterialId = Pool::None;
         };
 
+        struct GPUCanvasItemData {
+            int VertexOffset = 0;
+            int VertexCount = 0;
+            int VertexCapacity = 0;
+            int IndexOffset = 0;
+            int IndexCount = 0;
+            int IndexCapacity = 0;
+        };
+
     protected:
         Color mClearColor = Color::CornflowerBlue;
 
@@ -123,5 +151,6 @@ namespace YAWN {
         Pool mMeshPool;
         Pool mTexturePool;
         Pool mMaterialPool;
+        Pool mCanvasItemPool;
     };
 }

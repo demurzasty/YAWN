@@ -8,10 +8,10 @@ void Camera3D::Register(Meta<Camera3D>& meta) {
     meta.SetName(L"Camera3D");
 }
 
-void Camera3D::OnEnter() {
+void Camera3D::Enter() {
 }
 
-void Camera3D::OnExit() {
+void Camera3D::Exit() {
 }
 
 void Camera3D::OnTransformUpdate() {

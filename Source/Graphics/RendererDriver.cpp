@@ -45,3 +45,15 @@ void RendererDriver::DestroyInstance(int id) {
 bool RendererDriver::IsInstanceValid(int id) {
     return mInstancePool.IsValid(id);
 }
+
+int RendererDriver::CreateCanvasItem() {
+    return mCanvasItemPool.Acquire();
+}
+
+void RendererDriver::DestroyCanvasItem(int id) {
+    mCanvasItemPool.Dispose(id);
+}
+
+bool RendererDriver::IsCanvasItemValid(int id) {
+    return mCanvasItemPool.IsValid(id);
+}
