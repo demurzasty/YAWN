@@ -1,60 +1,62 @@
 #pragma once 
 
 #include "Node.hpp"
-#include "../Math/Matrix4.hpp"
+#include "../Math/Matrix3.hpp"
 #include "../Core/ArrayView.hpp"
 
 namespace YAWN {
-    class Node3D : public Node {
-        YAWN_OBJECT(Node3D, Node);
+    class Node2D : public Node {
+        YAWN_OBJECT(Node2D, Node);
 
     public:
-        static void Register(Meta<Node3D>& meta);
+        static void Register(Meta<Node2D>& meta);
 
     public:
-        virtual ~Node3D();
+        virtual ~Node2D();
 
         //////////////////////////
         /////// Frame Loop ///////
         //////////////////////////
 
-        void Update(float timeStep);
+        void Update(float timeStep) override;
 
-        void LateUpdate(float timeStep);
+        void LateUpdate(float timeStep) override;
 
-        void FixedUpdate(float timeStep);
+        void FixedUpdate(float timeStep) override;
+
+        void Draw() override;
 
         //////////////////////////
         ///////// Local //////////
         //////////////////////////
 
-        void SetLocalPosition(const Vector3& position);
+        void SetLocalPosition(const Vector2& position);
 
-        const Vector3& GetLocalPosition() const;
+        const Vector2& GetLocalPosition() const;
 
-        void SetLocalRotation(const Vector3& rotation);
+        void SetLocalRotation(float rotation);
 
-        const Vector3& GetLocalRotation() const;
+        float GetLocalRotation() const;
 
-        void SetLocalScale(const Vector3& scale);
+        void SetLocalScale(const Vector2& scale);
 
-        const Vector3& GetLocalScale() const;
+        const Vector2& GetLocalScale() const;
 
-        void SetLocalTransform(const Matrix4& transform);
+        void SetLocalTransform(const Matrix3& transform);
 
-        const Matrix4& GetLocalTransform() const;
+        const Matrix3& GetLocalTransform() const;
 
         //////////////////////////
         ///////// Global /////////
         //////////////////////////
 
-        Vector3 GetGlobalPosition() const;
+        Vector2 GetGlobalPosition() const;
 
-        Vector3 GetGlobalRotation() const;
+        float GetGlobalRotation() const;
 
-        void SetGlobalTransform(const Matrix4& transform, bool notify = true);
+        void SetGlobalTransform(const Matrix3& transform, bool notify = true);
 
-        const Matrix4& GetGlobalTransform() const;
+        const Matrix3& GetGlobalTransform() const;
 
     protected:
         //////////////////////////
@@ -89,16 +91,16 @@ namespace YAWN {
         ///////// Local //////////
         //////////////////////////
 
-        mutable Vector3 mLocalPosition = Vector3::Zero;
-        mutable Vector3 mLocalRotation = Vector3::Zero;
-        mutable Vector3 mLocalScale = Vector3::One;
-        mutable Matrix4 mLocalTransform = Matrix4::Identity;
+        mutable Vector2 mLocalPosition = Vector2::Zero;
+        mutable float mLocalRotation = 0.0f;
+        mutable Vector2 mLocalScale = Vector2::One;
+        mutable Matrix3 mLocalTransform = Matrix3::Identity;
 
         //////////////////////////
         ///////// Global /////////
         //////////////////////////
 
-        mutable Matrix4 mGlobalTransform = Matrix4::Identity;
+        mutable Matrix3 mGlobalTransform = Matrix3::Identity;
 
         //////////////////////////
         ////////// State /////////

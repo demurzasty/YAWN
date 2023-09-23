@@ -26,6 +26,14 @@ namespace YAWN {
             int FirstInstance = 0;
         };
 
+        struct CanvasDrawCommand {
+            Topology Topology;
+            int VertexOffset;
+            int VertexCount;
+            int IndexOffset;
+            int IndexCount;
+        };
+
     public:
         RendererDriverOpenGL();
 
@@ -49,6 +57,8 @@ namespace YAWN {
 
         void SetInstanceTransform(int id, const Matrix4& transform) override;
 
+        void Draw2D(Topology topology, const ArrayView<const Vertex2D>& vertices, const ArrayView<const int>& indices) override;
+
         void Present() override;
 
     private:
@@ -70,8 +80,13 @@ namespace YAWN {
         GLuint mIndexBufferId = 0;
         GLuint mVertexArrayObjectId = 0;
 
+        GLuint mCanvasVertexBufferId = 0;
+        GLuint mCanvasIndexBufferId = 0;
+        GLuint mCanvasVertexArrayObjectId = 0;
+
         GLuint mCullingProgramId = 0;
         GLuint mForwardProgramId = 0;
+        GLuint mCanvasProgramId = 0;
 
         GPUGlobalData* mGlobalData = nullptr;
         GPUInstanceData* mInstances = nullptr;
@@ -79,8 +94,14 @@ namespace YAWN {
         GLuint64* mSamplers = nullptr;
         Vertex3D* mVertices = nullptr;
         GLint* mIndices = nullptr;
+        Vertex2D* mCanvasVertices = nullptr;
+        GLint* mCanvasIndices = nullptr;
 
         int mGlobalVertexOffset = 0;
         int mGlobalIndexOffset = 0;
+        int mGlobalCanvasVertexOffset = 0;
+        int mGlobalCanvasIndexOffset = 0;
+
+        Array<CanvasDrawCommand> mCanvasDrawCommands;
     };
 }

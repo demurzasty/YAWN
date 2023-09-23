@@ -116,3 +116,4 @@ int Math::Align(int size, int align) {
 int Math::FastFloatToInt(float value) {
     return lrintf(value);
 }
+

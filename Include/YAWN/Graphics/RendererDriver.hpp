@@ -6,6 +6,7 @@
 #include "Texture.hpp"
 #include "Vertex.hpp"
 #include "Color.hpp"
+#include "Topology.hpp"
 
 namespace YAWN {
     class RendererDriver : public Reference {
@@ -20,6 +21,10 @@ namespace YAWN {
         static constexpr int MaxVertexCount = 0x1000000;
 
         static constexpr int MaxIndexCount = 0x1000000;
+
+        static constexpr int MaxCanvasVertexCount = 0x100000;
+
+        static constexpr int MaxCanvasIndexCount = 0x100000;
 
     public:
         virtual ~RendererDriver() = default;
@@ -51,6 +56,8 @@ namespace YAWN {
         virtual bool IsInstanceValid(int id);
 
         virtual void SetInstanceTransform(int id, const Matrix4& transform) = 0;
+
+        virtual void Draw2D(Topology topology, const ArrayView<const Vertex2D>& vertices, const ArrayView<const int>& indices) = 0;
 
         virtual void Present() = 0;
 

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Math.hpp"
-#include "Vector2.hpp"
 
 namespace YAWN {
     struct Vector2 {

@@ -266,7 +266,7 @@ namespace YAWN {
         void EnsureCapacity(int newSize) {
             if (newSize > mCapacity) {
                 do {
-                    mCapacity = (mCapacity ? (mCapacity << 1) : 1);
+                    mCapacity = (mCapacity ? (mCapacity << 1) : 4);
                 } while (newSize > mCapacity);
 
                 mData = (T*)Memory::Reallocate(mData, sizeof(T) * mCapacity);

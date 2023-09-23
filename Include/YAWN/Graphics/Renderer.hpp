@@ -38,6 +38,8 @@ namespace YAWN {
 
         static void SetInstanceTransform(int id, const Matrix4& transform);
 
+        static void Draw2D(Topology topology, const ArrayView<const Vertex2D>& vertices, const ArrayView<const int>& indices);
+
         static void Present();
 
     private:

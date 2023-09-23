@@ -3,7 +3,7 @@
 using namespace YAWN;
 
 void Node::Register(Meta<Node>& meta) {
-    meta.SetBase<Reactive>();
+    meta.SetBase<Reference>();
     meta.SetName(L"Node");
     meta.SetConstructable();
     meta.AddField<&Node::SetName, &Node::GetName>(L"Name");
@@ -20,6 +20,9 @@ void Node::LateUpdate(float timeStep) {
 }
 
 void Node::FixedUpdate(float timeStep) {
+}
+
+void Node::Draw() {
 }
 
 void Node::SetName(const String& name) {

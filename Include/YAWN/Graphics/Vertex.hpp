@@ -1,9 +1,20 @@
 #pragma once 
 
+#include "Color.hpp"
 #include "../Math/Vector2.hpp"
 #include "../Math/Vector3.hpp"
 
 namespace YAWN {
+    struct Vertex2D {
+        Vertex2D() = default;
+
+        Vertex2D(const Vector2& position, const Vector2& uv, const Color& color);
+
+        Vector2 Position;
+        Vector2 UV;
+        Color Color;
+    };
+
     struct Vertex3D {
         Vertex3D() = default;
 

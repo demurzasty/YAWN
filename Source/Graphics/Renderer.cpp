@@ -127,6 +127,14 @@ void Renderer::SetInstanceTransform(int id, const Matrix4& transform) {
     sDriver->SetInstanceTransform(id, transform);
 }
 
+void Renderer::Draw2D(Topology topology, const ArrayView<const Vertex2D>& vertices, const ArrayView<const int>& indices) {
+    ExclusiveLock lock(sMutex);
+
+    YAWN_ASSERT(sDriver);
+
+    sDriver->Draw2D(topology, vertices, indices);
+}
+
 void Renderer::Release() {
     ExclusiveLock lock(sMutex);
 

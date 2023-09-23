@@ -55,6 +55,8 @@ void Application::Run() {
 
         Scene::LateUpdate(1.0f / 60.0f);
 
+        Scene::Draw();
+
         Renderer::Present();
 
         Window::SwapBuffers();

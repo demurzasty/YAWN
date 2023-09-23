@@ -1,14 +1,12 @@
 #pragma once 
 
-#include "../Runtime/Reactive.hpp"
+#include "../Runtime/Reference.hpp"
 #include "../Reflection/Meta.hpp"
 #include "../Core/ArrayView.hpp"
-#include "../Math/Matrix4.hpp"
-#include "../Runtime/Signal.hpp"
 
 namespace YAWN {
-    class Node : public Reactive {
-        YAWN_OBJECT(Node, Reactive);
+    class Node : public Reference {
+        YAWN_OBJECT(Node, Reference);
 
     public:
         static void Register(Meta<Node>& meta);
@@ -20,11 +18,13 @@ namespace YAWN {
         /////// Frame Loop ///////
         //////////////////////////
 
-        void Update(float timeStep);
+        virtual void Update(float timeStep);
 
-        void LateUpdate(float timeStep);
+        virtual void LateUpdate(float timeStep);
 
-        void FixedUpdate(float timeStep);
+        virtual void FixedUpdate(float timeStep);
+
+        virtual void Draw();
 
         //////////////////////////
         ///////// Basic //////////

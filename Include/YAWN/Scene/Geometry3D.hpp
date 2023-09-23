@@ -2,6 +2,7 @@
 
 #include "Node3D.hpp"
 #include "../Graphics/Mesh.hpp"
+#include "../Runtime/Pool.hpp"
 
 namespace YAWN {
     class Geometry3D : public Node3D {
