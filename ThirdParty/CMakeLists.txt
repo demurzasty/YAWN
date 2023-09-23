@@ -13,7 +13,7 @@ set (GLFW_INSTALL OFF)
 
 add_subdirectory ("glfw-3.3.8")
 
-add_subdirectory ("imgui-1.89.5")
+add_subdirectory ("imgui-1.89.9")
 
 add_subdirectory ("inih-r56")
 
