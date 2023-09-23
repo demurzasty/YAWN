@@ -82,11 +82,12 @@ void ImGui2D::Update(float timeStep) {
         ImGui::End();
     }
 
-    ImGui::Render();
 }
 
 void ImGui2D::Draw() {
     Base::Draw();
+
+    ImGui::Render();
 
     ImDrawData* drawData = ImGui::GetDrawData();
     for (int n = 0; n < drawData->CmdListsCount; ++n) {
@@ -102,7 +103,9 @@ void ImGui2D::Draw() {
             const ImDrawCmd& cmd = cmdList->CmdBuffer[i];
 
             if (cmd.UserCallback) {
-                // TODO: Handle it.
+                if (cmd.UserCallback != ImDrawCallback_ResetRenderState) {
+                    cmd.UserCallback(cmdList, &cmd);
+                }
             } else {
                 // TODO: Scissor testing.
 

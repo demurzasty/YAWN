@@ -231,28 +231,6 @@ void RendererDriverOpenGL::DrawCanvasItem(int id, int vertexOffset, int indexOff
     mCanvasDrawCommands.Add(command);
 }
 
-//void RendererDriverOpenGL::Draw2D(int textureId, const ArrayView<const Vertex2D>& vertices, const ArrayView<const int>& indices) {
-    //CanvasDrawCommand command = CanvasDrawCommand();
-    //command.Topology = topology;
-    //command.VertexOffset = mGlobalCanvasVertexOffset;
-    //command.VertexCount = vertices.GetSize();
-    //command.IndexOffset = mGlobalCanvasIndexOffset;
-    //command.IndexCount = indices.GetSize();
-    //mCanvasDrawCommands.Add(command);
-
-    //mCanvasVertices = (Vertex2D*)glMapNamedBuffer(mCanvasVertexBufferId, GL_READ_WRITE);
-    //mCanvasIndices = (GLint*)glMapNamedBuffer(mCanvasIndexBufferId, GL_READ_WRITE);
-
-    //Memory::Copy(mCanvasVertices + mGlobalCanvasVertexOffset, vertices.GetData(), vertices.GetSizeInBytes());
-    //Memory::Copy(mCanvasIndices + mGlobalCanvasIndexOffset, indices.GetData(), indices.GetSizeInBytes());
-
-    //YAWN_GL_CHECK(glUnmapNamedBuffer(mCanvasIndexBufferId));
-    //YAWN_GL_CHECK(glUnmapNamedBuffer(mCanvasVertexBufferId));
-
-    //mGlobalCanvasVertexOffset += command.VertexCount;
-    //mGlobalCanvasIndexOffset += command.IndexCount;
-//}
-
 void RendererDriverOpenGL::Render() {
     mGlobalData->ProjectionView = mGlobalData->Projection * mGlobalData->View;
     mGlobalData->InvertedProjectionView = Matrix4::Invert(mGlobalData->ProjectionView);
