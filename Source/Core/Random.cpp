@@ -1,8 +1,10 @@
 #include <YAWN/Core/Random.hpp>
 
+#include <time.h>
+
 using namespace YAWN;
 
-Random Random::Global;
+Random Random::Global = Random((int)time(nullptr));
 
 Random::Random(int seed)
     : mMt(), mMtTempered() {

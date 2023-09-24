@@ -385,8 +385,9 @@ void RendererDriverOpenGL::LLSetIndexBufferData2D(const ArrayView<const unsigned
 
 void RendererDriverOpenGL::LLSetTexture2D(int textureId) {
     mGlobalData->TextureId = IsTextureValid(textureId) ? textureId : GetWhiteTexture();
-}
 
+    glMemoryBarrier(GL_BUFFER_UPDATE_BARRIER_BIT);
+}
 
 void RendererDriverOpenGL::LLSetClipRect(const Rectangle& clipRect) {
     GLint viewport[4];

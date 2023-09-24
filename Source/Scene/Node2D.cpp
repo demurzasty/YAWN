@@ -30,6 +30,8 @@ void Node2D::LateUpdate(float timeStep) {
 
         OnTransformUpdate();
 
+        RequestRedraw();
+
         mDirty &= ~TransformDirtyFlags::NotifyTransform;
     }
 

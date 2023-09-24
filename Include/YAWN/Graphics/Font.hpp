@@ -6,6 +6,7 @@
 #include "../Math/Rectangle.hpp"
 #include "../Core/Map.hpp"
 #include "../Core/String.hpp"
+#include "../Runtime/Buffer.hpp"
 
 namespace YAWN {
     struct FontGlyph {
@@ -18,7 +19,7 @@ namespace YAWN {
         YAWN_OBJECT(Font, Resource);
 
     public:
-        Font(const ArrayView<const unsigned char>& data);
+        Font(const Ref<Buffer>& data);
 
         virtual ~Font() override;
 
@@ -28,6 +29,8 @@ namespace YAWN {
 
         Vector2 GetTextSize(const String& text, int size) const;
 
+        int GetTextureId() const;
+
     private:
         Rectangle Pack(const Vector2& size) const;
 
@@ -36,7 +39,7 @@ namespace YAWN {
 
     private:
         const int mId;
-        mutable Array<unsigned char> mData;
+        Ref<Buffer> mData;
         mutable InternalData* mInternalData;
         mutable Array<Color4> mPixels;
         mutable Map<int, FontGlyph> mGlyphs;

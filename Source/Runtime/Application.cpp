@@ -17,6 +17,7 @@ void Application::Setup() {
     Settings::SetWindowWidth(1280);
     Settings::SetWindowHeight(720);
 
+    Types::Register<FontLoader>();
     Types::Register<TextureLoader>();
 
     Types::Register<Node>();
@@ -26,6 +27,7 @@ void Application::Setup() {
 
 #if !YAWN_PROD_BUILD
     /// Types::Register<Editor>();
+    Types::Register<FontImporter>();
     Types::Register<ModelImporter>();
     Types::Register<PrefabImporter>();
     Types::Register<TextureImporter>();
@@ -50,7 +52,7 @@ void Application::Run() {
 
         Renderer::Render();
 
-        Scene::Draw();
+        Scene::Redraw();
 
         Window::SwapBuffers();
     }

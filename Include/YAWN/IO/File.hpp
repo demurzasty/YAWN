@@ -4,6 +4,7 @@
 #include "../Runtime/Reference.hpp"
 #include "../Runtime/Variant.hpp"
 #include "../Reflection/Type.hpp"
+#include "../Runtime/Buffer.hpp"
 
 namespace YAWN {
     struct FileModeFlags {
@@ -21,7 +22,11 @@ namespace YAWN {
 
         static String ReadAllText(const Path& path);
 
+        static Ref<Buffer> ReadAll(const Path& path);
+
         static void WriteAllText(const Path& path, const String& content);
+
+        static void Copy(const Path& input, const Path& output);
 
         File() = default;
 

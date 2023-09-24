@@ -33,10 +33,6 @@ void Editor::Exit() {
 
 void Editor::Update(float timeStep) {
     Base::Update(timeStep);
-
-    ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
-
-    Hierarchy();
 }
 
 void Editor::Reimport() {

@@ -3,9 +3,11 @@
 using namespace YAWN;
 
 void Initialize() {
+    Scene::GetRoot()->AddChild(new Editor());
+
     Ref<Control> control = new Control();
 
-    control->SetLocalRectangle(Rectangle(100.0f, 100.0f, 200.0f, 200.0f));
+    control->SetLocalRectangle(Rectangle(100.0f, 100.0f, 512.0f, 512.0f));
     control->SetBackgroundColor(Color::Black);
 
     Scene::GetRoot()->AddChild(control);

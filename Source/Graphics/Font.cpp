@@ -1,5 +1,6 @@
 #include <YAWN/Graphics/Font.hpp>
 #include <YAWN/Graphics/Renderer.hpp>
+#include <YAWN/Runtime/Console.hpp>
 
 #include <stb_rect_pack.h>
 #include <stb_truetype.h>
@@ -12,14 +13,14 @@ struct Font::InternalData {
     stbrp_node Nodes[512];
 };
 
-Font::Font(const ArrayView<const unsigned char>& data)
+Font::Font(const Ref<Buffer>& data)
     : mId(Renderer::CreateTexture(512, 512, TextureFormat::RGBA8, TextureFilter::Nearest, TextureWrapping::ClampToEdge, 1))
-    , mData(data.GetData(), data.GetSize()) {
+    , mData(data) {
     mInternalData = new InternalData();
 
     stbrp_init_target(&mInternalData->Context, 512, 512, mInternalData->Nodes, 512);
 
-    stbtt_InitFont(&mInternalData->Info, mData.GetData(), 0);
+    stbtt_InitFont(&mInternalData->Info, (const unsigned char*)mData->GetData(), 0);
 
     mPixels.Resize(512 * 512, Color::Transparent);
 
@@ -33,7 +34,7 @@ Font::~Font() {
 }
 
 const FontGlyph& Font::GetGlyph(int codepoint, int size) const {
-    FontGlyph& glyph = mGlyphs[codepoint];
+    FontGlyph& glyph = mGlyphs.GetOrAdd(codepoint);
     if (glyph.Rectangle.Width > 0 && glyph.Rectangle.Height > 0) {
         return glyph;
     }
@@ -48,7 +49,7 @@ const FontGlyph& Font::GetGlyph(int codepoint, int size) const {
     for (int y = 0; y < Math::FastFloatToInt(rect.Height); ++y) {
         for (int x = 0; x < Math::FastFloatToInt(rect.Width); ++x) {
             int index = (Math::FastFloatToInt(rect.Top) + y) * 512 + (Math::FastFloatToInt(rect.Left) + x);
-            mPixels[index] = Color4(255, 255, 255, int(bitmap[y * Math::FastFloatToInt(rect.Left) + x]));
+            mPixels[index] = Color4(255, 255, 255, int(bitmap[y * Math::FastFloatToInt(rect.Width) + x]));
         }
     }
 
@@ -87,6 +88,10 @@ Vector2 Font::GetTextSize(const String& text, int size) const {
     }
 
     return textSize;
+}
+
+int Font::GetTextureId() const {
+    return mId;
 }
 
 Rectangle Font::Pack(const Vector2& size) const {

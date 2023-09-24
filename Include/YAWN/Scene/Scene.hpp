@@ -15,7 +15,7 @@ namespace YAWN {
 
         static void FixedUpdate(float timeStep);
 
-        static void Draw();
+        static void Redraw();
 
         static const Ref<Node>& GetRoot();
 
@@ -26,7 +26,7 @@ namespace YAWN {
 
         static void FixedUpdate(const Ref<Node>& node, float timeStep);
 
-        static void Draw(const Ref<Node>& node);
+        static void Redraw(const Ref<Node>& node);
 
     private:
         static Ref<Node> sRoot;

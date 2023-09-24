@@ -1,7 +1,14 @@
 #include <YAWN/Scene/UI/Control.hpp>
 #include <YAWN/Graphics/Renderer.hpp>
+#include <YAWN/Runtime/ResourceManager.hpp>
 
 using namespace YAWN;
+
+void Control::Enter() {
+    Base::Enter();
+
+    mFont = ResourceManager::Load<Font>(Guid(L"f77df380-4ce3-ab24-9ba6-ef80efd64a73"));
+}
 
 void Control::Draw() {
     Base::Draw();
@@ -9,24 +16,19 @@ void Control::Draw() {
     Vector2 globalPosition = GetGlobalPosition();
     Vector2 size = GetLocalSize();
 
-    Vertex2D vertices[4] = {
-        Vertex2D(globalPosition, Vector2(0.0f, 0.0f), mBackgroundColor),
-        Vertex2D(globalPosition + Vector2(0.0f, size.Y), Vector2(0.0f, 1.0f), mBackgroundColor),
-        Vertex2D(globalPosition + Vector2(size.X, size.Y), Vector2(1.0f, 1.0f), mBackgroundColor),
-        Vertex2D(globalPosition + Vector2(size.X, 0.0f), Vector2(1.0f, 0.0f), mBackgroundColor),
-    };
+    mFont->GetGlyph(L'A', 16);
+    mFont->GetGlyph(L'b', 16);
+    mFont->GetGlyph(L'C', 16);
+    mFont->GetGlyph(L'D', 16);
+    mFont->GetGlyph(L'E', 16);
+    mFont->GetGlyph(L'F', 16);
+    mFont->GetGlyph(L'G', 16);
 
-    unsigned short indices[6] = {
-        0, 1, 2,
-        2, 3, 0
-    };
+    //DrawTexture(Renderer::GetWhiteTexture(), GetGlobalRectangle(), Rectangle(0.0f, 0.0f, 4.0f, 4.0f), GetBackgroundColor());
 
-    Renderer::LLSetTexture2D(Renderer::GetWhiteTexture());
+    // DrawTexture(mFont->GetTextureId(), GetGlobalRectangle(), Rectangle(0.0f, 0.0f, 512.0f, 512.0f), Color::White);
 
-    Renderer::LLSetVertexBufferData2D(vertices);
-    Renderer::LLSetIndexBufferData2D(indices);
-
-    Renderer::LLDraw2D(0, 0, 6);
+    DrawText(mFont, GetGlobalPosition(), L"Lorem ipsum dolor sit amet.", Color::White);
 }
 
 void Control::SetLocalSize(const Vector2& size) {

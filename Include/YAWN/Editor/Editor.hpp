@@ -3,11 +3,11 @@
 #include "Importer.hpp"
 #include "../IO/FileInfo.hpp"
 #include "../Core/Array.hpp"
-#include "../Scene/ImGui2D.hpp"
+#include "../Scene/Node.hpp"
 
 namespace YAWN {
-    class Editor : public ImGui2D {
-        YAWN_OBJECT(Editor, ImGui2D);
+    class Editor : public Node {
+        YAWN_OBJECT(Editor, Node);
 
     public:
         void Enter() override;

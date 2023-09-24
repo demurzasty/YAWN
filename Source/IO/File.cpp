@@ -22,6 +22,22 @@ String File::ReadAllText(const Path& path) {
     return String::FromUTF8(utf8.GetData());
 }
 
+Ref<Buffer> File::ReadAll(const Path& path) {
+    FILE* file = fopen(path.ToString().ToUTF8().GetData(), "rb");
+    YAWN_ASSERT(file);
+
+    fseek(file, 0, SEEK_END);
+    long size = ftell(file);
+    fseek(file, 0, SEEK_SET);
+
+    Ref<Buffer> buffer = new Buffer(size);
+    fread(buffer->GetData(), 1, size, file);
+
+    fclose(file);
+
+    return buffer;
+}
+
 void File::WriteAllText(const Path& path, const String& content) {
     File file;
     file.Open(path, FileModeFlags::Write);
@@ -29,6 +45,25 @@ void File::WriteAllText(const Path& path, const String& content) {
 
     Array<char> utf8 = content.ToUTF8();
     file.Write(utf8.GetData(), utf8.GetSize() - 1);
+}
+
+void File::Copy(const Path& input, const Path& output) {
+    FILE* file = fopen(input.ToString().ToUTF8().GetData(), "rb");
+    YAWN_ASSERT(file);
+
+    fseek(file, 0, SEEK_END);
+    long size = ftell(file);
+    fseek(file, 0, SEEK_SET);
+
+    Array<char> data(size);
+    fread(data.GetData(), 1, size, file);
+    fclose(file);
+
+    file = fopen(output.ToString().ToUTF8().GetData(), "wb");
+    YAWN_ASSERT(file);
+
+    fwrite(data.GetData(), 1, size, file);
+    fclose(file);
 }
 
 struct FileTypeWriter : public Reference {

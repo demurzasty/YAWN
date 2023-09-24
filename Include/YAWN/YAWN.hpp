@@ -18,6 +18,7 @@
 #include "Core/Utility.hpp"
 
 #if !YAWN_PROD_BUILD
+#   include "Editor/Importers/FontImporter.hpp"
 #   include "Editor/Importers/ModelImporter.hpp"
 #   include "Editor/Importers/PrefabImporter.hpp"
 #   include "Editor/Importers/TextureImporter.hpp"
@@ -57,6 +58,7 @@
 #include "Reflection/TypeID.hpp"
 #include "Reflection/Types.hpp"
 
+#include "Runtime/Loaders/FontLoader.hpp"
 #include "Runtime/Loaders/TextureLoader.hpp"
 #include "Runtime/Application.hpp"
 #include "Runtime/Arena.hpp"

@@ -24,8 +24,8 @@ void Scene::FixedUpdate(float timeStep) {
     FixedUpdate(sRoot, timeStep);
 }
 
-void Scene::Draw() {
-    Draw(sRoot);
+void Scene::Redraw() {
+    Redraw(sRoot);
 }
 
 void Scene::Update(const Ref<Node>& node, float timeStep) {
@@ -52,11 +52,11 @@ void Scene::FixedUpdate(const Ref<Node>& node, float timeStep) {
     }
 }
 
-void Scene::Draw(const Ref<Node>& node) {
-    node->Draw();
+void Scene::Redraw(const Ref<Node>& node) {
+    node->Redraw();
 
     for (const Ref<Node>& child : node->GetChildren()) {
-        Draw(child);
+        Redraw(child);
     }
 }
 
