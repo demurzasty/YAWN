@@ -14,6 +14,8 @@ namespace YAWN {
 
         void Exit() override;
 
+        void Update(float timeStep) override;
+
         void Reimport();
 
     private:
@@ -24,6 +26,11 @@ namespace YAWN {
         void ImportFile(const FileInfo& info);
 
         Ref<Importer> FindImporterForExtension(const String& extension);
+
+    private:
+        void Hierarchy();
+
+        void Hierarchy(const Ref<Node>& node);
 
     private:
         Array<Ref<Importer>> sImporters;

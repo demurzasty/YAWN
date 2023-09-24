@@ -43,6 +43,7 @@ set (SRC
 	"Source/Editor/Importers/PrefabImporter.cpp"
 	"Source/Editor/Importers/TextureImporter.cpp"
 	"Source/Editor/Editor.cpp"
+	"Source/Editor/EditorUI.cpp"
 	"Source/Graphics/Color.cpp"
 	"Source/Graphics/Compute.cpp"
 	"Source/Graphics/Image.cpp"

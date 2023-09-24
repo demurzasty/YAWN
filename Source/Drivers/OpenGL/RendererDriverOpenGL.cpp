@@ -91,15 +91,11 @@ RendererDriverOpenGL::RendererDriverOpenGL() {
     mGlobalData = (GPUGlobalData*)glMapNamedBuffer(mGlobalBufferId, GL_READ_WRITE);
     mInstances = (GPUInstanceData*)glMapNamedBuffer(mInstanceBufferId, GL_READ_WRITE);
     mMeshes = (GPUMeshData*)glMapNamedBuffer(mMeshBufferId, GL_READ_WRITE);
-    mVertices = (Vertex3D*)glMapNamedBuffer(mVertexBufferId, GL_READ_WRITE);
-    mIndices = (GLint*)glMapNamedBuffer(mIndexBufferId, GL_READ_WRITE);
 
     mGlobalData->FramebufferSize = Window::GetSize();
 }
 
 RendererDriverOpenGL::~RendererDriverOpenGL() {
-    YAWN_GL_CHECK(glUnmapNamedBuffer(mIndexBufferId));
-    YAWN_GL_CHECK(glUnmapNamedBuffer(mVertexBufferId));
     YAWN_GL_CHECK(glUnmapNamedBuffer(mMeshBufferId));
     YAWN_GL_CHECK(glUnmapNamedBuffer(mInstanceBufferId));
     YAWN_GL_CHECK(glUnmapNamedBuffer(mGlobalBufferId));
@@ -370,17 +366,17 @@ void RendererDriverOpenGL::Render() {
 }
 
 void RendererDriverOpenGL::LLSetVertexBufferData2D(const ArrayView<const Vertex2D>& vertices) {
-    mCanvasVertices = (Vertex2D*)glMapNamedBuffer(mCanvasVertexBufferId, GL_WRITE_ONLY);
+    Vertex2D* canvasVertices = (Vertex2D*)glMapNamedBuffer(mCanvasVertexBufferId, GL_WRITE_ONLY);
 
-    Memory::Copy(mCanvasVertices, vertices.GetData(), vertices.GetSizeInBytes());
+    Memory::Copy(canvasVertices, vertices.GetData(), vertices.GetSizeInBytes());
 
     YAWN_GL_CHECK(glUnmapNamedBuffer(mCanvasVertexBufferId));
 }
 
 void RendererDriverOpenGL::LLSetIndexBufferData2D(const ArrayView<const unsigned short>& indices) {
-    mCanvasIndices = (GLint*)glMapNamedBuffer(mCanvasIndexBufferId, GL_WRITE_ONLY);
+    unsigned short* canvasIndices = (GLushort*)glMapNamedBuffer(mCanvasIndexBufferId, GL_WRITE_ONLY);
 
-    Memory::Copy(mCanvasIndices, indices.GetData(), indices.GetSizeInBytes());
+    Memory::Copy(canvasIndices, indices.GetData(), indices.GetSizeInBytes());
 
     YAWN_GL_CHECK(glUnmapNamedBuffer(mCanvasIndexBufferId));
 }

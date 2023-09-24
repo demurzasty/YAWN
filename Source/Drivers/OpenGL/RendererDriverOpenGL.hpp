@@ -117,10 +117,6 @@ namespace YAWN {
         GPUGlobalData* mGlobalData = nullptr;
         GPUInstanceData* mInstances = nullptr;
         GPUMeshData* mMeshes = nullptr;
-        Vertex3D* mVertices = nullptr;
-        GLint* mIndices = nullptr;
-        Vertex2D* mCanvasVertices = nullptr;
-        GLint* mCanvasIndices = nullptr;
 
         int mGlobalVertexOffset = 0;
         int mGlobalIndexOffset = 0;

@@ -8,6 +8,7 @@
 #include <YAWN/Core/StringBuilder.hpp>
 #include <YAWN/Runtime/Console.hpp>
 
+#include <imgui.h>
 #include <stdio.h>
 
 // TODO: Use JSON instead of YTXT.
@@ -16,6 +17,8 @@ using namespace YAWN;
 
 void Editor::Enter() {
     Base::Enter();
+
+    SetName(L"$Editor");
 
     Types::EnumerateTypesOfBase<Importer>(Delegate<void(const Type&)>::Bind<&Editor::InitializeImporter>(this));
     
@@ -26,6 +29,14 @@ void Editor::Exit() {
     Base::Exit();
 
     sImporters.Clear();
+}
+
+void Editor::Update(float timeStep) {
+    Base::Update(timeStep);
+
+    ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
+
+    Hierarchy();
 }
 
 void Editor::Reimport() {
