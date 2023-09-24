@@ -122,7 +122,8 @@ void ImGui2D::Draw() {
                     cmd.UserCallback(cmdList, &cmd);
                 }
             } else {
-                // TODO: Scissor testing.
+                Renderer::LLSetClipRect(Vector4(cmd.ClipRect.x, cmd.ClipRect.y, cmd.ClipRect.z, cmd.ClipRect.w));
+
                 Renderer::LLSetTexture2D((int)(intptr_t)cmd.GetTexID());
 
                 Renderer::LLDraw2D(cmd.VtxOffset, cmd.IdxOffset, cmd.ElemCount);

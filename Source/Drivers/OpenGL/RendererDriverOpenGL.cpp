@@ -92,28 +92,6 @@ RendererDriverOpenGL::RendererDriverOpenGL() {
     mMeshes = (GPUMeshData*)glMapNamedBuffer(mMeshBufferId, GL_READ_WRITE);
     mVertices = (Vertex3D*)glMapNamedBuffer(mVertexBufferId, GL_READ_WRITE);
     mIndices = (GLint*)glMapNamedBuffer(mIndexBufferId, GL_READ_WRITE);
-
-    GLint uniformLocation = glGetUniformLocation(mCanvasProgramId, "uSamplerId");
-    glProgramUniform1i(mCanvasProgramId, uniformLocation, GetWhiteTexture());
-
-
-    GLint uniform_count = 0;
-    glGetProgramiv(mCanvasProgramId, GL_ACTIVE_UNIFORMS, &uniform_count);
-
-    GLint max_name_len = 0;
-    glGetProgramiv(mCanvasProgramId, GL_ACTIVE_UNIFORM_MAX_LENGTH, &max_name_len);
-
-    Array<char> name;
-    name.Resize(max_name_len + 1);
-
-    for (GLint i = 0; i < uniform_count; ++i) {
-        GLsizei length = 0;
-        GLsizei count = 0;
-        GLenum type = GL_NONE;
-        glGetActiveUniform(mCanvasProgramId, i, max_name_len, &length, &count, &type, name.GetData());
-
-        Console::WriteLine(String::FromUTF8(name.GetData()));
-    }
 }
 
 RendererDriverOpenGL::~RendererDriverOpenGL() {
@@ -346,6 +324,8 @@ void RendererDriverOpenGL::Render() {
     mGlobalData->InvertedProjectionView = Matrix4::Invert(mGlobalData->ProjectionView);
     mGlobalData->InstanceCount = mInstancePool.GetSize();
 
+    YAWN_GL_CHECK(glDisable(GL_SCISSOR_TEST));
+
     YAWN_GL_CHECK(glClearColor(mClearColor.R, mClearColor.G, mClearColor.B, mClearColor.A));
     YAWN_GL_CHECK(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 
@@ -372,6 +352,7 @@ void RendererDriverOpenGL::Render() {
     YAWN_GL_CHECK(glDisable(GL_DEPTH_TEST));
     YAWN_GL_CHECK(glDisable(GL_CULL_FACE));
     YAWN_GL_CHECK(glEnable(GL_BLEND));
+    YAWN_GL_CHECK(glEnable(GL_SCISSOR_TEST));
     YAWN_GL_CHECK(glBlendEquation(GL_FUNC_ADD));
     YAWN_GL_CHECK(glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA));
 
@@ -397,6 +378,14 @@ void RendererDriverOpenGL::LLSetIndexBufferData2D(const ArrayView<const unsigned
 
 void RendererDriverOpenGL::LLSetTexture2D(int textureId) {
     mGlobalData->TextureId = IsTextureValid(textureId) ? textureId : GetWhiteTexture();
+}
+
+
+void RendererDriverOpenGL::LLSetClipRect(const Vector4& clipRect) {
+    GLint viewport[4];
+    glGetIntegerv(GL_VIEWPORT, viewport);
+
+    YAWN_GL_CHECK(glScissor((int)clipRect.X, (int)((float)viewport[3] - clipRect.W), (int)(clipRect.Z - clipRect.X), (int)(clipRect.W - clipRect.Y)));
 }
 
 void RendererDriverOpenGL::LLDraw2D(int vertexOffset, int indexOffset, int indexCount) {

@@ -232,6 +232,14 @@ void Renderer::LLSetTexture2D(int textureId) {
     sDriver->LLSetTexture2D(textureId);
 }
 
+void Renderer::LLSetClipRect(const Vector4& clipRect) {
+    ExclusiveLock lock(sMutex);
+
+    YAWN_ASSERT(sDriver);
+
+    sDriver->LLSetClipRect(clipRect);
+}
+
 void Renderer::LLDraw2D(int vertexOffset, int indexOffset, int indexCount) {
     ExclusiveLock lock(sMutex);
 
