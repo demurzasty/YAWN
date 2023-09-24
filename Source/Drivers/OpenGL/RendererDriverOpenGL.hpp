@@ -46,6 +46,10 @@ namespace YAWN {
 
         void DestroyTexture(int id) override;
 
+        void SetTextureData(int id, int mipmap, const void* data) override;
+
+        int GetWhiteTexture() override;
+
         int CreateMesh(int vertexCount, int indexCount) override;
 
         void DestroyMesh(int id) override;
@@ -109,7 +113,6 @@ namespace YAWN {
         GPUGlobalData* mGlobalData = nullptr;
         GPUInstanceData* mInstances = nullptr;
         GPUMeshData* mMeshes = nullptr;
-        GLuint64* mSamplers = nullptr;
         Vertex3D* mVertices = nullptr;
         GLint* mIndices = nullptr;
         Vertex2D* mCanvasVertices = nullptr;
@@ -120,10 +123,14 @@ namespace YAWN {
         int mGlobalCanvasVertexOffset = 0;
         int mGlobalCanvasIndexOffset = 0;
 
+        Array<GLuint> mTextureIds;
+
         Array<GPUCanvasItemData> mCanvasItems;
         Array<GLuint> mCanvasVertexBuffers;
         Array<GLuint> mCanvasIndexBuffers;
 
         Array<CanvasDrawCommand> mCanvasDrawCommands;
+
+        int mWhiteTextureId = Pool::None;
     };
 }

@@ -2,6 +2,7 @@
 
 #include "Node2D.hpp"
 #include "../Graphics/Vertex.hpp"
+#include "../Runtime/Pool.hpp"
 
 namespace YAWN {
     class ImGui2D : public Node2D {
@@ -15,5 +16,8 @@ namespace YAWN {
         virtual void Update(float timeStep) override;
 
         virtual void Draw() override;
+
+    private:
+        int mFontTextureId = Pool::None;
     };
 }

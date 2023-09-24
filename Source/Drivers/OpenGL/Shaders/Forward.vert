@@ -15,6 +15,7 @@ struct GlobalData {
     int CameraEnvironmentId;
     int InstanceCount;
     int LightCount;
+    int TextureId;
     float Time;
 };
 

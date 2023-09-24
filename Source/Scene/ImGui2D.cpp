@@ -24,10 +24,17 @@ void ImGui2D::Enter() {
     unsigned char* pixels;
     int width, height;
     io.Fonts->GetTexDataAsRGBA32(&pixels, &width, &height);   // Load as RGBA 32-bit (75% of the memory is wasted, but default font is so small) because it is more likely to be compatible with user's existing shaders. If your ImTextureId represent a higher-level concept than just a GL texture id, consider calling GetTexDataAsAlpha8() instead to save on GPU memory.
+
+    mFontTextureId = Renderer::CreateTexture(width, height, TextureFormat::RGBA8, TextureFilter::Linear, TextureWrapping::Repeat, 1);
+    Renderer::SetTextureData(mFontTextureId, 0, pixels);
+
+    io.Fonts->SetTexID((ImTextureID)(intptr_t)mFontTextureId);
 }
 
 void ImGui2D::Exit() {
     Base::Exit();
+
+    Renderer::DestroyTexture(mFontTextureId);
 
     ImGui::DestroyContext();
 }
@@ -38,7 +45,7 @@ void ImGui2D::Update(float timeStep) {
     ImGuiIO& io = ImGui::GetIO();
     io.DisplaySize = ImVec2(1280.0f, 720.0f);
     io.DisplayFramebufferScale = io.DisplaySize;
-    io.DeltaTime = 1.0f / 60.0f;
+    io.DeltaTime = timeStep;
 
     const Vector2& mousePosition = Input::GetMousePosition();
     io.AddMousePosEvent(mousePosition.X, mousePosition.Y);
@@ -116,6 +123,7 @@ void ImGui2D::Draw() {
                 }
             } else {
                 // TODO: Scissor testing.
+                Renderer::LLSetTexture2D((int)(intptr_t)cmd.GetTexID());
 
                 Renderer::LLDraw2D(cmd.VtxOffset, cmd.IdxOffset, cmd.ElemCount);
             }

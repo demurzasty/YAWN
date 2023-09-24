@@ -41,6 +41,10 @@ namespace YAWN {
 
         virtual bool IsTextureValid(int id);
 
+        virtual void SetTextureData(int id, int mipmap, const void* data) = 0;
+
+        virtual int GetWhiteTexture() = 0;
+
         virtual int CreateMesh(int vertexCount, int indexCount);
 
         virtual void DestroyMesh(int id);
@@ -101,6 +105,8 @@ namespace YAWN {
             int CameraEnvironmentId = Pool::None;
             int InstanceCount = 0;
             int LightCount = 0;
+            int TextureId = 0;
+            float Time = 0.0f;
         };
 
         struct GPUMeshData {

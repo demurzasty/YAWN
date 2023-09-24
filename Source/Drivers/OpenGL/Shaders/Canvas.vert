@@ -11,6 +11,8 @@ out gl_PerVertex {
     vec4 gl_Position;
 };
 
+uniform int uSamplerId;
+
 void main() {
     vUV = iUV;
     vColor = iColor;

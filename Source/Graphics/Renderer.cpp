@@ -61,6 +61,23 @@ bool Renderer::IsTextureValid(int id) {
     return sDriver->IsTextureValid(id);
 }
 
+void Renderer::SetTextureData(int id, int mipmap, const void* data) {
+    ExclusiveLock lock(sMutex);
+
+    YAWN_ASSERT(sDriver);
+    YAWN_ASSERT(sDriver->IsTextureValid(id));
+
+    return sDriver->SetTextureData(id, mipmap, data);
+}
+
+int Renderer::GetWhiteTexture() {
+    ExclusiveLock lock(sMutex);
+
+    YAWN_ASSERT(sDriver);
+
+    return sDriver->GetWhiteTexture();
+}
+
 int Renderer::CreateMesh(int vertexCount, int indexCount) {
     ExclusiveLock lock(sMutex);
 

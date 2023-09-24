@@ -14,7 +14,7 @@ using namespace YAWN;
 
 RendererDriverOpenGL::RendererDriverOpenGL() {
     YAWN_GL_CHECK(glCreateBuffers(1, &mGlobalBufferId));
-    YAWN_GL_CHECK(glNamedBufferStorage(mGlobalBufferId, sizeof(GPUGlobalData), nullptr, GL_MAP_COHERENT_BIT | GL_MAP_PERSISTENT_BIT | GL_MAP_READ_BIT | GL_MAP_WRITE_BIT));
+    YAWN_GL_CHECK(glNamedBufferStorage(mGlobalBufferId, sizeof(GPUGlobalData), nullptr, GL_MAP_COHERENT_BIT | GL_MAP_PERSISTENT_BIT | GL_MAP_READ_BIT | GL_MAP_WRITE_BIT | GL_DYNAMIC_STORAGE_BIT));
 
     YAWN_GL_CHECK(glCreateBuffers(1, &mInstanceBufferId));
     YAWN_GL_CHECK(glNamedBufferStorage(mInstanceBufferId, sizeof(GPUInstanceData) * MaxInstanceCount, nullptr, GL_MAP_COHERENT_BIT | GL_MAP_PERSISTENT_BIT | GL_MAP_READ_BIT | GL_MAP_WRITE_BIT));
@@ -23,7 +23,7 @@ RendererDriverOpenGL::RendererDriverOpenGL() {
     YAWN_GL_CHECK(glNamedBufferStorage(mMeshBufferId, sizeof(GPUMeshData) * MaxMeshCount, nullptr, GL_MAP_COHERENT_BIT | GL_MAP_PERSISTENT_BIT | GL_MAP_READ_BIT | GL_MAP_WRITE_BIT));
 
     YAWN_GL_CHECK(glCreateBuffers(1, &mSamplerBufferId));
-    YAWN_GL_CHECK(glNamedBufferStorage(mSamplerBufferId, sizeof(GLuint64) * MaxTextureCount, nullptr, GL_MAP_COHERENT_BIT | GL_MAP_PERSISTENT_BIT | GL_MAP_READ_BIT | GL_MAP_WRITE_BIT));
+    YAWN_GL_CHECK(glNamedBufferStorage(mSamplerBufferId, sizeof(GLuint64) * MaxTextureCount, nullptr, GL_MAP_COHERENT_BIT | GL_MAP_PERSISTENT_BIT | GL_MAP_READ_BIT | GL_MAP_WRITE_BIT | GL_DYNAMIC_STORAGE_BIT));
 
     YAWN_GL_CHECK(glCreateBuffers(1, &mDrawBufferId));
     YAWN_GL_CHECK(glNamedBufferStorage(mDrawBufferId, sizeof(GPUDrawElementsIndirectCommand) * MaxInstanceCount, nullptr, GL_MAP_COHERENT_BIT | GL_MAP_PERSISTENT_BIT | GL_MAP_READ_BIT | GL_MAP_WRITE_BIT));
@@ -90,15 +90,35 @@ RendererDriverOpenGL::RendererDriverOpenGL() {
     mGlobalData = (GPUGlobalData*)glMapNamedBuffer(mGlobalBufferId, GL_READ_WRITE);
     mInstances = (GPUInstanceData*)glMapNamedBuffer(mInstanceBufferId, GL_READ_WRITE);
     mMeshes = (GPUMeshData*)glMapNamedBuffer(mMeshBufferId, GL_READ_WRITE);
-    mSamplers = (GLuint64*)glMapNamedBuffer(mSamplerBufferId, GL_READ_WRITE);
     mVertices = (Vertex3D*)glMapNamedBuffer(mVertexBufferId, GL_READ_WRITE);
     mIndices = (GLint*)glMapNamedBuffer(mIndexBufferId, GL_READ_WRITE);
+
+    GLint uniformLocation = glGetUniformLocation(mCanvasProgramId, "uSamplerId");
+    glProgramUniform1i(mCanvasProgramId, uniformLocation, GetWhiteTexture());
+
+
+    GLint uniform_count = 0;
+    glGetProgramiv(mCanvasProgramId, GL_ACTIVE_UNIFORMS, &uniform_count);
+
+    GLint max_name_len = 0;
+    glGetProgramiv(mCanvasProgramId, GL_ACTIVE_UNIFORM_MAX_LENGTH, &max_name_len);
+
+    Array<char> name;
+    name.Resize(max_name_len + 1);
+
+    for (GLint i = 0; i < uniform_count; ++i) {
+        GLsizei length = 0;
+        GLsizei count = 0;
+        GLenum type = GL_NONE;
+        glGetActiveUniform(mCanvasProgramId, i, max_name_len, &length, &count, &type, name.GetData());
+
+        Console::WriteLine(String::FromUTF8(name.GetData()));
+    }
 }
 
 RendererDriverOpenGL::~RendererDriverOpenGL() {
     YAWN_GL_CHECK(glUnmapNamedBuffer(mIndexBufferId));
     YAWN_GL_CHECK(glUnmapNamedBuffer(mVertexBufferId));
-    YAWN_GL_CHECK(glUnmapNamedBuffer(mSamplerBufferId));
     YAWN_GL_CHECK(glUnmapNamedBuffer(mMeshBufferId));
     YAWN_GL_CHECK(glUnmapNamedBuffer(mInstanceBufferId));
     YAWN_GL_CHECK(glUnmapNamedBuffer(mGlobalBufferId));
@@ -132,11 +152,101 @@ void RendererDriverOpenGL::SetCameraTransform(const Matrix4& transform) {
 int RendererDriverOpenGL::CreateTexture(int width, int height, TextureFormat format, TextureFilter filter, TextureWrapping wrapping, int mipmapCount) {
     int id = Base::CreateTexture(width, height, format, filter, wrapping, mipmapCount);
 
+    mTextureIds.Expand(id + 1, 0);
+
+    YAWN_GL_CHECK(glCreateTextures(GL_TEXTURE_2D, 1, &mTextureIds[id]));
+
+    YAWN_GL_CHECK(glTextureParameteri(mTextureIds[id], GL_TEXTURE_WRAP_S, GL_REPEAT));
+    YAWN_GL_CHECK(glTextureParameteri(mTextureIds[id], GL_TEXTURE_WRAP_T, GL_REPEAT));
+
+    switch (filter) {
+    case TextureFilter::Nearest:
+        YAWN_GL_CHECK(glTextureParameteri(mTextureIds[id], GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST));
+        YAWN_GL_CHECK(glTextureParameteri(mTextureIds[id], GL_TEXTURE_MAG_FILTER, GL_NEAREST));
+        break;
+    case TextureFilter::Linear:
+        YAWN_GL_CHECK(glTextureParameteri(mTextureIds[id], GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR));
+        YAWN_GL_CHECK(glTextureParameteri(mTextureIds[id], GL_TEXTURE_MAG_FILTER, GL_LINEAR));
+        break;
+    case TextureFilter::Anisotropic:
+        YAWN_GL_CHECK(glTextureParameteri(mTextureIds[id], GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR));
+        YAWN_GL_CHECK(glTextureParameteri(mTextureIds[id], GL_TEXTURE_MAG_FILTER, GL_LINEAR));
+        // YAWN_GL_CHECK(glTextureParameterf(mTextureIds[id], GL_TEXTURE_MAX_ANISOTROPY_EXT, mMaxAnisotropy));
+        break;
+    }
+
+    switch (format) {
+    case TextureFormat::R8:
+        YAWN_GL_CHECK(glTextureStorage2D(mTextureIds[id], mipmapCount, GL_R8, width, height));
+        break;
+    case TextureFormat::RG8:
+        YAWN_GL_CHECK(glTextureStorage2D(mTextureIds[id], mipmapCount, GL_RG8, width, height));
+        break;
+    case TextureFormat::RGBA8:
+        YAWN_GL_CHECK(glTextureStorage2D(mTextureIds[id], mipmapCount, GL_RGBA8, width, height));
+        break;
+    case TextureFormat::BC1:
+        YAWN_GL_CHECK(glTextureStorage2D(mTextureIds[id], mipmapCount, GL_COMPRESSED_RGBA_S3TC_DXT1_EXT, width, height));
+        break;
+    case TextureFormat::BC3:
+        YAWN_GL_CHECK(glTextureStorage2D(mTextureIds[id], mipmapCount, GL_COMPRESSED_RGBA_S3TC_DXT5_EXT, width, height));
+        break;
+    }
+
+    GLuint64 handle;
+    YAWN_GL_CHECK(handle = glGetTextureHandleARB(mTextureIds[id]));
+    YAWN_GL_CHECK(glMakeTextureHandleResidentARB(handle));
+
+    YAWN_GL_CHECK(glNamedBufferSubData(mSamplerBufferId, sizeof(GLuint64) * id, sizeof(GLuint64), &handle));
     return id;
 }
 
 void RendererDriverOpenGL::DestroyTexture(int id) {
+    YAWN_GL_CHECK(glDeleteTextures(1, &mTextureIds[id]));
+
     Base::DestroyTexture(id);
+}
+
+void RendererDriverOpenGL::SetTextureData(int id, int mipmap, const void* data) {
+    int width, height, format;
+    YAWN_GL_CHECK(glGetTextureLevelParameteriv(mTextureIds[id], mipmap, GL_TEXTURE_WIDTH, &width));
+    YAWN_GL_CHECK(glGetTextureLevelParameteriv(mTextureIds[id], mipmap, GL_TEXTURE_HEIGHT, &height));
+    YAWN_GL_CHECK(glGetTextureLevelParameteriv(mTextureIds[id], mipmap, GL_TEXTURE_INTERNAL_FORMAT, &format));
+
+    switch (format) {
+    case GL_R8:
+        YAWN_GL_CHECK(glTextureSubImage2D(mTextureIds[id], mipmap, 0, 0, width, height, GL_RED, GL_UNSIGNED_BYTE, data));
+        break;
+    case GL_RG8:
+        YAWN_GL_CHECK(glTextureSubImage2D(mTextureIds[id], mipmap, 0, 0, width, height, GL_RG, GL_UNSIGNED_BYTE, data));
+        break;
+    case GL_RGBA8:
+        YAWN_GL_CHECK(glTextureSubImage2D(mTextureIds[id], mipmap, 0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, data));
+        break;
+    case GL_COMPRESSED_RGBA_S3TC_DXT1_EXT:
+        YAWN_GL_CHECK(glCompressedTextureSubImage2D(mTextureIds[id], mipmap, 0, 0, width, height, GL_COMPRESSED_RGBA_S3TC_DXT1_EXT, width * height / 2, data));
+        break;
+    case GL_COMPRESSED_RGBA_S3TC_DXT5_EXT:
+        YAWN_GL_CHECK(glCompressedTextureSubImage2D(mTextureIds[id], mipmap, 0, 0, width, height, GL_COMPRESSED_RGBA_S3TC_DXT5_EXT, width * height, data));
+        break;
+    }
+}
+
+int RendererDriverOpenGL::GetWhiteTexture() {
+    if (mWhiteTextureId == Pool::None) {
+        mWhiteTextureId = CreateTexture(4, 4, TextureFormat::RGBA8, TextureFilter::Anisotropic, TextureWrapping::Repeat, 1);
+
+        Color4 pixels[16] = {
+            Color::White, Color::White, Color::White, Color::White,
+            Color::White, Color::White, Color::White, Color::White,
+            Color::White, Color::White, Color::White, Color::White,
+            Color::White, Color::White, Color::White, Color::White,
+        };
+
+        SetTextureData(mWhiteTextureId, 0, pixels);
+    }
+
+    return mWhiteTextureId;
 }
 
 int RendererDriverOpenGL::CreateMesh(int vertexCount, int indexCount) {
@@ -286,7 +396,7 @@ void RendererDriverOpenGL::LLSetIndexBufferData2D(const ArrayView<const unsigned
 }
 
 void RendererDriverOpenGL::LLSetTexture2D(int textureId) {
-    // TODO: Implement.
+    mGlobalData->TextureId = IsTextureValid(textureId) ? textureId : GetWhiteTexture();
 }
 
 void RendererDriverOpenGL::LLDraw2D(int vertexOffset, int indexOffset, int indexCount) {
@@ -337,7 +447,7 @@ void RendererDriverOpenGL::TestShader(GLuint shaderProgram) {
         Array<char> message(infoLength + 1);
         YAWN_GL_CHECK(glGetProgramInfoLog(shaderProgram, infoLength, nullptr, &message[0]));
 
-        Console::WriteLine(L"%s", message.GetData());
+        Console::WriteLine(String::FromUTF8(message.GetData()));
     }
 }
 

@@ -22,6 +22,10 @@ namespace YAWN {
 
         static bool IsTextureValid(int id);
 
+        static void SetTextureData(int id, int mipmap, const void* data);
+
+        static int GetWhiteTexture();
+
         static int CreateMesh(int vertexCount, int indexCount);
 
         static void DestroyMesh(int id);
