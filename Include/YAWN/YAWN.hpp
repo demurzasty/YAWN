@@ -40,6 +40,7 @@
 
 #include "Math/Math.hpp"
 #include "Math/Matrix4.hpp"
+#include "Math/Rectangle.hpp"
 #include "Math/Vector2.hpp"
 #include "Math/Vector3.hpp"
 #include "Math/Vector4.hpp"
@@ -75,6 +76,7 @@
 #include "Runtime/Settings.hpp"
 #include "Runtime/YTXT.hpp"
 
+#include "Scene/UI/Control.hpp"
 #include "Scene/Camera3D.hpp"
 #include "Scene/Geometry3D.hpp"
 #include "Scene/ImGui2D.hpp"

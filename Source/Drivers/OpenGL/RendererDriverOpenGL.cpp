@@ -357,9 +357,11 @@ void RendererDriverOpenGL::Render() {
     YAWN_GL_CHECK(glDisable(GL_DEPTH_TEST));
     YAWN_GL_CHECK(glDisable(GL_CULL_FACE));
     YAWN_GL_CHECK(glEnable(GL_BLEND));
-    YAWN_GL_CHECK(glEnable(GL_SCISSOR_TEST));
     YAWN_GL_CHECK(glBlendEquation(GL_FUNC_ADD));
     YAWN_GL_CHECK(glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA));
+
+    YAWN_GL_CHECK(glEnable(GL_SCISSOR_TEST));
+    LLSetClipRect(Rectangle(Vector2::Zero, mGlobalData->FramebufferSize));
 
     mGlobalCanvasVertexOffset = 0;
     mGlobalCanvasIndexOffset = 0;
@@ -386,11 +388,11 @@ void RendererDriverOpenGL::LLSetTexture2D(int textureId) {
 }
 
 
-void RendererDriverOpenGL::LLSetClipRect(const Vector4& clipRect) {
+void RendererDriverOpenGL::LLSetClipRect(const Rectangle& clipRect) {
     GLint viewport[4];
     glGetIntegerv(GL_VIEWPORT, viewport);
 
-    YAWN_GL_CHECK(glScissor((int)clipRect.X, (int)((float)viewport[3] - clipRect.W), (int)(clipRect.Z - clipRect.X), (int)(clipRect.W - clipRect.Y)));
+    YAWN_GL_CHECK(glScissor((int)clipRect.Left, (int)((float)viewport[3] - clipRect.GetBottom()), (int)(clipRect.Width), (int)(clipRect.Height)));
 }
 
 void RendererDriverOpenGL::LLDraw2D(int vertexOffset, int indexOffset, int indexCount) {

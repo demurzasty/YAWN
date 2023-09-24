@@ -81,7 +81,7 @@ namespace YAWN {
 
         void LLSetTexture2D(int textureId) override;
 
-        void LLSetClipRect(const Vector4& clipRect) override;
+        void LLSetClipRect(const Rectangle& clipRect) override;
 
         void LLDraw2D(int vertexOffset, int indexOffset, int indexCount) override;
 

@@ -240,7 +240,7 @@ void Renderer::LLSetTexture2D(int textureId) {
     sDriver->LLSetTexture2D(textureId);
 }
 
-void Renderer::LLSetClipRect(const Vector4& clipRect) {
+void Renderer::LLSetClipRect(const Rectangle& clipRect) {
     ExclusiveLock lock(sMutex);
 
     YAWN_ASSERT(sDriver);

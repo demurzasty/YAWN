@@ -2,6 +2,7 @@
 
 #include "../Runtime/Reference.hpp"
 #include "../Math/Matrix4.hpp"
+#include "../Math/Rectangle.hpp"
 #include "../Runtime/Arena.hpp"
 #include "Texture.hpp"
 #include "Vertex.hpp"
@@ -84,7 +85,7 @@ namespace YAWN {
 
         virtual void LLSetTexture2D(int textureId) = 0;
 
-        virtual void LLSetClipRect(const Vector4& clipRect) = 0;
+        virtual void LLSetClipRect(const Rectangle& clipRect) = 0;
 
         virtual void LLDraw2D(int vertexOffset, int indexOffset, int indexCount) = 0;
 

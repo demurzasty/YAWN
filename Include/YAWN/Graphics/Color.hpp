@@ -14,6 +14,8 @@ namespace YAWN {
 
         static const Color CornflowerBlue;
 
+        static const Color Transparent;
+
         Color() = default;
 
         Color(float r, float g, float b);
@@ -27,6 +29,8 @@ namespace YAWN {
         Color4() = default;
 
         Color4(const Color& color);
+
+        constexpr Color4(int r, int g, int b, int a) : R(r), G(g), B(b), A(a) {}
 
         unsigned char R, G, B, A;
     };

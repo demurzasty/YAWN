@@ -3,15 +3,12 @@
 using namespace YAWN;
 
 void Initialize() {
-    Scene::GetRoot()->AddChild(new Editor());
+    Ref<Control> control = new Control();
 
-    Ref<Node3D> node = new Node3D();
-    node->SetName(L"Test");
-    Scene::GetRoot()->AddChild(node);
+    control->SetLocalRectangle(Rectangle(100.0f, 100.0f, 200.0f, 200.0f));
+    control->SetBackgroundColor(Color::Black);
 
-    Ref<Geometry3D> geometry = new Geometry3D();
-    geometry->SetName(L"Foo");
-    geometry->AddChild(geometry);
+    Scene::GetRoot()->AddChild(control);
 }
 
 int Main(int argc, char* argv[]) {

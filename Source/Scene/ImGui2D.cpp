@@ -87,7 +87,7 @@ void ImGui2D::Draw() {
                     cmd.UserCallback(cmdList, &cmd);
                 }
             } else {
-                Renderer::LLSetClipRect(Vector4(cmd.ClipRect.x, cmd.ClipRect.y, cmd.ClipRect.z, cmd.ClipRect.w));
+                Renderer::LLSetClipRect(Rectangle(cmd.ClipRect.x, cmd.ClipRect.y, cmd.ClipRect.z - cmd.ClipRect.x, cmd.ClipRect.w - cmd.ClipRect.y));
 
                 Renderer::LLSetTexture2D(cmd.GetTexID());
 

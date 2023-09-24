@@ -15,6 +15,8 @@ const Color Color::Blue = Color(0.0f, 0.0f, 1.0f);
 
 const Color Color::CornflowerBlue = Color(100.0f / 255.0f, 149.0f / 255.0f, 237.0f / 255.0f);
 
+const Color Color::Transparent = Color(0.0f, 0.0f, 0.0f, 0.0f);
+
 Color::Color(float r, float g, float b)
     : R(r), G(g), B(b), A(1.0f) {
 }
