@@ -199,7 +199,7 @@ void Renderer::LLSetVertexBufferData2D(const ArrayView<const Vertex2D>& vertices
     sDriver->LLSetVertexBufferData2D(vertices);
 }
 
-void Renderer::LLSetIndexBufferData2D(const ArrayView<const int>& indices) {
+void Renderer::LLSetIndexBufferData2D(const ArrayView<const unsigned short>& indices) {
     ExclusiveLock lock(sMutex);
 
     YAWN_ASSERT(sDriver);

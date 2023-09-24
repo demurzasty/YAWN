@@ -1,5 +1,6 @@
 #include <YAWN/Scene/ImGui2D.hpp>
 #include <YAWN/Graphics/Renderer.hpp>
+#include <YAWN/Platform/Input.hpp>
 
 #include <imgui.h>
 
@@ -38,6 +39,13 @@ void ImGui2D::Update(float timeStep) {
     io.DisplaySize = ImVec2(1280.0f, 720.0f);
     io.DisplayFramebufferScale = io.DisplaySize;
     io.DeltaTime = 1.0f / 60.0f;
+
+    const Vector2& mousePosition = Input::GetMousePosition();
+    io.AddMousePosEvent(mousePosition.X, mousePosition.Y);
+
+    io.AddMouseButtonEvent(ImGuiMouseButton_Left, Input::IsMouseButtonDown(MouseButton::Left));
+    io.AddMouseButtonEvent(ImGuiMouseButton_Middle, Input::IsMouseButtonDown(MouseButton::Middle));
+    io.AddMouseButtonEvent(ImGuiMouseButton_Right, Input::IsMouseButtonDown(MouseButton::Right));
 
     static bool show_demo_window = true;
     static bool show_another_window = false;
@@ -94,7 +102,7 @@ void ImGui2D::Draw() {
         const ImDrawList* cmdList = drawData->CmdLists[n];
 
         ArrayView<const Vertex2D> vertices((const Vertex2D*)cmdList->VtxBuffer.Data, cmdList->VtxBuffer.Size);
-        ArrayView<const int> indices(cmdList->IdxBuffer.Data, cmdList->IdxBuffer.Size);
+        ArrayView<const unsigned short> indices(cmdList->IdxBuffer.Data, cmdList->IdxBuffer.Size);
 
         Renderer::LLSetVertexBufferData2D(vertices);
         Renderer::LLSetIndexBufferData2D(indices);

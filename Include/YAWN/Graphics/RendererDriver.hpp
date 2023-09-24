@@ -74,7 +74,7 @@ namespace YAWN {
     public:
         virtual void LLSetVertexBufferData2D(const ArrayView<const Vertex2D>& vertices) = 0;
 
-        virtual void LLSetIndexBufferData2D(const ArrayView<const int>& indices) = 0;
+        virtual void LLSetIndexBufferData2D(const ArrayView<const unsigned short>& indices) = 0;
 
         virtual void LLSetTexture2D(int textureId) = 0;
 
