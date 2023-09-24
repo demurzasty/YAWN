@@ -38,6 +38,8 @@ namespace YAWN {
 
         ~RendererDriverOpenGL() override;
 
+        void SetFramebufferSize(const Vector2& size) override;
+
         void SetCameraProjection(const Matrix4& projection) override;
 
         void SetCameraTransform(const Matrix4& transform) override;

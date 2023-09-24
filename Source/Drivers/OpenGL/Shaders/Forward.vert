@@ -12,6 +12,7 @@ struct GlobalData {
     mat4 InvertedProjectionView;
     vec4 CameraPosition;
     vec4 CameraFrustum;
+    vec2 FramebufferSize;
     int CameraEnvironmentId;
     int InstanceCount;
     int LightCount;

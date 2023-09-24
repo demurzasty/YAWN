@@ -3,26 +3,30 @@
 #include "Importer.hpp"
 #include "../IO/FileInfo.hpp"
 #include "../Core/Array.hpp"
+#include "../Scene/ImGui2D.hpp"
 
 namespace YAWN {
-    class Editor {
+    class Editor : public ImGui2D {
+        YAWN_OBJECT(Editor, ImGui2D);
+
     public:
-        static void Initialize();
+        void Enter() override;
 
-        static void Release();
+        void Exit() override;
 
-        static void Reimport();
-
-    private:
-        static void InitializeImporter(const Type& type);
-
-        static void EnumerateFile(const FileInfo& info);
-
-        static void ImportFile(const FileInfo& info);
-
-        static Ref<Importer> FindImporterForExtension(const String& extension);
+        void Reimport();
 
     private:
-        static Array<Ref<Importer>> sImporters;
+        void InitializeImporter(const Type& type);
+
+        void EnumerateFile(const FileInfo& info);
+
+        void ImportFile(const FileInfo& info);
+
+        Ref<Importer> FindImporterForExtension(const String& extension);
+
+    private:
+        Array<Ref<Importer>> sImporters;
     };
 }
+

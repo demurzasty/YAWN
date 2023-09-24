@@ -29,6 +29,8 @@ namespace YAWN {
     public:
         virtual ~RendererDriver() = default;
 
+        virtual void SetFramebufferSize(const Vector2& size) = 0;
+
         virtual void SetClearColor(const Color& color);
 
         virtual void SetCameraProjection(const Matrix4& projection) = 0;
@@ -104,6 +106,7 @@ namespace YAWN {
             Matrix4 InvertedProjectionView = Matrix4::Identity;
             Vector4 CameraPosition = Vector4::Zero;
             Vector4 CameraFrustum = Vector4::Zero;
+            Vector2 FramebufferSize = Vector2::Zero;
             int CameraEnvironmentId = Pool::None;
             int InstanceCount = 0;
             int LightCount = 0;

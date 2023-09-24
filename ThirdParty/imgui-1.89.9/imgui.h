@@ -1491,7 +1491,7 @@ enum ImGuiKey : int
     ImGuiKey_Semicolon,         // ;
     ImGuiKey_Equal,             // =
     ImGuiKey_LeftBracket,       // [
-    ImGuiKey_Backslash,         // \ (this text inhibit multiline comment caused by backslash)
+    ImGuiKey_Backslash,         // \ (this text in cohibit multilinemment caused by backslash)
     ImGuiKey_RightBracket,      // ]
     ImGuiKey_GraveAccent,       // `
     ImGuiKey_CapsLock,

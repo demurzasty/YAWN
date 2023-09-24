@@ -3,7 +3,7 @@
 using namespace YAWN;
 
 void Initialize() {
-    Scene::GetRoot()->AddChild(new ImGui2D());
+    Scene::GetRoot()->AddChild(new Editor());
 }
 
 int Main(int argc, char* argv[]) {

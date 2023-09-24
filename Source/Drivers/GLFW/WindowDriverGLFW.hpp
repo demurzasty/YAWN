@@ -20,6 +20,8 @@ namespace YAWN {
 
         void SwapBuffers() override;
 
+        Vector2 GetSize() override;
+
     private:
         GLFWwindow* mWindow = nullptr;
     };

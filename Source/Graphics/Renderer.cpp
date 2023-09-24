@@ -13,6 +13,14 @@ void Renderer::Initialize() {
     sDriver = new RendererDriverOpenGL();
 }
 
+void Renderer::SetFramebufferSize(const Vector2& size) {
+    ExclusiveLock lock(sMutex);
+
+    YAWN_ASSERT(sDriver);
+
+    sDriver->SetFramebufferSize(size);
+}
+
 void Renderer::SetClearColor(const Color& color) {
     ExclusiveLock lock(sMutex);
 

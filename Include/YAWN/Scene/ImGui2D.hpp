@@ -19,5 +19,6 @@ namespace YAWN {
 
     private:
         int mFontTextureId = Pool::None;
+        bool mShowDemoWindow = true;
     };
 }

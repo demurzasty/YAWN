@@ -2,6 +2,7 @@
 
 #include <YAWN/Runtime/Settings.hpp>
 #include <YAWN/Platform/Input.hpp>
+#include <YAWN/Graphics/Renderer.hpp>
 
 using namespace YAWN;
 
@@ -160,6 +161,10 @@ static void CursorPositionCallback(GLFWwindow* window, double x, double y) {
     Input::UpdateMousePosition(Vector2(float(x), float(y)));
 }
 
+static void FramebufferSizeCallback(GLFWwindow* window, int width, int height) {
+    Renderer::SetFramebufferSize(Vector2(float(width), float(height)));
+}
+
 WindowDriverGLFW::WindowDriverGLFW() {
     glfwInit();
 
@@ -168,6 +173,7 @@ WindowDriverGLFW::WindowDriverGLFW() {
     glfwSetKeyCallback(mWindow, &KeyCallback);
     glfwSetMouseButtonCallback(mWindow, &MouseButtonCallback);
     glfwSetCursorPosCallback(mWindow, &CursorPositionCallback);
+    glfwSetFramebufferSizeCallback(mWindow, &FramebufferSizeCallback);
 
     glfwMakeContextCurrent(mWindow);
 
@@ -189,4 +195,10 @@ bool WindowDriverGLFW::IsOpen() const {
 
 void WindowDriverGLFW::SwapBuffers() {
     glfwSwapBuffers(mWindow);
+}
+
+Vector2 WindowDriverGLFW::GetSize() {
+    int width, height;
+    glfwGetWindowSize(mWindow, &width, &height);
+    return Vector2(float(width), float(height));
 }

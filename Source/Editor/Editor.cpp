@@ -14,13 +14,17 @@
 
 using namespace YAWN;
 
-Array<Ref<Importer>> Editor::sImporters;
+void Editor::Enter() {
+    Base::Enter();
 
-void Editor::Initialize() {
-    Types::EnumerateTypesOfBase<Importer>(Delegate<void(const Type&)>::Bind<&Editor::InitializeImporter>());
+    Types::EnumerateTypesOfBase<Importer>(Delegate<void(const Type&)>::Bind<&Editor::InitializeImporter>(this));
+    
+    Reimport();
 }
 
-void Editor::Release() {
+void Editor::Exit() {
+    Base::Exit();
+
     sImporters.Clear();
 }
 
@@ -29,7 +33,7 @@ void Editor::Reimport() {
     Directory::Create(L"Package");
     Directory::Create(L"Cache");
 
-    Directory::EnumerateFiles(L"Data", Delegate<void(const FileInfo&)>::Bind<&Editor::EnumerateFile>());
+    Directory::EnumerateFiles(L"Data", Delegate<void(const FileInfo&)>::Bind<&Editor::EnumerateFile>(this));
 }
 
 void Editor::InitializeImporter(const Type& type) {

@@ -16,6 +16,8 @@ namespace YAWN {
 
         static void SwapBuffers();
 
+        static Vector2 GetSize();
+
     private:
         static Ref<WindowDriver> sDriver;
         static ExclusiveMutex sMutex;

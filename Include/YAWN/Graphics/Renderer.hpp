@@ -10,6 +10,8 @@ namespace YAWN {
 
         static void Release();
 
+        static void SetFramebufferSize(const Vector2& size);
+
         static void SetClearColor(const Color& color);
 
         static void SetCameraProjection(const Matrix4& projection);

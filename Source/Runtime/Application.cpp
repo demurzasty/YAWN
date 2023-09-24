@@ -13,10 +13,6 @@ void Application::Setup() {
     AddService<ResourceManager>();
     AddService<Scene>();
 
-#if !YAWN_PROD_BUILD
-    AddService<Editor>();
-#endif
-
     Settings::SetWindowTitle(L"YAWN");
     Settings::SetWindowWidth(1280);
     Settings::SetWindowHeight(720);
@@ -29,6 +25,7 @@ void Application::Setup() {
     Types::Register<Geometry3D>();
 
 #if !YAWN_PROD_BUILD
+    /// Types::Register<Editor>();
     Types::Register<ModelImporter>();
     Types::Register<PrefabImporter>();
     Types::Register<TextureImporter>();
@@ -39,10 +36,6 @@ void Application::Run() {
     for (int i = 0; i < sInitializations.GetSize(); ++i) {
         sInitializations[i]();
     }
-
-#if !YAWN_PROD_BUILD
-    Editor::Reimport();
-#endif
 
     while (Window::IsOpen()) {
         Window::PollEvents();

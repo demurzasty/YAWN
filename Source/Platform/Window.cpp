@@ -44,3 +44,11 @@ void Window::SwapBuffers() {
 
     sDriver->SwapBuffers();
 }
+
+Vector2 Window::GetSize() {
+    ExclusiveLock lock(sMutex);
+
+    YAWN_ASSERT(sDriver);
+
+    return sDriver->GetSize();
+}

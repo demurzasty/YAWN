@@ -1,5 +1,6 @@
 #include "RendererDriverOpenGL.hpp"
 
+#include <YAWN/Platform/Window.hpp>
 #include <YAWN/Runtime/Console.hpp>
 
 #include "Shaders/Generated/Culling.comp.h"
@@ -92,6 +93,8 @@ RendererDriverOpenGL::RendererDriverOpenGL() {
     mMeshes = (GPUMeshData*)glMapNamedBuffer(mMeshBufferId, GL_READ_WRITE);
     mVertices = (Vertex3D*)glMapNamedBuffer(mVertexBufferId, GL_READ_WRITE);
     mIndices = (GLint*)glMapNamedBuffer(mIndexBufferId, GL_READ_WRITE);
+
+    mGlobalData->FramebufferSize = Window::GetSize();
 }
 
 RendererDriverOpenGL::~RendererDriverOpenGL() {
@@ -116,6 +119,12 @@ RendererDriverOpenGL::~RendererDriverOpenGL() {
     YAWN_GL_CHECK(glDeleteBuffers(1, &mMeshBufferId));
     YAWN_GL_CHECK(glDeleteBuffers(1, &mInstanceBufferId));
     YAWN_GL_CHECK(glDeleteBuffers(1, &mGlobalBufferId));
+}
+
+void RendererDriverOpenGL::SetFramebufferSize(const Vector2& size) {
+    glViewport(0, 0, Math::FastFloatToInt(size.X), Math::FastFloatToInt(size.Y));
+
+    mGlobalData->FramebufferSize = size;
 }
 
 void RendererDriverOpenGL::SetCameraProjection(const Matrix4& projection) {
