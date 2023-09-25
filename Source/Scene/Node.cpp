@@ -106,12 +106,13 @@ void Node::SetChildren(const Array<Ref<Node>>& children) {
 void Node::DrawTexture(int textureId, const Rectangle& destination, const Rectangle& source, const Color4& color) {
     Vector2 position = destination.GetPosition();
     Vector2 size = destination.GetSize();
+    Vector2 textureSize = Renderer::GetTextureSize(textureId);
 
     Vertex2D vertices[4] = {
-        Vertex2D(position, Vector2(source.Left / 512.0f, source.Top / 512.0f), color),
-        Vertex2D(position + Vector2(0.0f, size.Y), Vector2(source.Left / 512.0f, source.GetBottom() / 512.0f), color),
-        Vertex2D(position + Vector2(size.X, size.Y), Vector2(source.GetRight() / 512.0f, source.GetBottom() / 512.0f), color),
-        Vertex2D(position + Vector2(size.X, 0.0f), Vector2(source.GetRight() / 512.0f, source.Top / 512.0f), color),
+        Vertex2D(position, Vector2(source.Left / textureSize.X, source.Top / textureSize.Y), color),
+        Vertex2D(position + Vector2(0.0f, size.Y), Vector2(source.Left / textureSize.X, source.GetBottom() / textureSize.Y), color),
+        Vertex2D(position + Vector2(size.X, size.Y), Vector2(source.GetRight() / textureSize.X, source.GetBottom() / textureSize.Y), color),
+        Vertex2D(position + Vector2(size.X, 0.0f), Vector2(source.GetRight() / textureSize.X, source.Top / textureSize.Y), color),
     };
 
     unsigned short indices[6] = {
@@ -122,20 +123,20 @@ void Node::DrawTexture(int textureId, const Rectangle& destination, const Rectan
     AddDrawCommand(textureId, vertices, indices);
 }
 
-void Node::DrawText(const Ref<Font>& font, const Vector2& destination, const String& text, const Color4& color) {
+void Node::DrawText(const Ref<Font>& font, int size, const Vector2& destination, const String& text, const Color4& color) {
     Vector2 position = destination;
     for (int i = 0; i < text.GetSize(); ++i) {
-        const FontGlyph& glyph = font->GetGlyph(text[i], 16);
+        const FontGlyph& glyph = font->GetGlyph(text[i], size);
 
         DrawTexture(font->GetTextureId(),
-            Rectangle(position.X + glyph.Offset.X, position.Y + glyph.Offset.Y, glyph.Rectangle.Width, glyph.Rectangle.Height),
+            Rectangle(position.X + glyph.Offset.X, position.Y + glyph.Offset.Y + size, glyph.Rectangle.Width, glyph.Rectangle.Height),
             glyph.Rectangle,
             color);
 
         position.X += glyph.Advance;
 
         if (i + 1 < text.GetSize()) {
-            position.X += font->GetKerning(text[i], text[i + 1], 16);
+            position.X += font->GetKerning(text[i], text[i + 1], size);
         }
     }
 }

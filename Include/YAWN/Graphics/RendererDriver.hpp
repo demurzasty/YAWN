@@ -46,6 +46,8 @@ namespace YAWN {
 
         virtual void SetTextureData(int id, int mipmap, const void* data) = 0;
 
+        virtual Vector2 GetTextureSize(int id) const = 0;
+
         virtual int GetWhiteTexture() = 0;
 
         virtual int CreateMesh(int vertexCount, int indexCount);

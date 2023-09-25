@@ -88,17 +88,15 @@ RendererDriverOpenGL::RendererDriverOpenGL() {
     YAWN_GL_CHECK(glPixelStorei(GL_PACK_ALIGNMENT, 1));
     YAWN_GL_CHECK(glPixelStorei(GL_UNPACK_ALIGNMENT, 1));
 
-    mGlobalData = (GPUGlobalData*)glMapNamedBuffer(mGlobalBufferId, GL_READ_WRITE);
     mInstances = (GPUInstanceData*)glMapNamedBuffer(mInstanceBufferId, GL_READ_WRITE);
     mMeshes = (GPUMeshData*)glMapNamedBuffer(mMeshBufferId, GL_READ_WRITE);
 
-    mGlobalData->FramebufferSize = Window::GetSize();
+    mGlobalData.FramebufferSize = Window::GetSize();
 }
 
 RendererDriverOpenGL::~RendererDriverOpenGL() {
     YAWN_GL_CHECK(glUnmapNamedBuffer(mMeshBufferId));
     YAWN_GL_CHECK(glUnmapNamedBuffer(mInstanceBufferId));
-    YAWN_GL_CHECK(glUnmapNamedBuffer(mGlobalBufferId));
 
     YAWN_GL_CHECK(glDeleteProgramPipelines(1, &mCanvasProgramId));
     YAWN_GL_CHECK(glDeleteProgramPipelines(1, &mForwardProgramId));
@@ -120,16 +118,16 @@ RendererDriverOpenGL::~RendererDriverOpenGL() {
 void RendererDriverOpenGL::SetFramebufferSize(const Vector2& size) {
     glViewport(0, 0, Math::FastFloatToInt(size.X), Math::FastFloatToInt(size.Y));
 
-    mGlobalData->FramebufferSize = size;
+    mGlobalData.FramebufferSize = size;
 }
 
 void RendererDriverOpenGL::SetCameraProjection(const Matrix4& projection) {
-    mGlobalData->Projection = projection;
+    mGlobalData.Projection = projection;
 }
 
 void RendererDriverOpenGL::SetCameraTransform(const Matrix4& transform) {
-    mGlobalData->View = Matrix4::Invert(transform);
-    mGlobalData->CameraPosition = Vector4(Matrix4::ExtractPosition(transform), 1.0f);
+    mGlobalData.View = Matrix4::Invert(transform);
+    mGlobalData.CameraPosition = Vector4(Matrix4::ExtractPosition(transform), 1.0f);
 }
 
 int RendererDriverOpenGL::CreateTexture(int width, int height, TextureFormat format, TextureFilter filter, TextureWrapping wrapping, int mipmapCount) {
@@ -213,6 +211,13 @@ void RendererDriverOpenGL::SetTextureData(int id, int mipmap, const void* data) 
         YAWN_GL_CHECK(glCompressedTextureSubImage2D(mTextureIds[id], mipmap, 0, 0, width, height, GL_COMPRESSED_RGBA_S3TC_DXT5_EXT, width * height, data));
         break;
     }
+}
+
+Vector2 RendererDriverOpenGL::GetTextureSize(int id) const {
+    float width, height;
+    YAWN_GL_CHECK(glGetTextureLevelParameterfv(mTextureIds[id], 0, GL_TEXTURE_WIDTH, &width));
+    YAWN_GL_CHECK(glGetTextureLevelParameterfv(mTextureIds[id], 0, GL_TEXTURE_HEIGHT, &height));
+    return Vector2(width, height);
 }
 
 int RendererDriverOpenGL::GetWhiteTexture() {
@@ -325,9 +330,11 @@ void RendererDriverOpenGL::DrawCanvasItem(int id, int vertexOffset, int indexOff
 }
 
 void RendererDriverOpenGL::Render() {
-    mGlobalData->ProjectionView = mGlobalData->Projection * mGlobalData->View;
-    mGlobalData->InvertedProjectionView = Matrix4::Invert(mGlobalData->ProjectionView);
-    mGlobalData->InstanceCount = mInstancePool.GetSize();
+    mGlobalData.ProjectionView = mGlobalData.Projection * mGlobalData.View;
+    mGlobalData.InvertedProjectionView = Matrix4::Invert(mGlobalData.ProjectionView);
+    mGlobalData.InstanceCount = mInstancePool.GetSize();
+
+    YAWN_GL_CHECK(glNamedBufferSubData(mGlobalBufferId, 0, sizeof(GPUGlobalData), &mGlobalData));
 
     YAWN_GL_CHECK(glDisable(GL_SCISSOR_TEST));
 
@@ -336,7 +343,7 @@ void RendererDriverOpenGL::Render() {
 
     YAWN_GL_CHECK(glBindProgramPipeline(mCullingProgramId));
 
-    YAWN_GL_CHECK(glDispatchCompute(Math::Align(mGlobalData->InstanceCount, 64) / 64, 1, 1));
+    YAWN_GL_CHECK(glDispatchCompute(Math::Align(mGlobalData.InstanceCount, 64) / 64, 1, 1));
 
     YAWN_GL_CHECK(glBindProgramPipeline(mForwardProgramId));
 
@@ -348,7 +355,7 @@ void RendererDriverOpenGL::Render() {
 
     YAWN_GL_CHECK(glBindBuffer(GL_DRAW_INDIRECT_BUFFER, mDrawBufferId));
 
-    YAWN_GL_CHECK(glMultiDrawElementsIndirect(GL_TRIANGLES, GL_UNSIGNED_INT, nullptr, mGlobalData->InstanceCount, sizeof(GPUDrawElementsIndirectCommand)));
+    YAWN_GL_CHECK(glMultiDrawElementsIndirect(GL_TRIANGLES, GL_UNSIGNED_INT, nullptr, mGlobalData.InstanceCount, sizeof(GPUDrawElementsIndirectCommand)));
 
     YAWN_GL_CHECK(glBindProgramPipeline(mCanvasProgramId));
 
@@ -361,10 +368,8 @@ void RendererDriverOpenGL::Render() {
     YAWN_GL_CHECK(glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA));
 
     YAWN_GL_CHECK(glEnable(GL_SCISSOR_TEST));
-    LLSetClipRect(Rectangle(Vector2::Zero, mGlobalData->FramebufferSize));
 
-    mGlobalCanvasVertexOffset = 0;
-    mGlobalCanvasIndexOffset = 0;
+    LLSetClipRect(Rectangle(Vector2::Zero, mGlobalData.FramebufferSize));
 }
 
 void RendererDriverOpenGL::LLSetVertexBufferData2D(const ArrayView<const Vertex2D>& vertices) {
@@ -384,9 +389,9 @@ void RendererDriverOpenGL::LLSetIndexBufferData2D(const ArrayView<const unsigned
 }
 
 void RendererDriverOpenGL::LLSetTexture2D(int textureId) {
-    mGlobalData->TextureId = IsTextureValid(textureId) ? textureId : GetWhiteTexture();
+    mGlobalData.TextureId = IsTextureValid(textureId) ? textureId : GetWhiteTexture();
 
-    glMemoryBarrier(GL_BUFFER_UPDATE_BARRIER_BIT);
+    YAWN_GL_CHECK(glNamedBufferSubData(mGlobalBufferId, offsetof(GPUGlobalData, TextureId), sizeof(mGlobalData.TextureId), &mGlobalData.TextureId));
 }
 
 void RendererDriverOpenGL::LLSetClipRect(const Rectangle& clipRect) {
@@ -448,7 +453,7 @@ void RendererDriverOpenGL::TestShader(GLuint shaderProgram) {
     }
 }
 
-void RendererDriverOpenGL::CheckError(const wchar_t* path, int line, const wchar_t* expression) {
+void RendererDriverOpenGL::CheckError(const wchar_t* path, int line, const wchar_t* expression) const {
     GLenum errorCode = glGetError();
 
     if (errorCode != GL_NO_ERROR) {

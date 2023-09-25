@@ -16,23 +16,15 @@ void Control::Draw() {
     Vector2 globalPosition = GetGlobalPosition();
     Vector2 size = GetLocalSize();
 
-    mFont->GetGlyph(L'A', 16);
-    mFont->GetGlyph(L'b', 16);
-    mFont->GetGlyph(L'C', 16);
-    mFont->GetGlyph(L'D', 16);
-    mFont->GetGlyph(L'E', 16);
-    mFont->GetGlyph(L'F', 16);
-    mFont->GetGlyph(L'G', 16);
+    DrawTexture(Renderer::GetWhiteTexture(), GetGlobalRectangle(), Rectangle(0.0f, 0.0f, 4.0f, 4.0f), GetBackgroundColor());
 
-    //DrawTexture(Renderer::GetWhiteTexture(), GetGlobalRectangle(), Rectangle(0.0f, 0.0f, 4.0f, 4.0f), GetBackgroundColor());
-
-    // DrawTexture(mFont->GetTextureId(), GetGlobalRectangle(), Rectangle(0.0f, 0.0f, 512.0f, 512.0f), Color::White);
-
-    DrawText(mFont, GetGlobalPosition(), L"Lorem ipsum dolor sit amet.", Color::White);
+    DrawText(mFont, 32, GetGlobalPosition(), L"Lorem ipsum dolor sit amet.", Color::White);
 }
 
 void Control::SetLocalSize(const Vector2& size) {
     mLocalSize = size;
+
+    RequestRedraw();
 }
 
 const Vector2& Control::GetLocalSize() const {
@@ -42,6 +34,8 @@ const Vector2& Control::GetLocalSize() const {
 void Control::SetLocalRectangle(const Rectangle& rectangle) {
     SetLocalPosition(rectangle.GetPosition());
     SetLocalSize(rectangle.GetSize());
+
+    RequestRedraw();
 }
 
 Rectangle Control::GetLocalRectangle() const {
@@ -54,6 +48,8 @@ Rectangle Control::GetGlobalRectangle() const {
 
 void Control::SetBackgroundColor(const Color4& color) {
     mBackgroundColor = color;
+
+    RequestRedraw();
 }
 
 const Color4& Control::GetBackgroundColor() const {

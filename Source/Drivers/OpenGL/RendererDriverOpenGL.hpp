@@ -50,6 +50,8 @@ namespace YAWN {
 
         void SetTextureData(int id, int mipmap, const void* data) override;
 
+        Vector2 GetTextureSize(int id) const override;
+
         int GetWhiteTexture() override;
 
         int CreateMesh(int vertexCount, int indexCount) override;
@@ -92,7 +94,7 @@ namespace YAWN {
 
         void TestShader(GLuint shaderProgram);
 
-        void CheckError(const wchar_t* path, int line, const wchar_t* expression);
+        void CheckError(const wchar_t* path, int line, const wchar_t* expression) const;
 
         void DefragmentateCanvasItemData();
 
@@ -114,7 +116,7 @@ namespace YAWN {
         GLuint mForwardProgramId = 0;
         GLuint mCanvasProgramId = 0;
 
-        GPUGlobalData* mGlobalData = nullptr;
+        GPUGlobalData mGlobalData;
         GPUInstanceData* mInstances = nullptr;
         GPUMeshData* mMeshes = nullptr;
 

@@ -75,7 +75,16 @@ void Renderer::SetTextureData(int id, int mipmap, const void* data) {
     YAWN_ASSERT(sDriver);
     YAWN_ASSERT(sDriver->IsTextureValid(id));
 
-    return sDriver->SetTextureData(id, mipmap, data);
+    sDriver->SetTextureData(id, mipmap, data);
+}
+
+Vector2 Renderer::GetTextureSize(int id) {
+    ExclusiveLock lock(sMutex);
+
+    YAWN_ASSERT(sDriver);
+    YAWN_ASSERT(sDriver->IsTextureValid(id));
+
+    return sDriver->GetTextureSize(id);
 }
 
 int Renderer::GetWhiteTexture() {

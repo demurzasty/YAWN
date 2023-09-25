@@ -26,6 +26,8 @@ namespace YAWN {
 
         static void SetTextureData(int id, int mipmap, const void* data);
 
+        static Vector2 GetTextureSize(int id);
+
         static int GetWhiteTexture();
 
         static int CreateMesh(int vertexCount, int indexCount);
