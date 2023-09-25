@@ -75,17 +75,19 @@ float Font::GetKerning(int codepoint1, int codepoint2, int size) const {
 Vector2 Font::GetTextSize(const String& text, int size) const {
     float scale = stbtt_ScaleForPixelHeight(&mInternalData->Info, float(size));
 
-    Vector2 textSize = Vector2(0.0f, float(size));
+    Vector2 textSize = Vector2(0.0f, size * 1.2f);
     for (int i = 0; i < text.GetSize(); ++i) {
         int advance, lsb;
         stbtt_GetCodepointHMetrics(&mInternalData->Info, text[i], &advance, &lsb);
 
-        textSize.X += advance * scale;
+        textSize.X += advance;
 
         if (i + 1 < text.GetSize()) {
-            textSize.X += stbtt_GetCodepointKernAdvance(&mInternalData->Info, text[i], text[i + 1]) * scale;
+            textSize.X += stbtt_GetCodepointKernAdvance(&mInternalData->Info, text[i], text[i + 1]);
         }
     }
+
+    textSize.X *= scale;
 
     return textSize;
 }

@@ -3,6 +3,8 @@
 
 using namespace YAWN;
 
+static Guid DefaultThemeGuid = Guid(L"d90daf62-efb7-40c0-8f15-56a6333d3775");
+
 Map<int, Ref<Loader>> ResourceManager::sLoaders;
 Map<Guid, Ref<Resource>> ResourceManager::sResources;
 
@@ -36,4 +38,22 @@ Ref<Resource> ResourceManager::Load(int resourceTypeId, const Guid& guid) {
     Ref<Resource> resource = loader->Load(Path(L"Package") / guid.ToString());
     sResources.Add(guid, resource);
     return resource;
+}
+
+Ref<Resource> ResourceManager::Get(const Guid& guid) {
+    if (Ref<Resource>* resource = sResources.TryGet(guid); resource) {
+        return *resource;
+    }
+
+    return nullptr;
+}
+
+Ref<Theme> ResourceManager::GetDefaultTheme() {
+    if (Ref<Resource> theme = Get(DefaultThemeGuid); theme) {
+        return CastTo<Theme>(theme);
+    }
+
+    Ref<Theme> theme = Theme::CreateDefault();
+    sResources.Add(DefaultThemeGuid, theme);
+    return theme;
 }

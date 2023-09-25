@@ -47,7 +47,7 @@ void Node::Redraw() {
         for (const DrawCommand& command : mDrawCommands) {
             Renderer::LLSetTexture2D(command.TextureId);
 
-            Renderer::LLDraw2D(command.VertexOffset, command.IndexOffset, command.IndexCount);
+            Renderer::LLDraw2D(command.Topology, command.VertexOffset, command.IndexOffset, command.IndexCount);
         }
     }
 }
@@ -74,6 +74,8 @@ void Node::AddChild(const Ref<Node>& node) {
 
     node->mParent = this;
     mChildren.Add(node);
+
+    node->OnReparent();
 
     node->Enter();
 }
@@ -102,8 +104,14 @@ void Node::SetChildren(const Array<Ref<Node>>& children) {
     }
 }
 
+void Node::OnReparent() {
+}
 
 void Node::DrawTexture(int textureId, const Rectangle& destination, const Rectangle& source, const Color4& color) {
+    if (color.A == 0) {
+        return;
+    }
+
     Vector2 position = destination.GetPosition();
     Vector2 size = destination.GetSize();
     Vector2 textureSize = Renderer::GetTextureSize(textureId);
@@ -120,10 +128,37 @@ void Node::DrawTexture(int textureId, const Rectangle& destination, const Rectan
         2, 3, 0
     };
 
-    AddDrawCommand(textureId, vertices, indices);
+    AddDrawCommand(Topology::Triangles, textureId, vertices, indices);
+}
+
+void Node::DrawFillRect(const Rectangle& destination, const Color4& color) {
+    DrawTexture(Renderer::GetWhiteTexture(), destination, Rectangle(0.0f, 0.0f, 1.0f, 1.0f), color);
+}
+
+void Node::DrawRect(const Rectangle& destination, const Color4& color) {
+    Vector2 position = destination.GetPosition();// +Vector2(1.0f);
+    Vector2 size = destination.GetSize();// -Vector2(2.0f);
+
+    Vertex2D vertices[4] = {
+        Vertex2D(position + Vector2(0.25f, 0.0f), Vector2(0.0f, 0.0f), color),
+        Vertex2D(position + Vector2(0.25f, size.Y - 0.25f), Vector2(0.0f, 1.0f), color),
+        Vertex2D(position + Vector2(size.X, size.Y - 0.25f), Vector2(1.0f, 1.0f), color),
+        Vertex2D(position + Vector2(size.X, 0.25f), Vector2(1.0f, 0.0f), color),
+    };
+
+    unsigned short indices[8] = {
+        0, 1, 1, 2,
+        2, 3, 3, 0
+    };
+
+    AddDrawCommand(Topology::Lines, Renderer::GetWhiteTexture(), vertices, indices);
 }
 
 void Node::DrawText(const Ref<Font>& font, int size, const Vector2& destination, const String& text, const Color4& color) {
+    if (color.A == 0) {
+        return;
+    }
+
     Vector2 position = destination;
     for (int i = 0; i < text.GetSize(); ++i) {
         const FontGlyph& glyph = font->GetGlyph(text[i], size);
@@ -141,8 +176,9 @@ void Node::DrawText(const Ref<Font>& font, int size, const Vector2& destination,
     }
 }
 
-void Node::AddDrawCommand(int textureId, const ArrayView<const Vertex2D>& vertices, const ArrayView<const unsigned short>& indices) {
+void Node::AddDrawCommand(Topology topology, int textureId, const ArrayView<const Vertex2D>& vertices, const ArrayView<const unsigned short>& indices) {
     DrawCommand command;
+    command.Topology = topology;
     command.TextureId = textureId;
     command.VertexOffset = mVertices.GetSize();
     command.IndexOffset = mIndices.GetSize();

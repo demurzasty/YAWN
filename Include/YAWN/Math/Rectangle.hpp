@@ -23,8 +23,18 @@ namespace YAWN {
             return Top + Height;
         }
 
+        constexpr void SetPosition(const Vector2& position) {
+            Left = position.X;
+            Top = position.Y;
+        }
+
         Vector2 GetPosition() const {
             return Vector2(Left, Top);
+        }
+
+        constexpr void SetSize(const Vector2& size) {
+            Width = size.X;
+            Height = size.Y;
         }
 
         Vector2 GetSize() const {

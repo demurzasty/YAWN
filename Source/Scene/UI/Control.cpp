@@ -7,18 +7,33 @@ using namespace YAWN;
 void Control::Enter() {
     Base::Enter();
 
-    mFont = ResourceManager::Load<Font>(Guid(L"f77df380-4ce3-ab24-9ba6-ef80efd64a73"));
+    if (!GetTheme()) {
+        SetTheme(ResourceManager::GetDefaultTheme());
+    }
+}
+
+void Control::Update(float timeStep) {
+    Base::Update(timeStep);
+
+    if (mVerticalExpand || mHorizontalExpand) {
+        Vector2 size = GetLocalSize();
+
+        if (const Control* control = GetControlParent(); control) {
+            if (mVerticalExpand) {
+                size.Y = control->GetLocalSize().Y - GetLocalPosition().Y - control->GetPadding();
+            }
+
+            if (mHorizontalExpand) {
+                size.X = control->GetLocalSize().X - GetLocalPosition().X - control->GetPadding();
+            }
+        }
+
+        SetLocalSize(size);
+    }
 }
 
 void Control::Draw() {
     Base::Draw();
-
-    Vector2 globalPosition = GetGlobalPosition();
-    Vector2 size = GetLocalSize();
-
-    DrawTexture(Renderer::GetWhiteTexture(), GetGlobalRectangle(), Rectangle(0.0f, 0.0f, 4.0f, 4.0f), GetBackgroundColor());
-
-    DrawText(mFont, 32, GetGlobalPosition(), L"Lorem ipsum dolor sit amet.", Color::White);
 }
 
 void Control::SetLocalSize(const Vector2& size) {
@@ -46,12 +61,52 @@ Rectangle Control::GetGlobalRectangle() const {
     return Rectangle(GetGlobalPosition(), GetLocalSize());
 }
 
-void Control::SetBackgroundColor(const Color4& color) {
-    mBackgroundColor = color;
+Control* Control::GetControlParent() const {
+    return mControlParent;
+}
+
+void Control::SetTheme(const Ref<Theme>& theme) {
+    mTheme = theme;
 
     RequestRedraw();
 }
 
-const Color4& Control::GetBackgroundColor() const {
-    return mBackgroundColor;
+const Ref<Theme> Control::GetTheme() const {
+    return mTheme;
+}
+
+void Control::SetHorizontalExpand(bool expand) {
+    mHorizontalExpand = expand;
+
+    RequestRedraw();
+}
+
+bool Control::IsHorizontalExpand() const {
+    return mHorizontalExpand;
+}
+
+void Control::SetVerticalExpand(bool expand) {
+    mVerticalExpand = expand;
+
+    RequestRedraw();
+}
+
+bool Control::IsVerticalExpand() const {
+    return mVerticalExpand;
+}
+
+void Control::SetPadding(float padding) {
+    mPadding = padding;
+
+    RequestRedraw();
+}
+
+float Control::GetPadding() const {
+    return mPadding;
+}
+
+void Control::OnReparent() {
+    Base::OnReparent();
+
+    mControlParent = CastTo<Control>(GetParent());
 }

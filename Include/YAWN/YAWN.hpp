@@ -78,7 +78,11 @@
 #include "Runtime/Settings.hpp"
 #include "Runtime/YTXT.hpp"
 
+#include "Scene/UI/BoxContainer.hpp"
+#include "Scene/UI/Button.hpp"
 #include "Scene/UI/Control.hpp"
+#include "Scene/UI/MenuBar.hpp"
+#include "Scene/UI/Section.hpp"
 #include "Scene/Camera3D.hpp"
 #include "Scene/Geometry3D.hpp"
 #include "Scene/ImGui2D.hpp"

@@ -7,6 +7,7 @@
 #include "../Graphics/Color.hpp"
 #include "../Graphics/Font.hpp"
 #include "../Graphics/Vertex.hpp"
+#include "../Graphics/Topology.hpp"
 
 namespace YAWN {
     class Node : public Reference {
@@ -68,14 +69,24 @@ namespace YAWN {
 
     protected:
         ///////////////////////////
+        ////////// Events /////////
+        ///////////////////////////
+
+        virtual void OnReparent();
+
+        ///////////////////////////
         //// Drawing Utilities ////
         ///////////////////////////
 
         void DrawTexture(int textureId, const Rectangle& destination, const Rectangle& source, const Color4& color);
 
+        void DrawFillRect(const Rectangle& destination, const Color4& color);
+
+        void DrawRect(const Rectangle& destination, const Color4& color);
+
         void DrawText(const Ref<Font>& font, int size, const Vector2& destination, const String& text, const Color4& color);
 
-        void AddDrawCommand(int textureId, const ArrayView<const Vertex2D>& vertices, const ArrayView<const unsigned short>& indices);
+        void AddDrawCommand(Topology topology, int textureId, const ArrayView<const Vertex2D>& vertices, const ArrayView<const unsigned short>& indices);
 
     private:
         void SetChildren(const Array<Ref<Node>>& children);
@@ -86,6 +97,7 @@ namespace YAWN {
         //////////////////////////
 
         struct DrawCommand {
+            Topology Topology;
             int TextureId;
             int VertexOffset;
             int IndexOffset;

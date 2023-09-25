@@ -3,14 +3,101 @@
 using namespace YAWN;
 
 void Initialize() {
+    Ref<Font> font = ResourceManager::Load<Font>(Guid(L"f77df380-4ce3-ab24-9ba6-ef80efd64a73"));
+
     Scene::GetRoot()->AddChild(new Editor());
 
-    Ref<Control> control = new Control();
+    Ref<BoxContainer> mainForm = new BoxContainer();
+    mainForm->SetVertical(true);
+    mainForm->SetLocalRectangle(Rectangle(0.0f, 0.0f, 1280.0f, 720.0f));
 
-    control->SetLocalRectangle(Rectangle(100.0f, 100.0f, 512.0f, 512.0f));
-    control->SetBackgroundColor(Color::Black);
+    Ref<MenuBar> menuBar = new MenuBar();
+    menuBar->SetHorizontalExpand(true);
+    mainForm->AddChild(menuBar);
 
-    Scene::GetRoot()->AddChild(control);
+    {
+        Ref<Button> button = new Button();
+        button->SetText(L"File");
+        menuBar->AddChild(button);
+
+        Ref<Button> edit = new Button();
+        edit->SetText(L"Edit");
+        menuBar->AddChild(edit);
+
+        Ref<Button> view = new Button();
+        view->SetText(L"View");
+        menuBar->AddChild(view);
+
+        Ref<Button> project = new Button();
+        project->SetText(L"Project");
+        menuBar->AddChild(project);
+
+        Ref<Button> help = new Button();
+        help->SetText(L"Help");
+        menuBar->AddChild(help);
+    }
+
+    Ref<BoxContainer> container = new BoxContainer();
+    container->SetSplitter(true);
+    container->SetVerticalExpand(true);
+    container->SetHorizontalExpand(true);
+    {
+        Ref<BoxContainer> subContainer = new BoxContainer();
+        subContainer->SetLocalSize(232.0f);
+        subContainer->SetVerticalExpand(true);
+        container->AddChild(subContainer);
+
+        Ref<Section> section = new Section();
+        section->SetHorizontalExpand(true);
+        section->SetVerticalExpand(true);
+        section->SetText(L"HIERARCHY");
+        subContainer->AddChild(section);
+
+        subContainer = new BoxContainer();
+        subContainer->SetLocalSize(800.0f);
+        subContainer->SetVerticalExpand(true);
+        subContainer->SetSplitter(true);
+        subContainer->SetVertical(true);
+        container->AddChild(subContainer);
+
+        Ref<BoxContainer> subSubContainer = new BoxContainer();
+        subSubContainer->SetLocalSize(500.0f);
+        subSubContainer->SetHorizontalExpand(true);
+        subContainer->AddChild(subSubContainer);
+
+        section = new Section();
+        section->SetHorizontalExpand(true);
+        section->SetVerticalExpand(true);
+        section->SetText(L"SCENE");
+        subSubContainer->AddChild(section);
+
+        subSubContainer = new BoxContainer();
+        subSubContainer->SetLocalSize(300.0f);
+        subSubContainer->SetHorizontalExpand(true);
+        subSubContainer->SetVerticalExpand(true);
+        subContainer->AddChild(subSubContainer);
+
+        section = new Section();
+        section->SetHorizontalExpand(true);
+        section->SetVerticalExpand(true);
+        section->SetText(L"RESOURCES");
+        subSubContainer->AddChild(section);
+
+        subContainer = new BoxContainer();
+        subContainer->SetLocalSize(232.0f);
+        subContainer->SetVerticalExpand(true);
+        subContainer->SetHorizontalExpand(true);
+        container->AddChild(subContainer);
+
+        section = new Section();
+        section->SetHorizontalExpand(true);
+        section->SetVerticalExpand(true);
+        section->SetText(L"INSPECTOR");
+        subContainer->AddChild(section);
+    }
+    mainForm->AddChild(container);
+
+    Scene::GetRoot()->AddChild(mainForm);
 }
 
 int Main(int argc, char* argv[]) {

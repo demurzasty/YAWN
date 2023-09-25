@@ -257,10 +257,10 @@ void Renderer::LLSetClipRect(const Rectangle& clipRect) {
     sDriver->LLSetClipRect(clipRect);
 }
 
-void Renderer::LLDraw2D(int vertexOffset, int indexOffset, int indexCount) {
+void Renderer::LLDraw2D(Topology topology, int vertexOffset, int indexOffset, int indexCount) {
     ExclusiveLock lock(sMutex);
 
     YAWN_ASSERT(sDriver);
 
-    sDriver->LLDraw2D(vertexOffset, indexOffset, indexCount);
+    sDriver->LLDraw2D(topology, vertexOffset, indexOffset, indexCount);
 }

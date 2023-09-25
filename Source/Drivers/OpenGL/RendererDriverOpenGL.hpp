@@ -85,7 +85,7 @@ namespace YAWN {
 
         void LLSetClipRect(const Rectangle& clipRect) override;
 
-        void LLDraw2D(int vertexOffset, int indexOffset, int indexCount) override;
+        void LLDraw2D(Topology topology, int vertexOffset, int indexOffset, int indexCount) override;
 
     private:
         GLuint CompileShader(ArrayView<const char> vertexCode, ArrayView<const char> fragmentCode);

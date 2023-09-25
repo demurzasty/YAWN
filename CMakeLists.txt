@@ -56,6 +56,7 @@ set (SRC
 	"Source/Graphics/S3TC.cpp"
 	"Source/Graphics/Shader.cpp"
 	"Source/Graphics/Texture.cpp"
+	"Source/Graphics/Theme.cpp"
 	"Source/Graphics/Vertex.cpp"
 	"Source/IO/File.cpp"
 	"Source/IO/FileInfo.cpp"
@@ -86,7 +87,11 @@ set (SRC
 	"Source/Runtime/Settings.cpp"
 	"Source/Runtime/Variant.cpp"
 	"Source/Runtime/YTXT.cpp"
+	"Source/Scene/UI/BoxContainer.cpp"
+	"Source/Scene/UI/Button.cpp"
 	"Source/Scene/UI/Control.cpp"
+	"Source/Scene/UI/MenuBar.cpp"
+	"Source/Scene/UI/Section.cpp"
 	"Source/Scene/Camera3D.cpp"
 	"Source/Scene/Geometry3D.cpp"
 	"Source/Scene/ImGui2D.cpp"
@@ -119,7 +124,7 @@ endif ()
 add_library (YAWN STATIC ${SRC})
 target_compile_features (YAWN PUBLIC cxx_std_20)
 target_include_directories (YAWN PUBLIC "Include")
-target_link_libraries (YAWN PRIVATE json-c miniz imgui meshoptimizer rgbcx cgltf stb glew glfw)
+target_link_libraries (YAWN PRIVATE duktape json-c miniz imgui meshoptimizer rgbcx cgltf stb glew glfw)
 add_dependencies (YAWN Shaders)
 
 if (MSVC)

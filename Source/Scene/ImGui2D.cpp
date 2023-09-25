@@ -91,7 +91,7 @@ void ImGui2D::Draw() {
 
                 Renderer::LLSetTexture2D(cmd.GetTexID());
 
-                Renderer::LLDraw2D(cmd.VtxOffset, cmd.IdxOffset, cmd.ElemCount);
+                Renderer::LLDraw2D(Topology::Triangles, cmd.VtxOffset, cmd.IdxOffset, cmd.ElemCount);
             }
         }
     }

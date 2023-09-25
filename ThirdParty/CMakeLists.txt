@@ -4,6 +4,8 @@ set (BUILD_SHARED_LIBS OFF)
 
 add_subdirectory ("cgltf-1.13")
 
+add_subdirectory ("duktape-2.7.0")
+
 add_subdirectory ("glew-2.1.0")
 
 set (GLFW_BUILD_EXAMPLES OFF)

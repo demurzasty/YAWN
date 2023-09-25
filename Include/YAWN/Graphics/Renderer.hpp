@@ -69,7 +69,7 @@ namespace YAWN {
 
         static void LLSetClipRect(const Rectangle& clipRect);
 
-        static void LLDraw2D(int vertexOffset, int indexOffset, int indexCount);
+        static void LLDraw2D(Topology topology, int vertexOffset, int indexOffset, int indexCount);
 
     private:
         static Ref<RendererDriver> sDriver;

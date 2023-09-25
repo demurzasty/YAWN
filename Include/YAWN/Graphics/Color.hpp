@@ -30,6 +30,8 @@ namespace YAWN {
 
         Color4(const Color& color);
 
+        constexpr Color4(int r, int g, int b) : R(r), G(g), B(b), A(255) {}
+
         constexpr Color4(int r, int g, int b, int a) : R(r), G(g), B(b), A(a) {}
 
         unsigned char R, G, B, A;

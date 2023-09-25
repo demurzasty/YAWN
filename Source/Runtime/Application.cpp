@@ -1,5 +1,7 @@
 ﻿#include <YAWN/YAWN.hpp>
 
+#include <duktape.h>
+
 using namespace YAWN;
 
 Array<void(*)()> Application::sInitializations;
@@ -24,6 +26,10 @@ void Application::Setup() {
     Types::Register<Node3D>();
     Types::Register<Camera3D>();
     Types::Register<Geometry3D>();
+    //Types::Register<BoxContainer>();
+    //Types::Register<Button>();
+    //Types::Register<Control>();
+    //Types::Register<MenuBar>();
 
 #if !YAWN_PROD_BUILD
     /// Types::Register<Editor>();
@@ -40,9 +46,9 @@ void Application::Run() {
     }
 
     while (Window::IsOpen()) {
-        Window::PollEvents();
-
         Input::Refresh();
+
+        Window::PollEvents();
 
         Scene::Update(1.0f / 60.0f);
 

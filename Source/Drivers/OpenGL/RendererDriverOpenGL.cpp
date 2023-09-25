@@ -401,8 +401,17 @@ void RendererDriverOpenGL::LLSetClipRect(const Rectangle& clipRect) {
     YAWN_GL_CHECK(glScissor((int)clipRect.Left, (int)((float)viewport[3] - clipRect.GetBottom()), (int)(clipRect.Width), (int)(clipRect.Height)));
 }
 
-void RendererDriverOpenGL::LLDraw2D(int vertexOffset, int indexOffset, int indexCount) {
-    glDrawElementsBaseVertex(GL_TRIANGLES, indexCount, GL_UNSIGNED_SHORT, (void*)(intptr_t)(indexOffset * sizeof(unsigned short)), vertexOffset);
+void RendererDriverOpenGL::LLDraw2D(Topology topology, int vertexOffset, int indexOffset, int indexCount) {
+    GLenum type = GL_NONE;
+    switch (topology) {
+    case Topology::Points: type = GL_POINTS; break;
+    case Topology::Lines: type = GL_LINES; break;
+    case Topology::Triangles: type = GL_TRIANGLES; break;
+    }
+
+    if (type != GL_NONE) {
+        glDrawElementsBaseVertex(type, indexCount, GL_UNSIGNED_SHORT, (void*)(intptr_t)(indexOffset * sizeof(unsigned short)), vertexOffset);
+    }
 }
 
 GLuint RendererDriverOpenGL::CompileShader(ArrayView<const char> vertexCode, ArrayView<const char> fragmentCode) {

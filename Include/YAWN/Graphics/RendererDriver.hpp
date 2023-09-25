@@ -89,7 +89,7 @@ namespace YAWN {
 
         virtual void LLSetClipRect(const Rectangle& clipRect) = 0;
 
-        virtual void LLDraw2D(int vertexOffset, int indexOffset, int indexCount) = 0;
+        virtual void LLDraw2D(Topology topology, int vertexOffset, int indexOffset, int indexCount) = 0;
 
     protected:
         struct GPUTextureData {

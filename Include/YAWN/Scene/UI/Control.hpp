@@ -3,7 +3,7 @@
 #include "../Node2D.hpp"
 #include "../../Graphics/Color.hpp"
 #include "../../Math/Rectangle.hpp"
-#include "../../Graphics/Font.hpp"
+#include "../../Graphics/Theme.hpp"
 
 namespace YAWN {
     class Control : public Node2D {
@@ -11,6 +11,8 @@ namespace YAWN {
 
     public:
         virtual void Enter() override;
+
+        virtual void Update(float timeStep) override;
 
         virtual void Draw() override;
 
@@ -24,13 +26,33 @@ namespace YAWN {
 
         Rectangle GetGlobalRectangle() const;
 
-        void SetBackgroundColor(const Color4& color);
+        Control* GetControlParent() const;
 
-        const Color4& GetBackgroundColor() const;
+        void SetTheme(const Ref<Theme>& theme);
+
+        const Ref<Theme> GetTheme() const;
+
+        void SetHorizontalExpand(bool expand);
+
+        bool IsHorizontalExpand() const;
+
+        void SetVerticalExpand(bool expand);
+
+        bool IsVerticalExpand() const;
+
+        void SetPadding(float padding);
+
+        float GetPadding() const;
+
+    protected:
+        virtual void OnReparent() override;
 
     private:
         Vector2 mLocalSize = Vector2::Zero;
-        Color4 mBackgroundColor = Color::Transparent;
-        Ref<Font> mFont;
+        Control* mControlParent = nullptr;
+        Ref<Theme> mTheme;
+        bool mHorizontalExpand = false;
+        bool mVerticalExpand = false;
+        float mPadding = 0.0f;
     };
 }
