@@ -115,15 +115,16 @@ void Node::DrawTexture(int textureId, const Rectangle& destination, const Rectan
         return;
     }
 
-    Vector2 position = destination.GetPosition();
-    Vector2 size = destination.GetSize();
+    const Vector2& position = destination.Position;
+    const Vector2& size = destination.Size;
+
     Vector2 textureSize = Renderer::GetTextureSize(textureId);
 
     Vertex2D vertices[4] = {
-        Vertex2D(position, Vector2(source.Left / textureSize.X, source.Top / textureSize.Y), color),
-        Vertex2D(position + Vector2(0.0f, size.Y), Vector2(source.Left / textureSize.X, source.GetBottom() / textureSize.Y), color),
-        Vertex2D(position + Vector2(size.X, size.Y), Vector2(source.GetRight() / textureSize.X, source.GetBottom() / textureSize.Y), color),
-        Vertex2D(position + Vector2(size.X, 0.0f), Vector2(source.GetRight() / textureSize.X, source.Top / textureSize.Y), color),
+        Vertex2D(position, Vector2(source.Position.X / textureSize.X, source.Position.Y / textureSize.Y), color),
+        Vertex2D(position + Vector2(0.0f, size.Y), Vector2(source.Position.X / textureSize.X, source.GetEnd().Y / textureSize.Y), color),
+        Vertex2D(position + Vector2(size.X, size.Y), Vector2(source.GetEnd().X / textureSize.X, source.GetEnd().Y / textureSize.Y), color),
+        Vertex2D(position + Vector2(size.X, 0.0f), Vector2(source.GetEnd().X / textureSize.X, source.Position.Y / textureSize.Y), color),
     };
 
     unsigned short indices[6] = {
@@ -139,8 +140,8 @@ void Node::DrawFillRect(const Rectangle& destination, const Color4& color) {
 }
 
 void Node::DrawRect(const Rectangle& destination, const Color4& color) {
-    Vector2 position = destination.GetPosition();// +Vector2(1.0f);
-    Vector2 size = destination.GetSize();// -Vector2(2.0f);
+    const Vector2& position = destination.Position;
+    const Vector2& size = destination.Size;
 
     Vertex2D vertices[4] = {
         Vertex2D(position + Vector2(0.25f, 0.0f), Vector2(0.0f, 0.0f), color),
@@ -167,7 +168,7 @@ void Node::DrawText(const Ref<Font>& font, int size, const Vector2& destination,
         const FontGlyph& glyph = font->GetGlyph(text[i], size);
 
         DrawTexture(font->GetTextureId(),
-            Rectangle(position.X + glyph.Offset.X, position.Y + glyph.Offset.Y + size, glyph.Rectangle.Width, glyph.Rectangle.Height),
+            Rectangle(position.X + glyph.Offset.X, position.Y + glyph.Offset.Y + size, glyph.Rectangle.Size.X, glyph.Rectangle.Size.Y),
             glyph.Rectangle,
             color);
 

@@ -19,9 +19,9 @@ void Section::Draw() {
 
         Vector2 textSize = theme->GetDefaultFont()->GetTextSize(GetText(), 16);
 
-        DrawText(theme->GetDefaultFont(), 16, GetGlobalPosition() + rect.GetSize() / 2.0f - textSize / 2.0f, GetText(), theme->GetButtonTextColor());
+        DrawText(theme->GetDefaultFont(), 16, GetGlobalPosition() + rect.Size / 2.0f - textSize / 2.0f, GetText(), theme->GetButtonTextColor());
 
-        rect.Width = 4.0f;
+        rect.Size.X = 4.0f;
         DrawFillRect(rect, theme->GetSectionIndicatorColor());
 
         DrawRect(GetGlobalRectangle(), theme->GetFrameBorderColor());

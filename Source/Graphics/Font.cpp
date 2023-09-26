@@ -35,7 +35,7 @@ Font::~Font() {
 
 const FontGlyph& Font::GetGlyph(int codepoint, int size) const {
     FontGlyph& glyph = mGlyphs.GetOrAdd(codepoint);
-    if (glyph.Rectangle.Width > 0 && glyph.Rectangle.Height > 0) {
+    if (glyph.Rectangle.Size.X > 0 && glyph.Rectangle.Size.Y > 0) {
         return glyph;
     }
 
@@ -46,10 +46,10 @@ const FontGlyph& Font::GetGlyph(int codepoint, int size) const {
     glyph.Advance = 8.0f;
     Rectangle rect = Pack(Vector2(float(width), float(height)));
 
-    for (int y = 0; y < Math::FastFloatToInt(rect.Height); ++y) {
-        for (int x = 0; x < Math::FastFloatToInt(rect.Width); ++x) {
-            int index = (Math::FastFloatToInt(rect.Top) + y) * 512 + (Math::FastFloatToInt(rect.Left) + x);
-            mPixels[index] = Color4(255, 255, 255, int(bitmap[y * Math::FastFloatToInt(rect.Width) + x]));
+    for (int y = 0; y < Math::FastFloatToInt(rect.Size.Y); ++y) {
+        for (int x = 0; x < Math::FastFloatToInt(rect.Size.X); ++x) {
+            int index = (Math::FastFloatToInt(rect.Position.Y) + y) * 512 + (Math::FastFloatToInt(rect.Position.X) + x);
+            mPixels[index] = Color4(255, 255, 255, int(bitmap[y * Math::FastFloatToInt(rect.Size.X) + x]));
         }
     }
 
@@ -102,5 +102,5 @@ Rectangle Font::Pack(const Vector2& size) const {
     rect.h = Math::FastFloatToInt(size.Y + 2.0f);
     stbrp_pack_rects(&mInternalData->Context, &rect, 1);
 
-    return { rect.x + 1.0f, rect.y + 1.0f, size.X, size.Y };
+    return Rectangle(rect.x + 1.0f, rect.y + 1.0f, size.X, size.Y);
 }

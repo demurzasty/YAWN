@@ -82,15 +82,15 @@ void BoxContainer::Draw() {
                 if (const Ref<Control> control = CastTo<Control>(child); control) {
                     Rectangle rectangle;
                     if (IsVertical()) {
-                        rectangle.Left = control->GetGlobalPosition().X;
-                        rectangle.Top = control->GetGlobalPosition().Y + control->GetLocalSize().Y;
-                        rectangle.Width = control->GetLocalSize().X;
-                        rectangle.Height = GetMargin();
+                        rectangle.Position.X = control->GetGlobalPosition().X;
+                        rectangle.Position.Y = control->GetGlobalPosition().Y + control->GetLocalSize().Y;
+                        rectangle.Size.X = control->GetLocalSize().X;
+                        rectangle.Size.Y = GetMargin();
                     } else {
-                        rectangle.Left = control->GetGlobalPosition().X + control->GetLocalSize().X;
-                        rectangle.Top = control->GetGlobalPosition().Y;
-                        rectangle.Width = GetMargin();
-                        rectangle.Height = control->GetLocalSize().Y;
+                        rectangle.Position.X = control->GetGlobalPosition().X + control->GetLocalSize().X;
+                        rectangle.Position.Y = control->GetGlobalPosition().Y;
+                        rectangle.Size.X = GetMargin();
+                        rectangle.Size.Y = control->GetLocalSize().Y;
                     }
 
                     DrawFillRect(rectangle, GetChildren().Find(child) == mSelectedSplitter ? theme->GetActiveSplitterColor() : theme->GetSplitterColor());

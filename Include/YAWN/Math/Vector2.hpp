@@ -20,9 +20,13 @@ namespace YAWN {
 
         Vector2() = default;
 
-        Vector2(float value);
+        constexpr Vector2(float value)
+            : X(value), Y(value) {
+        }
 
-        Vector2(float x, float y);
+        constexpr Vector2(float x, float y)
+            : X(x), Y(y) {
+        }
 
         Vector2 operator+(const Vector2& rhs) const;
 

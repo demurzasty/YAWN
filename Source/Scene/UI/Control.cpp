@@ -58,8 +58,8 @@ const Vector2& Control::GetLocalSize() const {
 }
 
 void Control::SetLocalRectangle(const Rectangle& rectangle) {
-    SetLocalPosition(rectangle.GetPosition());
-    SetLocalSize(rectangle.GetSize());
+    SetLocalPosition(rectangle.Position);
+    SetLocalSize(rectangle.Size);
 
     RequestRedraw();
 }

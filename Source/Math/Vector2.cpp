@@ -29,14 +29,6 @@ bool Vector2::AlmostEquals(const Vector2& lhs, const Vector2& rhs) {
         Math::AlmostEquals(lhs.Y, rhs.Y);
 }
 
-Vector2::Vector2(float value)
-    : X(value), Y(value) {
-}
-
-Vector2::Vector2(float x, float y)
-    : X(x), Y(y) {
-}
-
 Vector2 Vector2::operator+(const Vector2& rhs) const {
     return Vector2(X + rhs.X, Y + rhs.Y);
 }

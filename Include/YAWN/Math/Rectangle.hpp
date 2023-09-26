@@ -6,41 +6,20 @@ namespace YAWN {
     struct Rectangle {
         Rectangle() = default;
 
-        constexpr Rectangle(float left, float top, float width, float height) : Left(left), Top(top), Width(width), Height(height) {}
+        constexpr Rectangle(float x, float y, float width, float height) : Position(x, y), Size(width, height) {}
 
-        constexpr Rectangle(const Vector2& position, const Vector2& size) : Left(position.X), Top(position.Y), Width(size.X), Height(size.Y) {}
+        constexpr Rectangle(const Vector2& position, const Vector2& size) : Position(position), Size(size) {}
 
         constexpr bool Contains(const Vector2& point) const {
-            return point.X >= Left && point.X < Left + Width &&
-                point.Y >= Top && point.Y < Top + Height;
+            return point.X >= Position.X && point.X < Position.X + Size.X &&
+                point.Y >= Position.Y && point.Y < Position.Y + Size.Y;
         }
 
-        constexpr float GetRight() const {
-            return Left + Width;
+        inline Vector2 GetEnd() const {
+            return Position + Size;
         }
 
-        constexpr float GetBottom() const {
-            return Top + Height;
-        }
-
-        constexpr void SetPosition(const Vector2& position) {
-            Left = position.X;
-            Top = position.Y;
-        }
-
-        Vector2 GetPosition() const {
-            return Vector2(Left, Top);
-        }
-
-        constexpr void SetSize(const Vector2& size) {
-            Width = size.X;
-            Height = size.Y;
-        }
-
-        Vector2 GetSize() const {
-            return Vector2(Width, Height);
-        }
-
-        float Left, Top, Width, Height;
+        Vector2 Position;
+        Vector2 Size;
     };
 }
