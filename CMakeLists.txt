@@ -64,6 +64,7 @@ set (SRC
 	"Source/Math/Math.cpp"
 	"Source/Math/Matrix3.cpp"
 	"Source/Math/Matrix4.cpp"
+	"Source/Math/Rectangle.cpp"
 	"Source/Math/Vector2.cpp"
 	"Source/Math/Vector3.cpp"
 	"Source/Math/Vector4.cpp"

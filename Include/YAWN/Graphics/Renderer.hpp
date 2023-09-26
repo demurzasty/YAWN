@@ -69,6 +69,10 @@ namespace YAWN {
 
         static void LLSetClipRect(const Rectangle& clipRect);
 
+        static void LLPushClipRect(const Rectangle& clipRect);
+
+        static void LLPopClipRect();
+
         static void LLDraw2D(Topology topology, int vertexOffset, int indexOffset, int indexCount);
 
     private:

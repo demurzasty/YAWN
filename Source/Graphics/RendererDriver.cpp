@@ -1,4 +1,5 @@
 #include <YAWN/Graphics/RendererDriver.hpp>
+#include <YAWN/Platform/Window.hpp>
 
 using namespace YAWN;
 
@@ -56,4 +57,30 @@ void RendererDriver::DestroyCanvasItem(int id) {
 
 bool RendererDriver::IsCanvasItemValid(int id) {
     return mCanvasItemPool.IsValid(id);
+}
+
+void RendererDriver::LLPushClipRect(const Rectangle& clipRect) {
+    if (!mClipRects.IsEmpty()) {
+        Rectangle newClipRect = clipRect.Intersect(mClipRects.GetBack());
+
+        LLSetClipRect(newClipRect);
+
+        mClipRects.Add(newClipRect);
+    } else {
+        LLSetClipRect(clipRect);
+
+        mClipRects.Add(clipRect);
+    }
+}
+
+void RendererDriver::LLPopClipRect() {
+    if (!mClipRects.IsEmpty()) {
+        mClipRects.Pop();
+
+        if (!mClipRects.IsEmpty()) {
+            LLSetClipRect(mClipRects.GetBack());
+        } else {
+            LLSetClipRect(Rectangle(Vector2::Zero, Window::GetSize()));
+        }
+    } 
 }

@@ -1,4 +1,6 @@
 #include <YAWN/Scene/Scene.hpp>
+#include <YAWN/Scene/UI/Control.hpp>
+#include <YAWN/Graphics/Renderer.hpp>
 
 using namespace YAWN;
 
@@ -65,10 +67,19 @@ void Scene::HandleEvent(const Ref<Node>& node, const Event& event) {
 }
 
 void Scene::Redraw(const Ref<Node>& node) {
+    const Ref<Control> control = CastTo<Control>(node);
+    if (control) {
+        Renderer::LLPushClipRect(control->GetGlobalRectangle());
+    }
+
     node->Redraw();
 
     for (const Ref<Node>& child : node->GetChildren()) {
         Redraw(child);
+    }
+
+    if (control) {
+        Renderer::LLPopClipRect();
     }
 }
 

@@ -257,6 +257,22 @@ void Renderer::LLSetClipRect(const Rectangle& clipRect) {
     sDriver->LLSetClipRect(clipRect);
 }
 
+void Renderer::LLPushClipRect(const Rectangle& clipRect) {
+    ExclusiveLock lock(sMutex);
+
+    YAWN_ASSERT(sDriver);
+
+    sDriver->LLPushClipRect(clipRect);
+}
+
+void Renderer::LLPopClipRect() {
+    ExclusiveLock lock(sMutex);
+
+    YAWN_ASSERT(sDriver);
+
+    sDriver->LLPopClipRect();
+}
+
 void Renderer::LLDraw2D(Topology topology, int vertexOffset, int indexOffset, int indexCount) {
     ExclusiveLock lock(sMutex);
 

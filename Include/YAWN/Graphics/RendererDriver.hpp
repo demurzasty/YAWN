@@ -89,6 +89,10 @@ namespace YAWN {
 
         virtual void LLSetClipRect(const Rectangle& clipRect) = 0;
 
+        virtual void LLPushClipRect(const Rectangle& clipRect);
+
+        virtual void LLPopClipRect();
+
         virtual void LLDraw2D(Topology topology, int vertexOffset, int indexOffset, int indexCount) = 0;
 
     protected:
@@ -166,5 +170,7 @@ namespace YAWN {
         Pool mTexturePool;
         Pool mMaterialPool;
         Pool mCanvasItemPool;
+
+        Array<Rectangle> mClipRects;
     };
 }

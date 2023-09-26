@@ -15,6 +15,8 @@ namespace YAWN {
                 point.Y >= Position.Y && point.Y < Position.Y + Size.Y;
         }
 
+        Rectangle Intersect(const Rectangle& rect) const;
+
         inline Vector2 GetEnd() const {
             return Position + Size;
         }
