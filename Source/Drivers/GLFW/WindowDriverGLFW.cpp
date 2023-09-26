@@ -3,6 +3,7 @@
 #include <YAWN/Runtime/Settings.hpp>
 #include <YAWN/Platform/Input.hpp>
 #include <YAWN/Graphics/Renderer.hpp>
+#include <YAWN/Scene/Scene.hpp>
 
 using namespace YAWN;
 
@@ -138,6 +139,12 @@ static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, i
     if (mappedKey != Key::Last) {
         Input::SetKeyState(mappedKey, action == GLFW_PRESS);
     }
+
+    if (action == GLFW_PRESS) {
+        Scene::HandleEvent(KeyDownEvent(mappedKey));
+    } else {
+        Scene::HandleEvent(KeyUpEvent(mappedKey));
+    }
 }
 
 static MouseButton MapMouseButton(int mouseButton) {
@@ -155,14 +162,32 @@ static void MouseButtonCallback(GLFWwindow* window, int button, int action, int 
     if (mappedButton != MouseButton::Last) {
         Input::SetMouseButtonState(mappedButton, action == GLFW_PRESS);
     }
+
+    double x, y;
+    glfwGetCursorPos(window, &x, &y);
+
+    Vector2 position = Vector2(float(x), float(y));
+    if (action == GLFW_PRESS) {
+        Scene::HandleEvent(MouseButtonDownEvent(position, mappedButton));
+    } else {
+        Scene::HandleEvent(MouseButtonUpEvent(position, mappedButton));
+    }
 }
 
 static void CursorPositionCallback(GLFWwindow* window, double x, double y) {
-    Input::UpdateMousePosition(Vector2(float(x), float(y)));
+    Vector2 position = Vector2(Vector2(float(x), float(y)));
+
+    Input::UpdateMousePosition(position);
+
+    Scene::HandleEvent(MouseMoveEvent(position));
 }
 
 static void FramebufferSizeCallback(GLFWwindow* window, int width, int height) {
-    Renderer::SetFramebufferSize(Vector2(float(width), float(height)));
+    Vector2 size = Vector2(float(width), float(height));
+
+    Renderer::SetFramebufferSize(size);
+
+    Scene::HandleEvent(WindowResizeEvent(size));
 }
 
 WindowDriverGLFW::WindowDriverGLFW() {
@@ -188,7 +213,7 @@ WindowDriverGLFW::~WindowDriverGLFW() {
 }
 
 void WindowDriverGLFW::PollEvents() {
-    glfwPollEvents();
+    glfwWaitEvents();
 }
 
 bool WindowDriverGLFW::IsOpen() const {

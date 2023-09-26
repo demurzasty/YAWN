@@ -8,6 +8,7 @@
 #include "../Graphics/Font.hpp"
 #include "../Graphics/Vertex.hpp"
 #include "../Graphics/Topology.hpp"
+#include "../Platform/Event.hpp"
 
 namespace YAWN {
     class Node : public Reference {
@@ -36,6 +37,8 @@ namespace YAWN {
         virtual void LateUpdate(float timeStep);
 
         virtual void FixedUpdate(float timeStep);
+
+        virtual void HandleEvent(const Event& event);
 
         virtual void Draw();
 

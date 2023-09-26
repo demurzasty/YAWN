@@ -1,6 +1,7 @@
 #include <YAWN/Scene/UI/Control.hpp>
 #include <YAWN/Graphics/Renderer.hpp>
 #include <YAWN/Runtime/ResourceManager.hpp>
+#include <YAWN/Platform/Window.hpp>
 
 using namespace YAWN;
 
@@ -25,6 +26,16 @@ void Control::Update(float timeStep) {
 
             if (mHorizontalExpand) {
                 size.X = control->GetLocalSize().X - GetLocalPosition().X - control->GetPadding();
+            }
+        } else {
+            Vector2 windowSize = Window::GetSize();
+
+            if (mVerticalExpand) {
+                size.Y = windowSize.Y - GetLocalPosition().Y;
+            }
+
+            if (mHorizontalExpand) {
+                size.X = windowSize.X - GetLocalPosition().X;
             }
         }
 

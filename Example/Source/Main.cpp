@@ -10,6 +10,8 @@ void Initialize() {
     Ref<BoxContainer> mainForm = new BoxContainer();
     mainForm->SetVertical(true);
     mainForm->SetLocalRectangle(Rectangle(0.0f, 0.0f, 1280.0f, 720.0f));
+    mainForm->SetVerticalExpand(true);
+    mainForm->SetHorizontalExpand(true);
 
     Ref<MenuBar> menuBar = new MenuBar();
     menuBar->SetHorizontalExpand(true);
@@ -50,7 +52,7 @@ void Initialize() {
         Ref<Section> section = new Section();
         section->SetHorizontalExpand(true);
         section->SetVerticalExpand(true);
-        section->SetText(L"HIERARCHY");
+        section->SetText(L"Hierarchy");
         subContainer->AddChild(section);
 
         subContainer = new BoxContainer();
@@ -68,7 +70,7 @@ void Initialize() {
         section = new Section();
         section->SetHorizontalExpand(true);
         section->SetVerticalExpand(true);
-        section->SetText(L"SCENE");
+        section->SetText(L"Scene");
         subSubContainer->AddChild(section);
 
         subSubContainer = new BoxContainer();
@@ -80,7 +82,7 @@ void Initialize() {
         section = new Section();
         section->SetHorizontalExpand(true);
         section->SetVerticalExpand(true);
-        section->SetText(L"RESOURCES");
+        section->SetText(L"Resources");
         subSubContainer->AddChild(section);
 
         subContainer = new BoxContainer();
@@ -92,7 +94,7 @@ void Initialize() {
         section = new Section();
         section->SetHorizontalExpand(true);
         section->SetVerticalExpand(true);
-        section->SetText(L"INSPECTOR");
+        section->SetText(L"Inspector");
         subContainer->AddChild(section);
     }
     mainForm->AddChild(container);

@@ -26,6 +26,9 @@ void Node::LateUpdate(float timeStep) {
 void Node::FixedUpdate(float timeStep) {
 }
 
+void Node::HandleEvent(const Event& event) {
+}
+
 void Node::Draw() {
 }
 

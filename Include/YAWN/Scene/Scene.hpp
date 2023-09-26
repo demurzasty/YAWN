@@ -15,6 +15,8 @@ namespace YAWN {
 
         static void FixedUpdate(float timeStep);
 
+        static void HandleEvent(const Event& event);
+
         static void Redraw();
 
         static const Ref<Node>& GetRoot();
@@ -25,6 +27,8 @@ namespace YAWN {
         static void LateUpdate(const Ref<Node>& node, float timeStep);
 
         static void FixedUpdate(const Ref<Node>& node, float timeStep);
+
+        static void HandleEvent(const Ref<Node>& node, const Event& event);
 
         static void Redraw(const Ref<Node>& node);
 

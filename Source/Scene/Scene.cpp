@@ -24,6 +24,10 @@ void Scene::FixedUpdate(float timeStep) {
     FixedUpdate(sRoot, timeStep);
 }
 
+void Scene::HandleEvent(const Event& event) {
+    HandleEvent(sRoot, event);
+}
+
 void Scene::Redraw() {
     Redraw(sRoot);
 }
@@ -49,6 +53,14 @@ void Scene::FixedUpdate(const Ref<Node>& node, float timeStep) {
 
     for (const Ref<Node>& child : node->GetChildren()) {
         FixedUpdate(child, timeStep);
+    }
+}
+
+void Scene::HandleEvent(const Ref<Node>& node, const Event& event) {
+    node->HandleEvent(event);
+
+    for (const Ref<Node>& child : node->GetChildren()) {
+        HandleEvent(child, event);
     }
 }
 

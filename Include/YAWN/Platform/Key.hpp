@@ -1,7 +1,7 @@
 #pragma once 
 
 namespace YAWN {
-    enum class Key {
+    enum class Key : unsigned char {
         Space,
         Apostrophe,
         Comma,

@@ -46,6 +46,7 @@
 #include "Math/Vector3.hpp"
 #include "Math/Vector4.hpp"
 
+#include "Platform/Event.hpp"
 #include "Platform/Input.hpp"
 #include "Platform/Key.hpp"
 #include "Platform/MouseButton.hpp"
