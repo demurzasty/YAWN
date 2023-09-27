@@ -7,49 +7,91 @@ void Initialize() {
 
     Ref<WindowContainer> windowContainer = new WindowContainer();
 
-    Ref<BoxContainer> boxContainer = new BoxContainer();
-    boxContainer->SetSplitter(true);
+    Ref<BoxContainer> mainContainer = new BoxContainer();
+    mainContainer->SetVertical(true);
+    mainContainer->SetVerticalExpand(true);
+    mainContainer->SetHorizontalExpand(true);
+    mainContainer->SetMargin(0.0f);
 
     {
-        Ref<Section> section = new Section();
-        section->SetMinimumSize(Vector2(250.0f, 200.0f));
-        section->SetText(L"Scene #1");
-        boxContainer->AddChild(section);
+        Ref<MenuBar> menuBar = new MenuBar();
+
+        {
+            Ref<Button> button = new Button();
+            button->SetText(L"Project");
+            menuBar->AddChild(button);
+        }
+
+        {
+            Ref<Button> button = new Button();
+            button->SetText(L"Debug");
+            menuBar->AddChild(button);
+        }
+
+        {
+            Ref<Button> button = new Button();
+            button->SetText(L"Tools");
+            menuBar->AddChild(button);
+        }
+
+        {
+            Ref<Button> button = new Button();
+            button->SetText(L"Help");
+            menuBar->AddChild(button);
+        }
+
+        mainContainer->AddChild(menuBar);
     }
 
     {
-        Ref<BoxContainer> centerContainer = new BoxContainer();
-        centerContainer->SetVertical(true);
-        centerContainer->SetSplitter(true);
-        centerContainer->SetHorizontalExpand(true);
+        Ref<BoxContainer> boxContainer = new BoxContainer();
+        boxContainer->SetSplitter(true);
+        boxContainer->SetVerticalExpand(true);
+        boxContainer->SetHorizontalExpand(true);
 
         {
             Ref<Section> section = new Section();
-            section->SetMinimumSize(Vector2(100.0f, 100.0f));
+            section->SetMinimumSize(Vector2(250.0f, 200.0f));
+            section->SetText(L"Scene");
+            boxContainer->AddChild(section);
+        }
+
+        {
+            Ref<BoxContainer> centerContainer = new BoxContainer();
+            centerContainer->SetVertical(true);
+            centerContainer->SetSplitter(true);
+            centerContainer->SetHorizontalExpand(true);
+
+            {
+                Ref<Section> section = new Section();
+                section->SetMinimumSize(Vector2(100.0f, 100.0f));
+                section->SetVerticalExpand(true);
+                section->SetText(L"Viewport");
+                centerContainer->AddChild(section);
+            }
+
+            {
+                Ref<Section> section = new Section();
+                section->SetMinimumSize(Vector2(100.0f, 250.0f));
+                section->SetText(L"Resources");
+                centerContainer->AddChild(section);
+            }
+
+            boxContainer->AddChild(centerContainer);
+        }
+
+        {
+            Ref<Section> section = new Section();
+            section->SetMinimumSize(Vector2(250.0f, 100.0f));
             section->SetVerticalExpand(true);
-            section->SetText(L"Viewport");
-            centerContainer->AddChild(section);
+            section->SetText(L"Inspector");
+            boxContainer->AddChild(section);
         }
 
-        {
-            Ref<Section> section = new Section();
-            section->SetMinimumSize(Vector2(100.0f, 250.0f));
-            section->SetText(L"Resources");
-            centerContainer->AddChild(section);
-        }
-
-        boxContainer->AddChild(centerContainer);
+        mainContainer->AddChild(boxContainer);
     }
 
-    {
-        Ref<Section> section = new Section();
-        section->SetMinimumSize(Vector2(250.0f, 100.0f));
-        section->SetVerticalExpand(true);
-        section->SetText(L"Inspector");
-        boxContainer->AddChild(section);
-    }
-
-    windowContainer->AddChild(boxContainer);
+    windowContainer->AddChild(mainContainer);
 
     Scene::GetRoot()->AddChild(windowContainer);
 

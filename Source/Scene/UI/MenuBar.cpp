@@ -2,21 +2,22 @@
 
 using namespace YAWN;
 
-void MenuBar::Enter() {
-    Base::Enter();
-
+MenuBar::MenuBar() {
     SetMargin(8.0f);
     SetPadding(4.0f);
+    SetLocalSize(24.0f + GetPadding() * 2.0f);
+}
+
+void MenuBar::Enter() {
+    Base::Enter();
 }
 
 void MenuBar::Update(float timeStep) {
-    SetLocalSize(Vector2(GetLocalSize().X, 24.0f + GetPadding() * 2.0f));
+    Base::Update(timeStep);
 
     for (const Ref<Node>& child : GetChildren()) {
         if (const Ref<Control> control = CastTo<Control>(child); control) {
             control->SetVerticalExpand(true);
         }
     }
-
-    Base::Update(timeStep);
 }

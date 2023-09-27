@@ -5,12 +5,12 @@
 
 using namespace YAWN;
 
+Control::Control() {
+    SetTheme(ResourceManager::GetDefaultTheme());
+}
+
 void Control::Enter() {
     Base::Enter();
-
-    if (!GetTheme()) {
-        SetTheme(ResourceManager::GetDefaultTheme());
-    }
 }
 
 void Control::Update(float timeStep) {

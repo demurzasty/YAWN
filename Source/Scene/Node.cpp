@@ -194,7 +194,7 @@ void Node::DrawText(const Ref<Font>& font, int size, const Vector2& destination,
         return;
     }
 
-    Vector2 position = destination;
+    Vector2 position = Vector2::Floor(destination);
     for (int i = 0; i < text.GetSize(); ++i) {
         const FontGlyph& glyph = font->GetGlyph(text[i], size);
 

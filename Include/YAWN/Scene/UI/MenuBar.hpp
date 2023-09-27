@@ -7,6 +7,8 @@ namespace YAWN {
         YAWN_OBJECT(MenuBar, BoxContainer);
 
     public:
+        MenuBar();
+
         virtual ~MenuBar() = default;
 
         virtual void Enter() override;

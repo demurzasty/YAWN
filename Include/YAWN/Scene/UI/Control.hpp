@@ -10,6 +10,10 @@ namespace YAWN {
         YAWN_OBJECT(Control, Node2D);
 
     public:
+        Control();
+
+        virtual ~Control() = default;
+
         virtual void Enter() override;
 
         virtual void Update(float timeStep) override;

@@ -93,6 +93,6 @@ void Button::CheckSize() {
         size.X = Math::Max(size.X, textSize.X + padding * 2.0f);
         size.Y = Math::Max(size.Y, textSize.Y);
 
-        SetLocalSize(size);
+        SetMinimumSize(size);
     }
 }

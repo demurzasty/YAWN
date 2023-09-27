@@ -14,8 +14,8 @@ void BoxContainer::Update(float timeStep) {
         const Vector2& mousePosition = Input::GetMousePosition();
         if (GetGlobalRectangle().Contains(mousePosition)) {
             if (Input::IsMouseButtonPressed(MouseButton::Left)) {
-               // float offset = 0.0f;
-                for (const Ref<Node>& child : GetChildren()) {
+                for (int i = 0; i < GetChildCount() - 1; ++i) {
+                    const Ref<Node>& child = GetChild(i);
                     if (const Ref<Control> control = CastTo<Control>(child); control) {
                         Vector2 position = control->GetGlobalPosition();
                         Vector2 size = control->GetLocalSize();
@@ -86,18 +86,15 @@ void BoxContainer::Update(float timeStep) {
 
         int notExpandedChildCount = GetChildCount() - expandedChildCount;
 
-        Vector2 size = GetLocalSize();
+        Vector2 size = GetLocalSize() - GetPadding() * 2.0f;
         Vector2 diffSize = size - (minimumSize + GetMargin() * (notExpandedChildCount - 1));
         Vector2 expandedElementSize = Vector2::Floor((diffSize - GetMargin() * (expandedChildCount - 1)) / expandedChildCount);
 
-        Vector2 position = Vector2::Zero;
+        Vector2 position = GetPadding();
         for (const Ref<Node>& child : GetChildren()) {
             if (const Ref<Control> control = CastTo<Control>(child); control) {
                 if (IsVertical()) {
-                    if (control->IsLastChild()) {
-                        control->SetLocalSize(Vector2(size.X, control->GetLocalSize().Y));
-                        control->SetLocalPosition(position);
-                    } else if (control->IsVerticalExpand()) {
+                    if (control->IsVerticalExpand()) {
                         control->SetLocalSize(Vector2(size.X, expandedElementSize.Y));
                         control->SetLocalPosition(position);
                         position.Y += expandedElementSize.Y + GetMargin();
@@ -107,10 +104,7 @@ void BoxContainer::Update(float timeStep) {
                         position.Y += control->GetLocalSize().Y + GetMargin();
                     }
                 } else {
-                    if (control->IsLastChild()) {
-                        control->SetLocalSize(Vector2(control->GetLocalSize().X, size.Y));
-                        control->SetLocalPosition(position);
-                    } else if (control->IsHorizontalExpand()) {
+                    if (control->IsHorizontalExpand()) {
                         control->SetLocalSize(Vector2(expandedElementSize.X, size.Y));
                         control->SetLocalPosition(position);
                         position.X += expandedElementSize.X + GetMargin();
@@ -123,8 +117,8 @@ void BoxContainer::Update(float timeStep) {
             }
         }
     } else {
-        Vector2 size = GetLocalSize();
-        Vector2 position = Vector2::Zero;
+        Vector2 size = GetLocalSize() - GetPadding() * 2.0f;
+        Vector2 position = GetPadding();
         for (const Ref<Node>& child : GetChildren()) {
             if (const Ref<Control> control = CastTo<Control>(child); control) {
                 if (IsVertical()) {
