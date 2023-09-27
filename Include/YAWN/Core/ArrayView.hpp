@@ -35,7 +35,7 @@ namespace YAWN {
             return mData[index];
         }
 
-        int Find(const T& value) const {
+        int Find(T const& value) const {
             for (int i = 0; i < mSize; ++i) {
                 if (mData[i] == value) {
                     return i;

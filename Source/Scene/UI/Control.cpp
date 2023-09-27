@@ -15,32 +15,6 @@ void Control::Enter() {
 
 void Control::Update(float timeStep) {
     Base::Update(timeStep);
-
-    if (mVerticalExpand || mHorizontalExpand) {
-        Vector2 size = GetLocalSize();
-
-        if (const Control* control = GetControlParent(); control) {
-            if (mVerticalExpand) {
-                size.Y = control->GetLocalSize().Y - GetLocalPosition().Y - control->GetPadding();
-            }
-
-            if (mHorizontalExpand) {
-                size.X = control->GetLocalSize().X - GetLocalPosition().X - control->GetPadding();
-            }
-        } else {
-            Vector2 windowSize = Window::GetSize();
-
-            if (mVerticalExpand) {
-                size.Y = windowSize.Y - GetLocalPosition().Y;
-            }
-
-            if (mHorizontalExpand) {
-                size.X = windowSize.X - GetLocalPosition().X;
-            }
-        }
-
-        SetLocalSize(size);
-    }
 }
 
 void Control::Draw() {
@@ -48,13 +22,24 @@ void Control::Draw() {
 }
 
 void Control::SetLocalSize(const Vector2& size) {
-    mLocalSize = size;
+    mLocalSize = Vector2::Max(size, mMinimumSize);
 
     RequestRedraw();
 }
 
 const Vector2& Control::GetLocalSize() const {
     return mLocalSize;
+}
+
+void Control::SetMinimumSize(const Vector2& size) {
+    mMinimumSize = size;
+    mLocalSize = Vector2::Max(mLocalSize, mMinimumSize);
+
+    RequestRedraw();
+}
+
+const Vector2& Control::GetMinimumSize() const {
+    return mMinimumSize;
 }
 
 void Control::SetLocalRectangle(const Rectangle& rectangle) {

@@ -14,6 +14,8 @@ void Section::Draw() {
     Base::Draw();
 
     if (const Ref<Theme> theme = GetTheme(); theme) {
+        DrawFillRect(GetGlobalRectangle(), theme->GetContainerColor());
+
         Rectangle rect(GetGlobalPosition(), Vector2(GetLocalSize().X, 32.0f));
         DrawFillRect(rect, theme->GetSectionBarColor());
 

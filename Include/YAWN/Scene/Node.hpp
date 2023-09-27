@@ -70,6 +70,16 @@ namespace YAWN {
 
         ArrayView<const Ref<Node>> GetChildren() const;
 
+        int GetChildCount() const;
+
+        const Ref<Node>& GetChild(int index) const;
+
+        int GetIndex() const;
+
+        bool IsFirstChild() const;
+
+        bool IsLastChild() const;
+
     protected:
         ///////////////////////////
         ////////// Events /////////

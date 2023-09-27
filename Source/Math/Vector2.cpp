@@ -29,6 +29,26 @@ bool Vector2::AlmostEquals(const Vector2& lhs, const Vector2& rhs) {
         Math::AlmostEquals(lhs.Y, rhs.Y);
 }
 
+Vector2 Vector2::Min(const Vector2& lhs, const Vector2& rhs) {
+    return Vector2(Math::Min(lhs.X, rhs.X), Math::Min(lhs.Y, rhs.Y));
+}
+
+Vector2 Vector2::Max(const Vector2& lhs, const Vector2& rhs) {
+    return Vector2(Math::Max(lhs.X, rhs.X), Math::Max(lhs.Y, rhs.Y));
+}
+
+Vector2 Vector2::Floor(const Vector2& vec) {
+    return Vector2(Math::Floor(vec.X), Math::Floor(vec.Y));
+}
+
+Vector2 Vector2::Ceil(const Vector2& vec) {
+    return Vector2(Math::Ceil(vec.X), Math::Floor(vec.Y));
+}
+
+Vector2 Vector2::Round(const Vector2& vec) {
+    return Vector2(Math::Round(vec.X), Math::Floor(vec.Y));
+}
+
 Vector2 Vector2::operator+(const Vector2& rhs) const {
     return Vector2(X + rhs.X, Y + rhs.Y);
 }

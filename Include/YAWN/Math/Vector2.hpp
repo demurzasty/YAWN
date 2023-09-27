@@ -18,6 +18,16 @@ namespace YAWN {
 
         static bool AlmostEquals(const Vector2& lhs, const Vector2& rhs);
 
+        static Vector2 Min(const Vector2& lhs, const Vector2& rhs);
+        
+        static Vector2 Max(const Vector2& lhs, const Vector2& rhs);
+
+        static Vector2 Floor(const Vector2& vec);
+
+        static Vector2 Ceil(const Vector2& vec);
+
+        static Vector2 Round(const Vector2& vec);
+
         Vector2() = default;
 
         constexpr Vector2(float value)

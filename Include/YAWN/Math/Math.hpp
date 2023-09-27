@@ -12,6 +12,12 @@ namespace YAWN {
 
         static float DegreesToRadians(float degrees);
 
+        static float Floor(float value);
+
+        static float Ceil(float value);
+
+        static float Round(float value);
+
         static bool IsPowerOfTwo(int x);
 
         static int NextPowerOfTwo(int v);

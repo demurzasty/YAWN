@@ -89,8 +89,39 @@ void Node::AddSibling(const Ref<Node>& node) {
     mParent->AddChild(node);
 }
 
+int Node::GetChildCount() const {
+    return mChildren.GetSize();
+}
+
+const Ref<Node>& Node::GetChild(int index) const {
+    YAWN_ASSERT(index >= 0 && index < GetChildCount());
+
+    return mChildren[index];
+}
+
 ArrayView<const Ref<Node>> Node::GetChildren() const {
     return mChildren;
+}
+
+int Node::GetIndex() const {
+    // TODO: Should be cached.
+    if (mParent) {
+        for (int i = 0; i < mParent->GetChildCount(); ++i) {
+            if (mParent->GetChild(i).Get() == this) {
+                return i;
+            }
+        }
+    }
+
+    return -1;
+}
+
+bool Node::IsFirstChild() const {
+    return GetIndex() == 0;
+}
+
+bool Node::IsLastChild() const {
+    return mParent && GetIndex() == mParent->GetChildCount() - 1;
 }
 
 void Node::Enter() {

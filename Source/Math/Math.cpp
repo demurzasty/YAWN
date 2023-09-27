@@ -12,6 +12,18 @@ float Math::DegreesToRadians(float degrees) {
     return degrees * PI / 180.0f;
 }
 
+float Math::Floor(float value) {
+    return floorf(value);
+}
+
+float Math::Ceil(float value) {
+    return ceilf(value);
+}
+
+float Math::Round(float value) {
+    return roundf(value);
+}
+
 bool Math::IsPowerOfTwo(int value) {
     return !(value == 0) && !(value & (value - 1));
 }

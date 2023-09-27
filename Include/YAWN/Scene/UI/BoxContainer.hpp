@@ -1,12 +1,14 @@
 #pragma once 
 
-#include "Control.hpp"
+#include "Container.hpp"
 
 namespace YAWN {
-    class BoxContainer : public Control {
-        YAWN_OBJECT(BoxContainer, Control);
+    class BoxContainer : public Container {
+        YAWN_OBJECT(BoxContainer, Container);
 
     public:
+        BoxContainer();
+
         virtual ~BoxContainer() = default;
 
         virtual void Update(float timeStep) override;
@@ -17,18 +19,16 @@ namespace YAWN {
 
         bool IsVertical() const;
 
-        void SetMargin(float margin);
-
-        float GetMargin() const;
-
         void SetSplitter(bool splitter);
 
         bool IsSplitter() const;
 
     private:
+        bool HasExpandedChild() const;
+
+    private:
         bool mVertical = false;
         bool mSplitter = false;
-        float mMargin = 0.0f;
 
         int mSelectedSplitter = -1;
         Vector2 mLastMousePosition = Vector2::Zero;

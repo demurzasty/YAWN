@@ -20,6 +20,10 @@ namespace YAWN {
 
         const Vector2& GetLocalSize() const;
 
+        void SetMinimumSize(const Vector2& size);
+
+        const Vector2& GetMinimumSize() const;
+
         void SetLocalRectangle(const Rectangle& rectangle);
 
         Rectangle GetLocalRectangle() const;
@@ -49,6 +53,7 @@ namespace YAWN {
 
     private:
         Vector2 mLocalSize = Vector2::Zero;
+        Vector2 mMinimumSize = Vector2::Zero;
         Control* mControlParent = nullptr;
         Ref<Theme> mTheme;
         bool mHorizontalExpand = false;
