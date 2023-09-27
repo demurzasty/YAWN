@@ -11,68 +11,41 @@ void Initialize() {
     boxContainer->SetSplitter(true);
 
     {
-        Ref<BoxContainer> leftContainer = new BoxContainer();
-        leftContainer->SetVertical(true);
-        leftContainer->SetVerticalExpand(true);
-        leftContainer->SetMinimumSize(Vector2(200.0f, 200.f));
-        leftContainer->SetSplitter(true);
+        Ref<Section> section = new Section();
+        section->SetMinimumSize(Vector2(250.0f, 200.0f));
+        section->SetText(L"Scene #1");
+        boxContainer->AddChild(section);
+    }
+
+    {
+        Ref<BoxContainer> centerContainer = new BoxContainer();
+        centerContainer->SetVertical(true);
+        centerContainer->SetSplitter(true);
+        centerContainer->SetHorizontalExpand(true);
 
         {
             Ref<Section> section = new Section();
-            section->SetMinimumSize(Vector2(200.0f, 200.0f));
-            section->SetText(L"Section #1");
-            leftContainer->AddChild(section);
-        }
-
-        {
-            Ref<Section> section = new Section();
-            section->SetMinimumSize(Vector2(200.0f, 200.0f));
+            section->SetMinimumSize(Vector2(100.0f, 100.0f));
             section->SetVerticalExpand(true);
-            section->SetText(L"Section #6");
-            leftContainer->AddChild(section);
+            section->SetText(L"Viewport");
+            centerContainer->AddChild(section);
         }
 
         {
             Ref<Section> section = new Section();
-            section->SetMinimumSize(Vector2(200.0f, 200.0f));
-            section->SetText(L"Section #7");
-            leftContainer->AddChild(section);
+            section->SetMinimumSize(Vector2(100.0f, 250.0f));
+            section->SetText(L"Resources");
+            centerContainer->AddChild(section);
         }
 
-        boxContainer->AddChild(leftContainer);
+        boxContainer->AddChild(centerContainer);
     }
 
     {
         Ref<Section> section = new Section();
-        section->SetMinimumSize(Vector2(100.0f, 100.0f));
+        section->SetMinimumSize(Vector2(250.0f, 100.0f));
         section->SetVerticalExpand(true);
-        section->SetHorizontalExpand(true);
-        section->SetText(L"Section #2");
-        boxContainer->AddChild(section);
-    }
-
-    {
-        Ref<Section> section = new Section();
-        section->SetMinimumSize(Vector2(100.0f, 100.0f));
-        section->SetVerticalExpand(true);
-        section->SetText(L"Section #3");
-        boxContainer->AddChild(section);
-    }
-
-    {
-        Ref<Section> section = new Section();
-        section->SetMinimumSize(Vector2(100.0f, 100.0f));
-        section->SetVerticalExpand(true);
-        section->SetHorizontalExpand(true);
-        section->SetText(L"Section #4");
-        boxContainer->AddChild(section);
-    }
-
-    {
-        Ref<Section> section = new Section();
-        section->SetMinimumSize(Vector2(100.0f, 100.0f));
-        section->SetVerticalExpand(true);
-        section->SetText(L"Section #5");
+        section->SetText(L"Inspector");
         boxContainer->AddChild(section);
     }
 

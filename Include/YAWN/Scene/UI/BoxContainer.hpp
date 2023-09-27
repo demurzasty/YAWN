@@ -31,6 +31,8 @@ namespace YAWN {
         bool mSplitter = false;
 
         int mSelectedSplitter = -1;
-        Vector2 mLastMousePosition = Vector2::Zero;
+        Vector2 mSplitMousePosition = Vector2::Zero;
+        Vector2 mSplitSizeLeft = Vector2::Zero;
+        Vector2 mSplitSizeRight = Vector2::Zero;
     };
 }
