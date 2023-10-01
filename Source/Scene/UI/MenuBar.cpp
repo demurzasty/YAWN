@@ -5,7 +5,9 @@ using namespace YAWN;
 MenuBar::MenuBar() {
     SetMargin(8.0f);
     SetPadding(4.0f);
-    SetLocalSize(24.0f + GetPadding() * 2.0f);
+
+    const Vector4& padding = GetPadding();
+    SetLocalSize(Vector2(24.0f) + Vector2(padding.X + padding.Z, padding.Y + padding.W));
 }
 
 void MenuBar::Enter() {

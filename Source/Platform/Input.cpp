@@ -8,6 +8,7 @@ bool Input::sLastKeyStates[int(Key::Last)];
 bool Input::sMouseButtonStates[int(MouseButton::Last)];
 bool Input::sLastMouseButtonStates[int(MouseButton::Last)];
 Vector2 Input::sMousePosition = Vector2::Zero;
+float Input::sMouseWheel = 0.0f;
 
 void Input::Initialize() {
     for (bool& value : sKeyStates) {
@@ -77,6 +78,14 @@ void Input::SetKeyState(Key key, bool state) {
 
 void Input::SetMouseButtonState(MouseButton button, bool state) {
     sMouseButtonStates[int(button)] = state;
+}
+
+void Input::SetMouseWheel(float wheel) {
+    sMouseWheel = wheel;
+}
+
+float Input::GetMouseWheel() {
+    return sMouseWheel;
 }
 
 void Input::UpdateMousePosition(const Vector2& position) {

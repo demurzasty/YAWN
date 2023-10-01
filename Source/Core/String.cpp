@@ -1,11 +1,16 @@
 #include <YAWN/Core/String.hpp>
 #include <YAWN/Core/Memory.hpp>
 #include <YAWN/Core/Unicode.hpp>
+#include <YAWN/Core/FNV1a.hpp>
 
 #include <string.h>
 #include <wchar.h>
+#include <stdio.h>
+#include <stdarg.h>
 
 using namespace YAWN;
+
+static thread_local wchar_t sBuffer[2048];
 
 String String::FromUTF8(const char* utf8) {
     mbstate_t state = mbstate_t();
@@ -21,6 +26,24 @@ String String::FromUTF8(const char* utf8) {
     }
 
     return string;
+}
+
+String String::Format(const wchar_t* format, ...) {
+    va_list args;
+    va_start(args, format);
+    vswprintf(sBuffer, format, args);
+    va_end(args);
+
+    return sBuffer;
+}
+
+String String::Format(const String& format, ...) {
+    va_list args;
+    va_start(args, &format);
+    vswprintf(sBuffer, format.GetData(), args);
+    va_end(args);
+
+    return sBuffer;
 }
 
 String::String(const wchar_t* string)
@@ -281,4 +304,8 @@ const wchar_t* String::GetData() const {
 
 int String::GetSize() const { 
     return mSize; 
+}
+
+int String::GetHash() const {
+    return FNV1a::Hash(GetData(), GetSize());
 }

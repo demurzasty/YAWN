@@ -26,6 +26,14 @@ namespace YAWN {
             int FirstInstance = 0;
         };
 
+        struct GPUViewportData {
+            GLuint FramebufferId = 0;
+            int ColorTextureId = 0;
+            int DepthTextureId = 0;
+            int Width = 0;
+            int Height = 0;
+        };
+
         struct CanvasDrawCommand {
             int CanvasItemId;
             int VertexOffset;
@@ -44,6 +52,14 @@ namespace YAWN {
 
         void SetCameraTransform(const Matrix4& transform) override;
 
+        int CreateViewport(int width, int height) override;
+
+        void DestroyViewport(int id) override;
+
+        void SetViewportSize(int id, int width, int height) override;
+
+        int GetViewportColorTextureId(int id) const override;
+
         int CreateTexture(int width, int height, TextureFormat format, TextureFilter filter, TextureWrapping wrapping, int mipmapCount) override;
 
         void DestroyTexture(int id) override;
@@ -58,11 +74,15 @@ namespace YAWN {
 
         void DestroyMesh(int id) override;
 
+        void SetMeshData(int id, const ArrayView<const Vertex3D>& vertices, const ArrayView<const int>& indices) override;
+
         int CreateInstance() override;
 
         void DestroyInstance(int id) override;
 
         void SetInstanceTransform(int id, const Matrix4& transform) override;
+
+        void SetInstanceMesh(int id, int meshId) override;
 
         int CreateCanvasItem() override;
 
@@ -117,8 +137,8 @@ namespace YAWN {
         GLuint mCanvasProgramId = 0;
 
         GPUGlobalData mGlobalData;
-        GPUInstanceData* mInstances = nullptr;
-        GPUMeshData* mMeshes = nullptr;
+        Array<GPUInstanceData> mInstances;
+        Array<GPUMeshData> mMeshes;
 
         int mGlobalVertexOffset = 0;
         int mGlobalIndexOffset = 0;
@@ -130,6 +150,8 @@ namespace YAWN {
         Array<GPUCanvasItemData> mCanvasItems;
         Array<GLuint> mCanvasVertexBuffers;
         Array<GLuint> mCanvasIndexBuffers;
+
+        Array<GPUViewportData> mViewports;
 
         Array<CanvasDrawCommand> mCanvasDrawCommands;
 

@@ -12,15 +12,23 @@ namespace YAWN {
         MouseMove,
         MouseButtonDown,
         MouseButtonUp,
+        MouseWheel,
         WindowResize,
     };
 
     struct Event {
-        EventType Type = EventType::None;
-
         constexpr Event() = default;
 
         constexpr Event(EventType type) : Type(type) { }
+
+        constexpr void Consume() const { mConsumed = true; }
+
+        constexpr bool IsConsumed() const { return mConsumed; }
+
+        EventType Type = EventType::None;
+
+    private:
+        mutable bool mConsumed = false;
     };
 
     struct KeyDownEvent : public Event {
@@ -53,6 +61,12 @@ namespace YAWN {
 
         MouseButton Button;
         Vector2 Position;
+    };
+
+    struct MouseWheelEvent : public Event {
+        constexpr MouseWheelEvent(float wheel) : Event(EventType::MouseWheel), Wheel(wheel) {}
+
+        float Wheel;
     };
 
     struct WindowResizeEvent : public Event {

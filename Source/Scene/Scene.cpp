@@ -8,6 +8,7 @@ Ref<Node> Scene::sRoot;
 
 void Scene::Initialize() {
     sRoot = new Node();
+    sRoot->SetName(L"Root");
 }
 
 void Scene::Release() {
@@ -59,27 +60,31 @@ void Scene::FixedUpdate(const Ref<Node>& node, float timeStep) {
 }
 
 void Scene::HandleEvent(const Ref<Node>& node, const Event& event) {
-    node->HandleEvent(event);
+    for (int i = node->GetChildCount() - 1; i >= 0; --i) {
+        HandleEvent(node->GetChild(i), event);
+    }
 
-    for (const Ref<Node>& child : node->GetChildren()) {
-        HandleEvent(child, event);
+    if (!event.IsConsumed()) {
+        node->HandleEvent(event);
     }
 }
 
 void Scene::Redraw(const Ref<Node>& node) {
-    const Ref<Control> control = CastTo<Control>(node);
-    if (control) {
-        Renderer::LLPushClipRect(control->GetGlobalRectangle());
-    }
+    if (node->IsVisible()) {
+        const Ref<Control> control = CastTo<Control>(node);
+        if (control) {
+            Renderer::LLPushClipRect(control->GetGlobalRectangle());
+        }
 
-    node->Redraw();
+        node->Redraw();
 
-    for (const Ref<Node>& child : node->GetChildren()) {
-        Redraw(child);
-    }
+        for (const Ref<Node>& child : node->GetChildren()) {
+            Redraw(child);
+        }
 
-    if (control) {
-        Renderer::LLPopClipRect();
+        if (control) {
+            Renderer::LLPopClipRect();
+        }
     }
 }
 

@@ -19,6 +19,8 @@ namespace YAWN {
         YAWN_OBJECT(Font, Resource);
 
     public:
+        static void Register(Meta<Font>& meta);
+
         Font(const Ref<Buffer>& data);
 
         virtual ~Font() override;

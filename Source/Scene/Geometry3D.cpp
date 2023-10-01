@@ -6,14 +6,20 @@ using namespace YAWN;
 void Geometry3D::Register(Meta<Geometry3D>& meta) {
     meta.SetBase<Node3D>();
     meta.SetName(L"Geometry3D");
+    meta.SetConstructable();
+    meta.AddField<&Geometry3D::SetMesh, &Geometry3D::GetMesh>(L"Mesh");
 }
 
 void Geometry3D::SetMesh(const Ref<Mesh>& mesh) {
     mMesh = mesh;
 
-    if (mMesh) {
-
+    if (mMesh && Renderer::IsMeshValid(mMesh->GetId())) {
+        if (mId == Pool::None) {
+            mId = Renderer::CreateInstance();
+        }
     }
+
+    Renderer::SetInstanceMesh(mId, mMesh ? mMesh->GetId() : Pool::None);
 }
 
 const Ref<Mesh>& Geometry3D::GetMesh() const {

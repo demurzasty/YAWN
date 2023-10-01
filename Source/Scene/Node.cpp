@@ -40,6 +40,10 @@ void Node::Redraw() {
 
         Draw();
 
+        for (const Ref<Node>& node : GetChildren()) {
+            node->RequestRedraw();
+        }
+
         mNeedRedraw = false;
     }
 
@@ -67,6 +71,16 @@ const String& Node::GetName() const {
     return mName;
 }
 
+void Node::SetVisible(bool visible) {
+    mVisible = visible;
+
+    RequestRedraw();
+}
+
+bool Node::IsVisible() const {
+    return mVisible;
+}
+
 Node* Node::GetParent() const {
     return mParent;
 }
@@ -81,12 +95,25 @@ void Node::AddChild(const Ref<Node>& node) {
     node->OnReparent();
 
     node->Enter();
+
+    RequestRedraw();
 }
 
 void Node::AddSibling(const Ref<Node>& node) {
     YAWN_ASSERT(mParent);
 
     mParent->AddChild(node);
+}
+
+void Node::RemoveChild(const Ref<Node>& node) {
+    YAWN_ASSERT(node->mParent == this);
+
+    node->Exit();
+
+    node->mParent = nullptr;
+    mChildren.Remove(node);
+
+    RequestRedraw();
 }
 
 int Node::GetChildCount() const {
@@ -177,8 +204,8 @@ void Node::DrawRect(const Rectangle& destination, const Color4& color) {
     Vertex2D vertices[4] = {
         Vertex2D(position + Vector2(0.25f, 0.0f), Vector2(0.0f, 0.0f), color),
         Vertex2D(position + Vector2(0.25f, size.Y - 0.25f), Vector2(0.0f, 1.0f), color),
-        Vertex2D(position + Vector2(size.X, size.Y - 0.25f), Vector2(1.0f, 1.0f), color),
-        Vertex2D(position + Vector2(size.X, 0.25f), Vector2(1.0f, 0.0f), color),
+        Vertex2D(position + Vector2(size.X - 0.25f, size.Y - 0.25f), Vector2(1.0f, 1.0f), color),
+        Vertex2D(position + Vector2(size.X - 0.25f, 0.25f), Vector2(1.0f, 0.0f), color),
     };
 
     unsigned short indices[8] = {

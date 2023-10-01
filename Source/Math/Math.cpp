@@ -121,6 +121,10 @@ float Math::Log(float v) {
     return logf(v);
 }
 
+float Math::CopySign(float a, float b) {
+    return copysignf(a, b);
+}
+
 int Math::Align(int size, int align) {
     return (size + align - 1) & ~(align - 1);
 }

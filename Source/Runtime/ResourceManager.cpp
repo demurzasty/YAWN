@@ -9,7 +9,7 @@ Map<int, Ref<Loader>> ResourceManager::sLoaders;
 Map<Guid, Ref<Resource>> ResourceManager::sResources;
 
 void ResourceManager::Initialize() {
-    Types::EnumerateTypesOfBase<Loader>(Delegate<void(const Type&)>::Bind<&ResourceManager::InitializeLoader>());
+    Types::EnumerateTypesOfBase<Loader>(Delegate<void(const Ref<Type>&)>::Bind<&ResourceManager::InitializeLoader>());
 }
 
 void ResourceManager::Release() {
@@ -17,27 +17,13 @@ void ResourceManager::Release() {
     sLoaders.Clear();
 }
 
-void ResourceManager::InitializeLoader(const Type& type) {
-    Ref<Loader> loader = CastTo<Loader>(type.Construct());
+void ResourceManager::InitializeLoader(const Ref<Type>& type) {
+    Ref<Loader> loader = CastTo<Loader>(type->Construct());
 
     YAWN_ASSERT(loader);
     YAWN_ASSERT(loader->IsInstanceOf<Loader>());
 
     sLoaders.Add(loader->GetSupportedResourceTypeId(), loader);
-}
-
-Ref<Resource> ResourceManager::Load(int resourceTypeId, const Guid& guid) {
-    YAWN_ASSERT(sLoaders.Contains(resourceTypeId));
-
-    if (Ref<Resource>* resource = sResources.TryGet(guid); resource) {
-        return *resource;
-    }
-
-    Ref<Loader> loader = sLoaders[resourceTypeId];
-
-    Ref<Resource> resource = loader->Load(Path(L"Package") / guid.ToString());
-    sResources.Add(guid, resource);
-    return resource;
 }
 
 Ref<Resource> ResourceManager::Get(const Guid& guid) {
@@ -46,6 +32,33 @@ Ref<Resource> ResourceManager::Get(const Guid& guid) {
     }
 
     return nullptr;
+}
+
+void ResourceManager::Set(const Guid& guid, const Ref<Resource>& resource) {
+    sResources.Add(guid, resource);
+}
+
+Ref<Resource> ResourceManager::Load(const String& resourceTypeName, const Guid& guid) {
+    if (Type* type = Types::GetTypeByName(resourceTypeName); type) {
+        return Load(type->GetId(), guid);
+    }
+
+    return nullptr;
+}
+
+Ref<Resource> ResourceManager::Load(int resourceTypeId, const Guid& guid) {
+    YAWN_ASSERT(sLoaders.Contains(resourceTypeId));
+
+    Ref<Resource> resource;
+    if (sResources.TryGet(guid, resource)) {
+        return resource;
+    }
+
+    Ref<Loader> loader = sLoaders[resourceTypeId];
+
+    resource = loader->Load(Path(L"Package") / guid.ToString());
+    Set(guid, resource);
+    return resource;
 }
 
 Ref<Theme> ResourceManager::GetDefaultTheme() {

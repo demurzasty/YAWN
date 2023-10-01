@@ -18,7 +18,7 @@ namespace YAWN {
                 return Meta<T>(sTypes[hash]);
             }
 
-            return Meta<T>(sTypes.Add(hash, Type()));
+            return Meta<T>(sTypes.Add(hash, new Type()));
         }
 
         template<typename T>
@@ -28,26 +28,26 @@ namespace YAWN {
         }
 
         template<typename T>
-        static Type& GetType() {
+        static Ref<Type> GetType() {
             constexpr int hash = TypeID::Hash<T>();
 
-            return sTypes[hash];
+            return GetType(hash);
         }
 
-        static Type& GetType(int id);
+        static Ref<Type> GetType(int id);
 
-        static Type* GetTypeByName(const String& name);
+        static Ref<Type> GetTypeByName(const String& name);
 
         template<typename T>
-        static void EnumerateTypesOfBase(const Delegate<void(const Type&)>& delegate) {
+        static void EnumerateTypesOfBase(const Delegate<void(const Ref<Type>&)>& delegate) {
             constexpr int hash = TypeID::Hash<T>();
 
             EnumerateTypesOfBase(hash, delegate);
         }
 
-        static void EnumerateTypesOfBase(int base, const Delegate<void(const Type&)>& delegate);
+        static void EnumerateTypesOfBase(int base, const Delegate<void(const Ref<Type>&)>& delegate);
 
     private:
-        static Map<int, Type> sTypes;
+        static Map<int, Ref<Type>> sTypes;
     };
 }

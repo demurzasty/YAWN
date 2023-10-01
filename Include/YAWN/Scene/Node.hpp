@@ -58,6 +58,10 @@ namespace YAWN {
 
         const String& GetName() const;
 
+        void SetVisible(bool visible);
+
+        bool IsVisible() const;
+
         //////////////////////////
         /////// Hierarchy ////////
         //////////////////////////
@@ -67,6 +71,8 @@ namespace YAWN {
         void AddChild(const Ref<Node>& node);
 
         void AddSibling(const Ref<Node>& node);
+
+        void RemoveChild(const Ref<Node>& node);
 
         ArrayView<const Ref<Node>> GetChildren() const;
 
@@ -122,6 +128,7 @@ namespace YAWN {
         //////////////////////////
 
         String mName;
+        bool mVisible = true;
 
         //////////////////////////
         /////// Hierarchy ////////

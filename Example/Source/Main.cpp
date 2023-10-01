@@ -2,12 +2,36 @@
 
 using namespace YAWN;
 
+void BuildTree(const Ref<Tree>& tree, const Ref<Node>& node, Ref<TreeItem> item) {
+    item->SetText(node->GetTypeName());
+
+    for (const Ref<Node>& child : node->GetChildren()) {
+        BuildTree(tree, child, tree->CreateItem(item));
+    }
+};
+
 void Initialize() {
     Scene::GetRoot()->AddChild(new Editor());
 
-    Ref<WindowContainer> windowContainer = new WindowContainer();
+    Ref<Prefab> prefab = ResourceManager::Load<Prefab>(Guid(L"97b9dcf3-1894-cc03-e0d7-f4c4d2c9e800"));
 
+    Ref<Node> node = prefab->Instantiate();
+
+    Scene::GetRoot()->AddChild(node);
+
+    Ref<Camera3D> camera = new Camera3D();
+
+    camera->SetLocalPosition(Vector3(0.0f, 0.25f, 1.0f));
+
+    Scene::GetRoot()->AddChild(camera);
+
+    return;
+
+    Ref<WindowContainer> windowContainer = new WindowContainer();
+    windowContainer->SetName(L"WindowContainer");
+ 
     Ref<BoxContainer> mainContainer = new BoxContainer();
+    mainContainer->SetName(L"BoxContainer");
     mainContainer->SetVertical(true);
     mainContainer->SetVerticalExpand(true);
     mainContainer->SetHorizontalExpand(true);
@@ -15,27 +39,38 @@ void Initialize() {
 
     {
         Ref<MenuBar> menuBar = new MenuBar();
+        menuBar->SetName(L"MenuBar");
 
         {
-            Ref<Button> button = new Button();
-            button->SetText(L"Project");
-            menuBar->AddChild(button);
+            Ref<MenuButton> menu = new MenuButton();
+            menu->SetName(L"MenuButton");
+            menu->SetText(L"Project");
+
+            Ref<Button> vsyncButton = new Button();
+            vsyncButton->SetText(L"VSync");
+            vsyncButton->SetMinimumSize(24.0f);
+            menu->GetPopup()->AddChild(vsyncButton);
+
+            menuBar->AddChild(menu);
         }
 
         {
-            Ref<Button> button = new Button();
+            Ref<MenuButton> button = new MenuButton();
+            button->SetName(L"MenuButton");
             button->SetText(L"Debug");
             menuBar->AddChild(button);
         }
 
         {
-            Ref<Button> button = new Button();
+            Ref<MenuButton> button = new MenuButton();
+            button->SetName(L"MenuButton");
             button->SetText(L"Tools");
             menuBar->AddChild(button);
         }
 
         {
-            Ref<Button> button = new Button();
+            Ref<MenuButton> button = new MenuButton();
+            button->SetName(L"MenuButton");
             button->SetText(L"Help");
             menuBar->AddChild(button);
         }
@@ -43,27 +78,39 @@ void Initialize() {
         mainContainer->AddChild(menuBar);
     }
 
+    Ref<Tree> tree = new Tree();
+    tree->SetName(L"Tree");
+
     {
         Ref<BoxContainer> boxContainer = new BoxContainer();
+        boxContainer->SetName(L"BoxContainer");
         boxContainer->SetSplitter(true);
         boxContainer->SetVerticalExpand(true);
         boxContainer->SetHorizontalExpand(true);
 
         {
             Ref<Section> section = new Section();
+            section->SetName(L"Section");
             section->SetMinimumSize(Vector2(250.0f, 200.0f));
             section->SetText(L"Scene");
-            boxContainer->AddChild(section);
+            boxContainer->AddChild(section); 
+
+            tree->SetLocalPosition(Vector2(0.0f, 32.0f));
+            tree->SetMinimumSize(Vector2(20.0f, 20.0f));
+            tree->SetVerticalExpand(true);
+            section->AddChild(tree);
         }
 
         {
             Ref<BoxContainer> centerContainer = new BoxContainer();
+            centerContainer->SetName(L"BoxContainer");
             centerContainer->SetVertical(true);
             centerContainer->SetSplitter(true);
             centerContainer->SetHorizontalExpand(true);
 
             {
                 Ref<Section> section = new Section();
+                section->SetName(L"Section");
                 section->SetMinimumSize(Vector2(100.0f, 100.0f));
                 section->SetVerticalExpand(true);
                 section->SetText(L"Viewport");
@@ -72,6 +119,7 @@ void Initialize() {
 
             {
                 Ref<Section> section = new Section();
+                section->SetName(L"Section");
                 section->SetMinimumSize(Vector2(100.0f, 250.0f));
                 section->SetText(L"Resources");
                 centerContainer->AddChild(section);
@@ -82,6 +130,7 @@ void Initialize() {
 
         {
             Ref<Section> section = new Section();
+            section->SetName(L"Section");
             section->SetMinimumSize(Vector2(250.0f, 100.0f));
             section->SetVerticalExpand(true);
             section->SetText(L"Inspector");
@@ -95,102 +144,9 @@ void Initialize() {
 
     Scene::GetRoot()->AddChild(windowContainer);
 
-
-
-    //Ref<WindowContainer> windowContainer = new WindowContainer();
-
-    //Ref<BoxContainer> mainForm = new BoxContainer();
-    //mainForm->SetVertical(true);
-    //mainForm->SetLocalRectangle(Rectangle(0.0f, 0.0f, 1280.0f, 720.0f)); 
-    //mainForm->SetHorizontalExpand(true);
-    //mainForm->SetVerticalExpand(true);
-
-    //Ref<MenuBar> menuBar = new MenuBar();
-    //{
-    //    Ref<Button> button = new Button();
-    //    button->SetText(L"File");
-    //    menuBar->AddChild(button);
-
-    //    Ref<Button> edit = new Button();
-    //    edit->SetText(L"Edit");
-    //    menuBar->AddChild(edit);
-
-    //    Ref<Button> view = new Button();
-    //    view->SetText(L"View");
-    //    menuBar->AddChild(view);
-
-    //    Ref<Button> project = new Button();
-    //    project->SetText(L"Project");
-    //    menuBar->AddChild(project);
-
-    //    Ref<Button> help = new Button();
-    //    help->SetText(L"Help");
-    //    menuBar->AddChild(help);
-    //}
-    //mainForm->AddChild(menuBar);
-
-    //Ref<BoxContainer> container = new BoxContainer();
-    //container->SetSplitter(true);
-    //container->SetVerticalExpand(true);
-    //container->SetHorizontalExpand(true);
-    //{
-    //    Ref<BoxContainer> subContainer = new BoxContainer();
-    //    subContainer->SetLocalSize(232.0f);
-    //    subContainer->SetVerticalExpand(true);
-    //    container->AddChild(subContainer);
-
-    //    Ref<Section> section = new Section();
-    //    section->SetHorizontalExpand(true);
-    //    section->SetVerticalExpand(true);
-    //    section->SetText(L"Hierarchy");
-    //    subContainer->AddChild(section);
-
-    //    subContainer = new BoxContainer();
-    //    subContainer->SetLocalSize(800.0f);
-    //    subContainer->SetVerticalExpand(true);
-    //    subContainer->SetHorizontalExpand(true);
-    //    subContainer->SetSplitter(true);
-    //    subContainer->SetVertical(true);
-    //    container->AddChild(subContainer);
-
-    //    Ref<BoxContainer> subSubContainer = new BoxContainer();
-    //    subSubContainer->SetLocalSize(500.0f);
-    //    subSubContainer->SetHorizontalExpand(true);
-    //    subContainer->AddChild(subSubContainer);
-
-    //    section = new Section();
-    //    section->SetHorizontalExpand(true);
-    //    section->SetVerticalExpand(true);
-    //    section->SetText(L"Scene");
-    //    subSubContainer->AddChild(section);
-
-    //    subSubContainer = new BoxContainer();
-    //    subSubContainer->SetLocalSize(300.0f);
-    //    subSubContainer->SetHorizontalExpand(true);
-    //    subContainer->AddChild(subSubContainer);
-
-    //    section = new Section();
-    //    section->SetHorizontalExpand(true);
-    //    section->SetVerticalExpand(true);
-    //    section->SetText(L"Resources");
-    //    subSubContainer->AddChild(section);
-
-    //    subContainer = new BoxContainer();
-    //    subContainer->SetLocalSize(232.0f);
-    //    subContainer->SetVerticalExpand(true);
-    //    container->AddChild(subContainer);
-
-    //    section = new Section();
-    //    section->SetHorizontalExpand(true);
-    //    section->SetVerticalExpand(true);
-    //    section->SetText(L"Inspector");
-    //    subContainer->AddChild(section);
-    //}
-    //mainForm->AddChild(container);
-
-    //windowContainer->AddChild(mainForm);
-
-    //Scene::GetRoot()->AddChild(windowContainer);
+    Ref<TreeItem> item = tree->CreateItem();
+    item->SetText(L"Root");
+    BuildTree(tree, Scene::GetRoot(), item);
 }
 
 int Main(int argc, char* argv[]) {

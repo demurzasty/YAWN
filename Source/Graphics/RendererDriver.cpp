@@ -7,6 +7,18 @@ void RendererDriver::SetClearColor(const Color& color) {
     mClearColor = color;
 }
 
+int RendererDriver::CreateViewport(int width, int height) {
+    return mViewportPool.Acquire();
+}
+
+void RendererDriver::DestroyViewport(int id) {
+    mViewportPool.Dispose(id);
+}
+
+bool RendererDriver::IsViewportValid(int id) {
+    return mViewportPool.IsValid(id);
+}
+
 int RendererDriver::CreateTexture(int width, int height, TextureFormat format, TextureFilter filter, TextureWrapping wrapping, int mipmapCount) {
     return mTexturePool.Acquire();
 }
@@ -29,10 +41,6 @@ void RendererDriver::DestroyMesh(int id) {
 
 bool RendererDriver::IsMeshValid(int id) {
     return mMeshPool.IsValid(id);
-}
-
-void RendererDriver::SetMeshData(int id, const ArrayView<const Vertex3D>& vertices, const ArrayView<const int>& indices) {
-    // TODO: What should I do?
 }
 
 int RendererDriver::CreateInstance() {

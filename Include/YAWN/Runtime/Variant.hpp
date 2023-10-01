@@ -106,6 +106,8 @@ namespace YAWN {
 
         Variant(String&& value);
 
+        Variant(const wchar_t* value);
+
         Variant(const Array<Variant>& value);
 
         Variant(Array<Variant>&& value) noexcept;

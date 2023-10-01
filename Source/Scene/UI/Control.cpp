@@ -67,7 +67,7 @@ void Control::SetTheme(const Ref<Theme>& theme) {
     RequestRedraw();
 }
 
-const Ref<Theme> Control::GetTheme() const {
+const Ref<Theme>& Control::GetTheme() const {
     return mTheme;
 }
 
@@ -91,13 +91,13 @@ bool Control::IsVerticalExpand() const {
     return mVerticalExpand;
 }
 
-void Control::SetPadding(float padding) {
+void Control::SetPadding(const Vector4& padding) {
     mPadding = padding;
 
     RequestRedraw();
 }
 
-float Control::GetPadding() const {
+const Vector4& Control::GetPadding() const {
     return mPadding;
 }
 
@@ -105,4 +105,6 @@ void Control::OnReparent() {
     Base::OnReparent();
 
     mControlParent = CastTo<Control>(GetParent());
+
+    RequestRedraw();
 }

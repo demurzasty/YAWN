@@ -48,6 +48,10 @@ Variant::Variant(String&& value) : mType(VariantType::String) {
     Memory::Construct((String*)mData, Utility::Forward<String>(value));
 }
 
+Variant::Variant(const wchar_t* value) : mType(VariantType::String) {
+    Memory::Construct((String*)mData, value);
+}
+
 Variant::Variant(const Array<Variant>& value) : mType(VariantType::Array) {
     Memory::Construct((Array<Variant>*)mData, value);
 }

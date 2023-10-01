@@ -6,33 +6,38 @@ using namespace YAWN;
 void Button::Update(float timeStep) {
     Base::Update(timeStep);
 
-    // TODO: Should be on event.
-    CheckSize();
+    if (IsVisible()) {
+        // TODO: Should be on event.
+        CheckSize();
 
-    const Vector2& mousePosition = Input::GetMousePosition();
-    Rectangle globalRect = GetGlobalRectangle();
-
-    if (globalRect.Contains(mousePosition)) {
-        if (Input::IsMouseButtonPressed(MouseButton::Left)) {
-                mState = ButtonState::Active;
-        } 
-
-        if (mState == ButtonState::Default) {
-            mState = ButtonState::Hover;
-        }
-    } else {
-        if (mState == ButtonState::Hover) {
-            mState = ButtonState::Default;
-        }
-    }
-
-    if (Input::IsMouseButtonReleased(MouseButton::Left)) {
-        if (mState == ButtonState::Active) {
-            mState = ButtonState::Default;
-        }
+        const Vector2& mousePosition = Input::GetMousePosition();
+        Rectangle globalRect = GetGlobalRectangle();
 
         if (globalRect.Contains(mousePosition)) {
+            if (Input::IsMouseButtonPressed(MouseButton::Left)) {
+                    mState = ButtonState::Active;
+            } 
 
+            if (mState == ButtonState::Default) {
+                mState = ButtonState::Hover;
+            }
+        } else {
+            if (mState == ButtonState::Hover) {
+                mState = ButtonState::Default;
+            }
+        }
+
+        if (Input::IsMouseButtonReleased(MouseButton::Left)) {
+            if (mState == ButtonState::Active) {
+
+                if (globalRect.Contains(mousePosition)) {
+                    GetClickedSignal().Emit(this);
+
+                    mState = ButtonState::Hover;
+                } else {
+                    mState = ButtonState::Default;
+                }
+            }
         }
     }
 }
@@ -83,14 +88,36 @@ int Button::GetFontSize() const {
     return mFontSize;
 }
 
+void Button::SetIconTexture(const Ref<Texture>& texture) {
+    mIconTexture = texture;
+}
+
+const Ref<Texture> Button::GetIconTexture() const {
+    return mIconTexture;
+}
+
+void Button::SetIconSourceRectangle(const Rectangle& source) {
+    mIconSourceRectangle = source;
+}
+
+const Rectangle& Button::GetIconSourceRectangle() const {
+    return mIconSourceRectangle;
+}
+
+Signal<Ref<Button>>& Button::GetClickedSignal() {
+    return mClickedSignal;
+}
+
 void Button::CheckSize() {
     if (const Ref<Theme>& theme = GetTheme(); theme) {
         Vector2 size = GetLocalSize();
         Vector2 textSize = theme->GetDefaultFont()->GetTextSize(GetText(), GetFontSize());
 
         float padding = 8.0f;
+        
+        float margin = mIconTexture ? 16.0f : 0.0f;
 
-        size.X = Math::Max(size.X, textSize.X + padding * 2.0f);
+        size.X = Math::Max(size.X, textSize.X + padding * 2.0f + margin);
         size.Y = Math::Max(size.Y, textSize.Y);
 
         SetMinimumSize(size);

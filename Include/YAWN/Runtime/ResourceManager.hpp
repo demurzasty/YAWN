@@ -17,14 +17,18 @@ namespace YAWN {
             return CastTo<TResource>(Load(TypeID::Hash<TResource>(), guid));
         }
 
-        static Ref<Theme> GetDefaultTheme();
-        
-    private:
-        static void InitializeLoader(const Type& type);
+        static Ref<Resource> Load(const String& resourceTypeName, const Guid& guid);
 
-        static Ref<Resource> Load(int resourceTypeId, const Guid& guid);
+        static Ref<Theme> GetDefaultTheme();
 
         static Ref<Resource> Get(const Guid& guid);
+
+        static void Set(const Guid& guid, const Ref<Resource>& resource);
+        
+    private:
+        static void InitializeLoader(const Ref<Type>& type);
+
+        static Ref<Resource> Load(int resourceTypeId, const Guid& guid);
 
     private:
         static Map<int, Ref<Loader>> sLoaders;

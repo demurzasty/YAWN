@@ -2,6 +2,7 @@
 #include <YAWN/IO/File.hpp>
 #include <YAWN/Reflection/Types.hpp>
 #include <YAWN/Runtime/Console.hpp>
+#include <YAWN/Runtime/ResourceManager.hpp>
 
 // TODO: Write our own parser to avoid boilerplate.
 
@@ -74,6 +75,13 @@ static void ParseVector4(json_object* json, Variant& output) {
     output = vec;
 }
 
+static void ParseResourceLink(json_object* json, Variant& output) {
+    const char* guid = json_object_get_string(json_object_object_get(json, "Guid"));
+    const char* resourceTypeName = json_object_get_string(json_object_object_get(json, "ResourceType"));
+
+    output = ResourceManager::Load(String::FromUTF8(resourceTypeName), Guid(String::FromUTF8(guid)));
+}
+
 static void ParseArray(json_object* json, Variant& output) {
     output = Variant::MakeArray();
 
@@ -98,7 +106,9 @@ static void ParseJson(json_object* json, Variant& output) {
                 ParseVector3(json, output);
             } else if (strcmp(typeName, "Vector4") == 0) {
                 ParseVector4(json, output);
-            } else {
+            } else if (strcmp(typeName, "ResourceLink") == 0) {
+                ParseResourceLink(json, output);
+            }  else {
                 ParseObject(json, output);
             }
         } else {
@@ -166,10 +176,10 @@ private:
 static json_object* BuildObject(const Ref<Reference>& ref) {
     json_object* object = json_object_new_object();
 
-    Type& type = Types::GetType(ref->GetTypeId());
+    Ref<Type> type = Types::GetType(ref->GetTypeId());
 
     Ref<ObjectBuilder> builder = new ObjectBuilder(object, ref);
-    type.EnumerateFields(Delegate<void(const String&, const Field&)>::Bind<&ObjectBuilder::BuildMember>(builder.Get()));
+    type->EnumerateFields(Delegate<void(const String&, const Field&)>::Bind<&ObjectBuilder::BuildMember>(builder.Get()));
 
     json_object_object_add(object, "$Type", json_object_new_string(String(ref->GetTypeName()).ToUTF8().GetData()));
 

@@ -1,12 +1,21 @@
 #include <YAWN/Graphics/Theme.hpp>
+#include <YAWN/Graphics/Image.hpp>
 
 #include "BuiltIn/RobotoMedium.ttf.h"
+#include "BuiltIn/Icons.png.h"
 
 using namespace YAWN;
 
 Ref<Theme> Theme::CreateDefault() {
     Ref<Theme> theme = new Theme();
-    theme->SetDefaultFont(new Font(new Buffer(roboto_medium, sizeof(roboto_medium))));
+    theme->SetDefaultFont(new Font(new Buffer(RobotoMediumFontData, sizeof(RobotoMediumFontData))));
+
+    Ref<Image> iconsImage = Image::FromMemory(ArrayView<const unsigned char>(IconsImageData, sizeof(IconsImageData)), 4);
+
+    Ref<Texture> iconsTexture = new Texture(iconsImage->GetInfo().GetWidth(), iconsImage->GetInfo().GetHeight(), TextureFormat::RGBA8, TextureFilter::Linear, TextureWrapping::ClampToEdge, 1);
+    iconsTexture->SetData(0, iconsImage->GetData().GetData());
+    theme->SetIconsTexture(iconsTexture);
+
     return theme;
 }
 
@@ -16,6 +25,14 @@ void Theme::SetDefaultFont(const Ref<Font>& font) {
 
 const Ref<Font>& Theme::GetDefaultFont() const {
     return mDefaultFont;
+}
+
+void Theme::SetIconsTexture(const Ref<Texture>& texture) {
+    mIconsTexture = texture;
+}
+
+const Ref<Texture>& Theme::GetIconsTexture() const {
+    return mIconsTexture;
 }
 
 void Theme::SetContainerColor(const Color4& color) {
@@ -96,5 +113,21 @@ void Theme::SetFrameBorderColor(const Color4& color) {
 
 const Color4& Theme::GetFrameBorderColor() const {
     return mFrameBorderColor;
+}
+
+void Theme::SetTreeItemEvenColor(const Color4& color) {
+    mTreeItemEvenColor = color;
+}
+
+const Color4& Theme::GetTreeItemEvenColor() const {
+    return mTreeItemEvenColor;
+}
+
+void Theme::SetTreeItemOddColor(const Color4& color) {
+    mTreeItemOddColor = color;
+}
+
+const Color4& Theme::GetTreeItemOddColor() const {
+    return mTreeItemOddColor;
 }
 

@@ -13,6 +13,8 @@ namespace YAWN {
 
         virtual void Update(float timeStep) override;
 
+        virtual void HandleEvent(const Event& event) override;
+
         virtual void Draw() override;
 
         void SetVertical(bool vertical);

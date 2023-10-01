@@ -13,7 +13,13 @@ Path::Path(const String& path) {
 Path Path::operator/(const Path& path) const {
     Path newPath = *this;
     for (int i = 0; i < path.mParts.GetSize(); ++i) {
-        newPath.mParts.Add(path.mParts[i]);
+        if (path.mParts[i] == L"..") {
+            if (!newPath.mParts.IsEmpty()) {
+                newPath.mParts.Pop();
+            }
+        } else {
+            newPath.mParts.Add(path.mParts[i]);
+        }
     }
     return newPath;
 }

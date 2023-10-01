@@ -190,6 +190,14 @@ static void FramebufferSizeCallback(GLFWwindow* window, int width, int height) {
     Scene::HandleEvent(WindowResizeEvent(size));
 }
 
+static void ScrollCallback(GLFWwindow* window, double xoffset, double yoffset) {
+    (void)xoffset;
+
+    Input::SetMouseWheel(float(yoffset));
+
+    Scene::HandleEvent(MouseWheelEvent(float(yoffset)));
+}
+
 WindowDriverGLFW::WindowDriverGLFW() {
     glfwInit();
 
@@ -199,10 +207,11 @@ WindowDriverGLFW::WindowDriverGLFW() {
     glfwSetMouseButtonCallback(mWindow, &MouseButtonCallback);
     glfwSetCursorPosCallback(mWindow, &CursorPositionCallback);
     glfwSetFramebufferSizeCallback(mWindow, &FramebufferSizeCallback);
+    glfwSetScrollCallback(mWindow, &ScrollCallback);
 
     glfwMakeContextCurrent(mWindow);
 
-    glfwSwapInterval(1);
+    glfwSwapInterval(0);
 
     glewInit();
 }

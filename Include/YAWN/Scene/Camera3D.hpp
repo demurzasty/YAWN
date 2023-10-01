@@ -17,6 +17,8 @@ namespace YAWN {
 
         virtual void Exit() override;
 
+        virtual void HandleEvent(const Event& event) override;
+
     private:
         virtual void OnTransformUpdate() override;
     };

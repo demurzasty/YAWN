@@ -259,6 +259,10 @@ namespace YAWN {
             return mSize;
         }
 
+        int GetSizeInBytes() const {
+            return mSize * sizeof(T);
+        }
+
         bool IsEmpty() const {
             return mSize == 0;
         }

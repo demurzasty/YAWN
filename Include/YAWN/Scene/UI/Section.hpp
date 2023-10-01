@@ -7,6 +7,8 @@ namespace YAWN {
         YAWN_OBJECT(Section, Control);
 
     public:
+        Section();
+
         virtual ~Section() = default;
 
         virtual void Enter() override;

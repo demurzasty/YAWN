@@ -8,6 +8,13 @@ namespace YAWN {
     template<typename... TArgs>
     class Signal {
     public:
+        template<auto VMethod>
+        void Connect() {
+            Delegate<void(TArgs...)> delegate;
+            delegate.Connect<VMethod>();
+            mConnections.Add(delegate);
+        }
+
         template<auto VMethod, typename T>
         void Connect(T* instance) {
             mConnections.Add(Delegate<void(TArgs...)>::Bind<VMethod>(instance));

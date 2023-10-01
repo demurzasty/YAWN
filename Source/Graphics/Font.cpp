@@ -13,6 +13,11 @@ struct Font::InternalData {
     stbrp_node Nodes[512];
 };
 
+void Font::Register(Meta<Font>& meta) {
+    meta.SetName(L"Font");
+    meta.SetBase<Resource>();
+}
+
 Font::Font(const Ref<Buffer>& data)
     : mId(Renderer::CreateTexture(512, 512, TextureFormat::RGBA8, TextureFilter::Nearest, TextureWrapping::ClampToEdge, 1))
     , mData(data) {

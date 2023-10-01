@@ -26,6 +26,17 @@ Ref<Image> Image::FromFile(const Path& path, int desiredChannels) {
     return nullptr;
 }
 
+Ref<Image> Image::FromMemory(const ArrayView<const unsigned char>& data, int desiredChannels) {
+    int width, height, channels;
+    unsigned char* pixels = stbi_load_from_memory(data.GetData(), data.GetSize(), &width, &height, &channels, desiredChannels);
+
+    if (pixels) {
+        return new Image(pixels, ImageInfo(width, height, desiredChannels > 0 ? desiredChannels : channels));
+    }
+
+    return nullptr;
+}
+
 Ref<Image> Image::Resize(Ref<Image> image, int width, int height) {
     ImageInfo imageInfo(width, height, image->mInfo.GetChannels());
 

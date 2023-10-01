@@ -19,7 +19,7 @@ namespace YAWN {
         void Reimport();
 
     private:
-        void InitializeImporter(const Type& type);
+        void InitializeImporter(const Ref<Type>& type);
 
         void EnumerateFile(const FileInfo& info);
 

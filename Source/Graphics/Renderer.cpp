@@ -45,6 +45,40 @@ void Renderer::SetCameraTransform(const Matrix4& transform) {
     sDriver->SetCameraTransform(transform);
 }
 
+int Renderer::CreateViewport(int width, int height) {
+    ExclusiveLock lock(sMutex);
+
+    YAWN_ASSERT(sDriver);
+
+    return sDriver->CreateViewport(width, height);
+}
+
+void Renderer::DestroyViewport(int id) {
+    ExclusiveLock lock(sMutex);
+
+    YAWN_ASSERT(sDriver);
+    YAWN_ASSERT(sDriver->IsViewportValid(id));
+
+    sDriver->DestroyViewport(id);
+}
+
+bool Renderer::IsViewportValid(int id) {
+    ExclusiveLock lock(sMutex);
+
+    YAWN_ASSERT(sDriver);
+
+    return sDriver->IsViewportValid(id);
+}
+
+void Renderer::SetViewportSize(int id, int width, int height) {
+    ExclusiveLock lock(sMutex);
+
+    YAWN_ASSERT(sDriver);
+    YAWN_ASSERT(sDriver->IsViewportValid(id));
+
+    sDriver->SetViewportSize(id, width, height);
+}
+
 int Renderer::CreateTexture(int width, int height, TextureFormat format, TextureFilter filter, TextureWrapping wrapping, int mipmapCount) {
     ExclusiveLock lock(sMutex);
 
@@ -123,6 +157,7 @@ void Renderer::SetMeshData(int id, const ArrayView<const Vertex3D>& vertices, co
     ExclusiveLock lock(sMutex);
 
     YAWN_ASSERT(sDriver);
+    YAWN_ASSERT(sDriver->IsMeshValid(id));
 
     sDriver->SetMeshData(id, vertices, indices);
 }
@@ -158,6 +193,16 @@ void Renderer::SetInstanceTransform(int id, const Matrix4& transform) {
     YAWN_ASSERT(sDriver->IsInstanceValid(id));
 
     sDriver->SetInstanceTransform(id, transform);
+}
+
+void Renderer::SetInstanceMesh(int id, int meshId) {
+    ExclusiveLock lock(sMutex);
+
+    YAWN_ASSERT(sDriver);
+    YAWN_ASSERT(sDriver->IsInstanceValid(id));
+    YAWN_ASSERT(meshId == Pool::None || sDriver->IsMeshValid(meshId));
+
+    sDriver->SetInstanceMesh(id, meshId);
 }
 
 int Renderer::CreateCanvasItem() {

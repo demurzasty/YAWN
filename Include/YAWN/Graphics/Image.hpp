@@ -15,6 +15,8 @@ namespace YAWN {
 
         static Ref<Image> FromFile(const Path& path, int desiredChannels = 0);
 
+        static Ref<Image> FromMemory(const ArrayView<const unsigned char>& data, int desiredChannels = 0);
+
         static Ref<Image> Resize(Ref<Image> image, int width, int height);
 
         ~Image();

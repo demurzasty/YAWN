@@ -19,7 +19,14 @@ void Application::Setup() {
     Settings::SetWindowWidth(1280);
     Settings::SetWindowHeight(720);
 
+    Types::Register<Texture>();
+    Types::Register<Font>();
+    Types::Register<Mesh>();
+    Types::Register<Prefab>();
+
     Types::Register<FontLoader>();
+    Types::Register<MeshLoader>();
+    Types::Register<PrefabLoader>();
     Types::Register<TextureLoader>();
 
     Types::Register<Node>();

@@ -10,64 +10,15 @@ BoxContainer::BoxContainer() {
 void BoxContainer::Update(float timeStep) {
     Base::Update(timeStep);
 
-    if (IsSplitter()) {
-        const Vector2& mousePosition = Input::GetMousePosition();
-        if (GetGlobalRectangle().Contains(mousePosition)) {
-            if (Input::IsMouseButtonPressed(MouseButton::Left)) {
-                for (int i = 0; i < GetChildCount() - 1; ++i) {
-                    const Ref<Node>& child = GetChild(i);
-                    if (const Ref<Control> control = CastTo<Control>(child); control) {
-                        Vector2 position = control->GetGlobalPosition();
-                        Vector2 size = control->GetLocalSize();
-                        if (IsVertical()) {
-                            if (mousePosition.Y > position.Y + size.Y && mousePosition.Y < position.Y + size.Y + GetMargin()) {
-                                mSelectedSplitter = GetChildren().Find(child);
-                                mSplitMousePosition = mousePosition;
-                                mSplitSizeLeft = control->GetLocalSize();
-                                mSplitSizeRight = CastTo<Control>(GetChild(mSelectedSplitter + 1))->GetLocalSize();
-                                break;
-                            }
-                        } else {
-                            if (mousePosition.X > position.X + size.X && mousePosition.X < position.X + size.X + GetMargin()) {
-                                mSelectedSplitter = GetChildren().Find(child);
-                                mSplitMousePosition = mousePosition;
-                                mSplitSizeLeft = control->GetLocalSize();
-                                mSplitSizeRight = CastTo<Control>(GetChild(mSelectedSplitter + 1))->GetLocalSize();
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-
-            if (Input::IsMouseButtonDown(MouseButton::Left) && mSelectedSplitter > -1) {
-                Vector2 splitOffset = mousePosition - mSplitMousePosition;
-
-                if (mSelectedSplitter + 1 < GetChildCount()) {
-                    Ref<Control> leftControl = CastTo<Control>(GetChild(mSelectedSplitter));
-                    Ref<Control> rightControl = CastTo<Control>(GetChild(mSelectedSplitter + 1));
-
-                    if (IsVertical()) {
-                        leftControl->SetLocalSize(Vector2(mSplitSizeLeft.X, mSplitSizeLeft.Y + splitOffset.Y));
-                        rightControl->SetLocalSize(Vector2(mSplitSizeRight.X, mSplitSizeRight.Y - splitOffset.Y));
-                    } else {
-                        leftControl->SetLocalSize(Vector2(mSplitSizeLeft.X + splitOffset.X, mSplitSizeLeft.Y));
-                        rightControl->SetLocalSize(Vector2(mSplitSizeRight.X - splitOffset.X, mSplitSizeRight.Y));
-                    }
-                }
-            }
-        }
-
-        if (Input::IsMouseButtonReleased(MouseButton::Left)) {
-            mSelectedSplitter = -1;
-        }
+    if (!IsVisible()) {
+        return;
     }
 
     if (HasExpandedChild()) {
         Vector2 minimumSize = Vector2::Zero;
         int expandedChildCount = 0;
         for (const Ref<Node>& child : GetChildren()) {
-            if (const Ref<Control> control = CastTo<Control>(child); control) {
+            if (const Ref<Control> control = CastTo<Control>(child); control && control->IsVisible()) {
                 if (IsVertical()) {
                     if (control->IsVerticalExpand()) {
                         ++expandedChildCount;
@@ -86,13 +37,14 @@ void BoxContainer::Update(float timeStep) {
 
         int notExpandedChildCount = GetChildCount() - expandedChildCount;
 
-        Vector2 size = GetLocalSize() - GetPadding() * 2.0f;
+        const Vector4& padding = GetPadding();
+        Vector2 size = GetLocalSize() - Vector2(padding.X + padding.Z, padding.Y + padding.W);
         Vector2 diffSize = size - (minimumSize + GetMargin() * (notExpandedChildCount - 1));
-        Vector2 expandedElementSize = Vector2::Floor((diffSize - GetMargin() * (expandedChildCount - 1)) / expandedChildCount);
+        Vector2 expandedElementSize = Vector2::Floor((diffSize - GetMargin() * float(expandedChildCount - 1)) / float(expandedChildCount));
 
-        Vector2 position = GetPadding();
+        Vector2 position = Vector2(padding.X, padding.Y);
         for (const Ref<Node>& child : GetChildren()) {
-            if (const Ref<Control> control = CastTo<Control>(child); control) {
+            if (const Ref<Control> control = CastTo<Control>(child); control && control->IsVisible()) {
                 if (IsVertical()) {
                     if (control->IsVerticalExpand()) {
                         control->SetLocalSize(Vector2(size.X, expandedElementSize.Y));
@@ -117,10 +69,11 @@ void BoxContainer::Update(float timeStep) {
             }
         }
     } else {
-        Vector2 size = GetLocalSize() - GetPadding() * 2.0f;
-        Vector2 position = GetPadding();
+        const Vector4& padding = GetPadding();
+        Vector2 size = GetLocalSize() - Vector2(padding.X + padding.Z, padding.Y + padding.W);
+        Vector2 position = Vector2(padding.X, padding.Y);
         for (const Ref<Node>& child : GetChildren()) {
-            if (const Ref<Control> control = CastTo<Control>(child); control) {
+            if (const Ref<Control> control = CastTo<Control>(child); control && control->IsVisible()) {
                 if (IsVertical()) {
                     control->SetLocalSize(Vector2(size.X, control->GetLocalSize().Y));
 
@@ -132,6 +85,71 @@ void BoxContainer::Update(float timeStep) {
                     control->SetLocalPosition(position);
                     position.X += control->GetLocalSize().X + GetMargin();
                 }
+            }
+        }
+    }
+}
+
+void BoxContainer::HandleEvent(const Event& event) {
+    Base::HandleEvent(event);
+
+    if (event.Type == EventType::MouseButtonDown ||
+        event.Type == EventType::MouseButtonUp ||
+        event.Type == EventType::MouseMove) {
+        const Vector2& mousePosition = Input::GetMousePosition();
+        if (event.Type == EventType::MouseButtonDown && GetGlobalRectangle().Contains(mousePosition)) {
+            event.Consume();
+        }
+
+        if (IsSplitter()) { 
+            if (GetGlobalRectangle().Contains(mousePosition)) {
+                if (Input::IsMouseButtonPressed(MouseButton::Left)) {
+                    for (int i = 0; i < GetChildCount() - 1; ++i) {
+                        const Ref<Node>& child = GetChild(i);
+                        if (const Ref<Control> control = CastTo<Control>(child); control) {
+                            Vector2 position = control->GetGlobalPosition();
+                            Vector2 size = control->GetLocalSize();
+                            if (IsVertical()) {
+                                if (mousePosition.Y > position.Y + size.Y && mousePosition.Y < position.Y + size.Y + GetMargin()) {
+                                    mSelectedSplitter = GetChildren().Find(child);
+                                    mSplitMousePosition = mousePosition;
+                                    mSplitSizeLeft = control->GetLocalSize();
+                                    mSplitSizeRight = CastTo<Control>(GetChild(mSelectedSplitter + 1))->GetLocalSize();
+                                    break;
+                                }
+                            } else {
+                                if (mousePosition.X > position.X + size.X && mousePosition.X < position.X + size.X + GetMargin()) {
+                                    mSelectedSplitter = GetChildren().Find(child);
+                                    mSplitMousePosition = mousePosition;
+                                    mSplitSizeLeft = control->GetLocalSize();
+                                    mSplitSizeRight = CastTo<Control>(GetChild(mSelectedSplitter + 1))->GetLocalSize();
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (Input::IsMouseButtonDown(MouseButton::Left) && mSelectedSplitter > -1) {
+                    Vector2 splitOffset = mousePosition - mSplitMousePosition;
+
+                    if (mSelectedSplitter + 1 < GetChildCount()) {
+                        Ref<Control> leftControl = CastTo<Control>(GetChild(mSelectedSplitter));
+                        Ref<Control> rightControl = CastTo<Control>(GetChild(mSelectedSplitter + 1));
+
+                        if (IsVertical()) {
+                            leftControl->SetLocalSize(Vector2(mSplitSizeLeft.X, mSplitSizeLeft.Y + splitOffset.Y));
+                            rightControl->SetLocalSize(Vector2(mSplitSizeRight.X, mSplitSizeRight.Y - splitOffset.Y));
+                        } else {
+                            leftControl->SetLocalSize(Vector2(mSplitSizeLeft.X + splitOffset.X, mSplitSizeLeft.Y));
+                            rightControl->SetLocalSize(Vector2(mSplitSizeRight.X - splitOffset.X, mSplitSizeRight.Y));
+                        }
+                    }
+                }
+            }
+
+            if (Input::IsMouseButtonReleased(MouseButton::Left)) {
+                mSelectedSplitter = -1;
             }
         }
     }

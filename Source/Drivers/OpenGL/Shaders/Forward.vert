@@ -8,7 +8,6 @@ struct GlobalData {
     mat4 Projection;
     mat4 View;
     mat4 ProjectionView;
-    mat4 LastProjectionView;
     mat4 InvertedProjectionView;
     vec4 CameraPosition;
     vec4 CameraFrustum;
@@ -22,9 +21,10 @@ struct GlobalData {
 
 struct InstanceData {
     mat4 Transform;
+    int Visible;
     int MeshId;
     int MaterialId;
-    int Visible;
+    int Padding;
 };
 
 layout (std140, binding = 0) uniform GlobalUniform {

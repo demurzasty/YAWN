@@ -7,10 +7,17 @@
 #include "../Core/String.hpp"
 #include "../Runtime/Delegate.hpp"
 #include "../Runtime/Object.hpp"
+#include "../Runtime/Reference.hpp"
 
 namespace YAWN {
-    class Type {
+    class Type : public Reference {
     public:
+        virtual ~Type() = default;
+
+        void SetId(int id);
+
+        int GetId() const;
+
         void SetName(const String& string);
 
         const String& GetName() const;
@@ -41,7 +48,8 @@ namespace YAWN {
         String mName;
         Array<String> mTags;
         Map<String, Field> mFields;
-        Ref<Reference>(*mConstructor)();
+        Ref<Reference>(*mConstructor)() = nullptr;
+        int mId = 0;
         int mBase = 0;
     };
 }

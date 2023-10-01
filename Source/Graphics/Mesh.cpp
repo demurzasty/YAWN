@@ -3,6 +3,11 @@
 
 using namespace YAWN;
 
+void Mesh::Register(Meta<Mesh>& meta) {
+    meta.SetName(L"Mesh");
+    meta.SetBase<Resource>();
+}
+
 Ref<Mesh> Mesh::CreateBox(const Vector3& extent) {
     Ref<Mesh> mesh = new Mesh(24, 36);
 
@@ -72,4 +77,8 @@ Mesh::~Mesh() {
 
 void Mesh::SetData(const ArrayView<const Vertex3D>& vertices, const ArrayView<const int>& indices) {
     Renderer::SetMeshData(mId, vertices, indices);
+}
+
+int Mesh::GetId() const {
+    return mId;
 }

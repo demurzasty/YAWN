@@ -56,6 +56,8 @@ namespace YAWN {
 
         static float Log(float v);
 
+        static float CopySign(float a, float b);
+
         static int Align(int size, int align);
 
         static int FastFloatToInt(float value);

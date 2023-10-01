@@ -8,6 +8,10 @@ namespace YAWN {
     public:
         static String FromUTF8(const char* utf8);
 
+        static String Format(const wchar_t* format, ...);
+
+        static String Format(const String& format, ...);
+
         String() = default;
 
         String(const wchar_t* string);
@@ -57,6 +61,8 @@ namespace YAWN {
         const wchar_t* GetData() const;
 
         int GetSize() const;
+
+        int GetHash() const;
 
     private:
         wchar_t* mString = nullptr;

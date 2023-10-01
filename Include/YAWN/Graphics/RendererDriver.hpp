@@ -38,6 +38,16 @@ namespace YAWN {
 
         virtual void SetCameraTransform(const Matrix4& transform) = 0;
 
+        virtual int CreateViewport(int width, int height);
+
+        virtual void DestroyViewport(int id);
+
+        virtual bool IsViewportValid(int id);
+
+        virtual void SetViewportSize(int id, int width, int height) = 0;
+
+        virtual int GetViewportColorTextureId(int id) const = 0;
+
         virtual int CreateTexture(int width, int height, TextureFormat format, TextureFilter filter, TextureWrapping wrapping, int mipmapCount);
 
         virtual void DestroyTexture(int id);
@@ -56,7 +66,7 @@ namespace YAWN {
 
         virtual bool IsMeshValid(int id);
 
-        virtual void SetMeshData(int id, const ArrayView<const Vertex3D>& vertices, const ArrayView<const int>& indices);
+        virtual void SetMeshData(int id, const ArrayView<const Vertex3D>& vertices, const ArrayView<const int>& indices) = 0;
 
         virtual int CreateInstance();
 
@@ -65,6 +75,8 @@ namespace YAWN {
         virtual bool IsInstanceValid(int id);
 
         virtual void SetInstanceTransform(int id, const Matrix4& transform) = 0;
+
+        virtual void SetInstanceMesh(int id, int meshId) = 0;
 
         virtual int CreateCanvasItem();
 
@@ -122,8 +134,9 @@ namespace YAWN {
         };
 
         struct GPUMeshData {
-            Vector4 BoundingSphere = Vector4::Zero;
+            // Vector4 BoundingSphere = Vector4::Zero;
             int VertexOffset = 0;
+            int VertexCount = 0;
             int IndexOffset = 0;
             int IndexCount = 0;
         };
@@ -151,6 +164,7 @@ namespace YAWN {
             int Visible = 0;
             int MeshId = Pool::None;
             int MaterialId = Pool::None;
+            int Padding = 0;
         };
 
         struct GPUCanvasItemData {
@@ -165,6 +179,7 @@ namespace YAWN {
     protected:
         Color mClearColor = Color::CornflowerBlue;
 
+        Pool mViewportPool;
         Pool mInstancePool;
         Pool mMeshPool;
         Pool mTexturePool;

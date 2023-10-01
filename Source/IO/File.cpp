@@ -304,11 +304,11 @@ void File::WriteVariant(const Variant& variant) {
         break;
     case VariantType::Object:
         if (variant.AsObject()) {
-            Type& type = Types::GetType(variant.AsObject()->GetTypeId());
+            Ref<Type> type = Types::GetType(variant.AsObject()->GetTypeId());
 
-            Write32(type.GetName().GetSize());
-            for (int i = 0; i < type.GetName().GetSize(); ++i) {
-                Write32(type.GetName()[i]);
+            Write32(type->GetName().GetSize());
+            for (int i = 0; i < type->GetName().GetSize(); ++i) {
+                Write32(type->GetName()[i]);
             }
 
             FileTypeWriter writer;
@@ -318,7 +318,7 @@ void File::WriteVariant(const Variant& variant) {
             Delegate<void(const String&, const Field&)> delegate;
             delegate.Connect<&FileTypeWriter::WriteTypeFields>(&writer);
 
-            type.EnumerateFields(delegate);
+            type->EnumerateFields(delegate);
         } else {
             Write32(0);
         }

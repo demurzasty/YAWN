@@ -4,6 +4,7 @@
 
 namespace YAWN {
     enum class TextureFormat {
+        D24,
         R8,
         RG8,
         RGBA8,
@@ -27,9 +28,15 @@ namespace YAWN {
         YAWN_OBJECT(Texture, Resource);
 
     public:
+        static void Register(Meta<Texture>& meta);
+
         Texture(int width, int height, TextureFormat format, TextureFilter filter, TextureWrapping wrapping, int mipmapCount);
 
         virtual ~Texture() override;
+
+        void SetData(int mipmap, const void* data);
+
+        int GetId() const;
 
     private:
         const int mId;

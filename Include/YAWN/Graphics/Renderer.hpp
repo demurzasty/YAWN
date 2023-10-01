@@ -18,6 +18,14 @@ namespace YAWN {
 
         static void SetCameraTransform(const Matrix4& transform);
 
+        static int CreateViewport(int width, int height);
+
+        static void DestroyViewport(int id);
+
+        static bool IsViewportValid(int id);
+
+        static void SetViewportSize(int id, int width, int height);
+
         static int CreateTexture(int width, int height, TextureFormat format, TextureFilter filter, TextureWrapping wrapping, int mipmapCount);
 
         static void DestroyTexture(int id);
@@ -45,6 +53,8 @@ namespace YAWN {
         static bool IsInstanceValid(int id);
 
         static void SetInstanceTransform(int id, const Matrix4& transform);
+
+        static void SetInstanceMesh(int id, int meshId);
 
         static int CreateCanvasItem();
 

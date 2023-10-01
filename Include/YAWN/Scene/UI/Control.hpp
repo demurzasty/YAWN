@@ -4,6 +4,7 @@
 #include "../../Graphics/Color.hpp"
 #include "../../Math/Rectangle.hpp"
 #include "../../Graphics/Theme.hpp"
+#include "../../Math/Vector4.hpp"
 
 namespace YAWN {
     class Control : public Node2D {
@@ -38,7 +39,7 @@ namespace YAWN {
 
         void SetTheme(const Ref<Theme>& theme);
 
-        const Ref<Theme> GetTheme() const;
+        const Ref<Theme>& GetTheme() const;
 
         void SetHorizontalExpand(bool expand);
 
@@ -48,9 +49,9 @@ namespace YAWN {
 
         bool IsVerticalExpand() const;
 
-        void SetPadding(float padding);
+        void SetPadding(const Vector4& padding);
 
-        float GetPadding() const;
+        const Vector4& GetPadding() const;
 
     protected:
         virtual void OnReparent() override;
@@ -62,6 +63,6 @@ namespace YAWN {
         Ref<Theme> mTheme;
         bool mHorizontalExpand = false;
         bool mVerticalExpand = false;
-        float mPadding = 0.0f;
+        Vector4 mPadding = 0.0f;
     };
 }

@@ -35,6 +35,10 @@ namespace YAWN {
 
         static void SetMouseButtonState(MouseButton button, bool state);
 
+        static void SetMouseWheel(float wheel);
+
+        static float GetMouseWheel();
+
         static void UpdateMousePosition(const Vector2& position);
 
     private:
@@ -43,5 +47,6 @@ namespace YAWN {
         static bool sMouseButtonStates[int(MouseButton::Last)];
         static bool sLastMouseButtonStates[int(MouseButton::Last)];
         static Vector2 sMousePosition;
+        static float sMouseWheel;
     };
 }

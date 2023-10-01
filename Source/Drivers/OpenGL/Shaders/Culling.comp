@@ -14,7 +14,6 @@ struct GlobalData {
     mat4 Projection;
     mat4 View;
     mat4 ProjectionView;
-    mat4 LastProjectionView;
     mat4 InvertedProjectionView;
     vec4 CameraPosition;
     vec4 CameraFrustum;
@@ -28,12 +27,14 @@ struct GlobalData {
 
 struct InstanceData {
     mat4 Transform;
-    int MeshID;
-    int MaterialId;
     int Visible;
+    int MeshId;
+    int MaterialId;
+    int Padding;
 };
 
 struct MeshData {
+    // vec4 BoundingSphere;
     int VertexOffset;
     int VertexCount;
     int IndexOffset;
@@ -96,16 +97,16 @@ void main() {
             sCameraData.z = uGlobal.Data.Projection[3][2] / (uGlobal.Data.Projection[2][2] + 1.0);
         }
 
-        int meshID = uInstances.Data[instanceId].MeshID;
-        if (meshID > -1 &&
+        int meshId = uInstances.Data[instanceId].MeshId;
+        if (meshId > -1 &&
             uInstances.Data[instanceId].Visible > 0 &&
-            uMeshes.Data[meshID].VertexCount > 0 &&
-            uMeshes.Data[meshID].IndexCount > 0) {
+            uMeshes.Data[meshId].VertexCount > 0 &&
+            uMeshes.Data[meshId].IndexCount > 0) {
             
-            uDrawCommands.Data[instanceId].IndexCount = uMeshes.Data[meshID].IndexCount;
+            uDrawCommands.Data[instanceId].IndexCount = uMeshes.Data[meshId].IndexCount;
             uDrawCommands.Data[instanceId].InstanceCount = 1;
-            uDrawCommands.Data[instanceId].FirstIndex = uMeshes.Data[meshID].IndexOffset;
-            uDrawCommands.Data[instanceId].VertexOffset = uMeshes.Data[meshID].VertexOffset;
+            uDrawCommands.Data[instanceId].FirstIndex = uMeshes.Data[meshId].IndexOffset;
+            uDrawCommands.Data[instanceId].VertexOffset = uMeshes.Data[meshId].VertexOffset;
             uDrawCommands.Data[instanceId].FirstInstance = 0;
         } else {
             uDrawCommands.Data[instanceId].InstanceCount = 0;

@@ -20,7 +20,7 @@ void Editor::Enter() {
 
     SetName(L"$Editor");
 
-    Types::EnumerateTypesOfBase<Importer>(Delegate<void(const Type&)>::Bind<&Editor::InitializeImporter>(this));
+    Types::EnumerateTypesOfBase<Importer>(Delegate<void(const Ref<Type>&)>::Bind<&Editor::InitializeImporter>(this));
     
     Reimport();
 }
@@ -43,8 +43,8 @@ void Editor::Reimport() {
     Directory::EnumerateFiles(L"Data", Delegate<void(const FileInfo&)>::Bind<&Editor::EnumerateFile>(this));
 }
 
-void Editor::InitializeImporter(const Type& type) {
-    Ref<Reference> importer = type.Construct();
+void Editor::InitializeImporter(const Ref<Type>& type) {
+    Ref<Reference> importer = type->Construct();
 
     YAWN_ASSERT(importer);
     YAWN_ASSERT(importer->IsInstanceOf<Importer>());
@@ -82,6 +82,11 @@ void Editor::ImportFile(const FileInfo& info) {
 
     String guid = metadata[L"Guid"];
 
+    bool alwaysImport = false;
+    if (metadata.Contains(L"AlwaysImport")) {
+        alwaysImport = metadata[L"AlwaysImport"];
+    }
+
     Path cachePath = String(L"Cache/") + guid;
 
     Map<String, Variant> cache;
@@ -97,7 +102,9 @@ void Editor::ImportFile(const FileInfo& info) {
 
     File::WriteAllText(metadataPath, YTXT::Stringify(metadata));
 
-    if (info.GetLastWriteTime() > lastWriteTime) {
+    if (alwaysImport || info.GetLastWriteTime() > lastWriteTime) {
+        Console::WriteLine(L"Importing: %s", info.GetPath().ToString().GetData());
+
         importer->Import(info.GetPath(), Path(L"Package") / guid, metadata);
 
         cache.GetOrAdd(L"LastWriteTime") = info.GetLastWriteTime();
