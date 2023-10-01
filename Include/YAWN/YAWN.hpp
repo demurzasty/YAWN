@@ -91,6 +91,7 @@
 #include "Scene/UI/Popup.hpp"
 #include "Scene/UI/Section.hpp"
 #include "Scene/UI/Tree.hpp"
+#include "Scene/UI/ViewportContainer.hpp"
 #include "Scene/UI/WindowContainer.hpp"
 #include "Scene/Camera3D.hpp"
 #include "Scene/Geometry3D.hpp"
@@ -99,6 +100,7 @@
 #include "Scene/Node2D.hpp"
 #include "Scene/Node3D.hpp"
 #include "Scene/Scene.hpp"
+#include "Scene/Viewport.hpp"
 
 #include "Threading/ConditionVariable.hpp"
 #include "Threading/ExclusiveMutex.hpp"

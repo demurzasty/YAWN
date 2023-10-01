@@ -22,6 +22,7 @@ struct GlobalData {
     int InstanceCount;
     int LightCount;
     int TextureId;
+    int CurrentViewportId;
     float Time;
 };
 
@@ -30,7 +31,7 @@ struct InstanceData {
     int Visible;
     int MeshId;
     int MaterialId;
-    int Padding;
+    int ViewportId;
 };
 
 struct MeshData {
@@ -100,6 +101,7 @@ void main() {
         int meshId = uInstances.Data[instanceId].MeshId;
         if (meshId > -1 &&
             uInstances.Data[instanceId].Visible > 0 &&
+            uInstances.Data[instanceId].ViewportId == uGlobal.Data.CurrentViewportId &&
             uMeshes.Data[meshId].VertexCount > 0 &&
             uMeshes.Data[meshId].IndexCount > 0) {
             

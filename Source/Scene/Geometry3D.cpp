@@ -1,5 +1,7 @@
 #include <YAWN/Scene/Geometry3D.hpp>
 #include <YAWN/Graphics/Renderer.hpp>
+#include <YAWN/Scene/Viewport.hpp>
+#include <YAWN/Runtime/Console.hpp>
 
 using namespace YAWN;
 
@@ -30,6 +32,10 @@ void Geometry3D::Enter() {
     if (mId == Pool::None) {
         mId = Renderer::CreateInstance();
     }
+
+    Ref<Viewport> viewport = GetViewport();
+    YAWN_ASSERT(viewport);
+    Renderer::SetInstanceViewport(mId, viewport->GetId());
 }
 
 void Geometry3D::Exit() {

@@ -1,5 +1,6 @@
-#include <YAWN/Scene/Node3D.hpp>
+#include <YAWN/Scene/Node.hpp>
 #include <YAWN/Graphics/Renderer.hpp>
+#include <YAWN/Scene/Viewport.hpp>
 
 using namespace YAWN;
 
@@ -13,8 +14,18 @@ void Node::Register(Meta<Node>& meta) {
 
 Node::~Node() {
     for (const Ref<Node>& child : mChildren) {
-        child->Exit();
+        if (child->mEntered) {
+            child->Exit();
+
+            child->mEntered = false;
+        }
     }
+}
+
+void Node::Enter() {
+}
+
+void Node::Exit() {
 }
 
 void Node::Update(float timeStep) {
@@ -94,7 +105,9 @@ void Node::AddChild(const Ref<Node>& node) {
 
     node->OnReparent();
 
-    node->Enter();
+    if (mEntered) {
+        node->OnEnter();
+    }
 
     RequestRedraw();
 }
@@ -151,10 +164,17 @@ bool Node::IsLastChild() const {
     return mParent && GetIndex() == mParent->GetChildCount() - 1;
 }
 
-void Node::Enter() {
-}
+Ref<Viewport> Node::GetViewport() const {
+    if (mParent) {
+        Viewport* viewport = CastTo<Viewport>(mParent);
+        if (viewport) {
+            return viewport;
+        }
 
-void Node::Exit() {
+        return mParent->GetViewport();
+    }
+
+    return nullptr;
 }
 
 void Node::SetChildren(const Array<Ref<Node>>& children) {
@@ -165,10 +185,22 @@ void Node::SetChildren(const Array<Ref<Node>>& children) {
     }
 }
 
+void Node::OnEnter() {
+    if (!mEntered) {
+        Enter();
+
+        mEntered = true;
+
+        for (const Ref<Node>& child : mChildren) {
+            child->OnEnter();
+        }
+    }
+}
+
 void Node::OnReparent() {
 }
 
-void Node::DrawTexture(int textureId, const Rectangle& destination, const Rectangle& source, const Color4& color) {
+void Node::DrawTexture(int textureId, const Rectangle& destination, const Rectangle& source, const Color4& color, bool flipY) {
     if (color.A == 0) {
         return;
     }
@@ -184,6 +216,13 @@ void Node::DrawTexture(int textureId, const Rectangle& destination, const Rectan
         Vertex2D(position + Vector2(size.X, size.Y), Vector2(source.GetEnd().X / textureSize.X, source.GetEnd().Y / textureSize.Y), color),
         Vertex2D(position + Vector2(size.X, 0.0f), Vector2(source.GetEnd().X / textureSize.X, source.Position.Y / textureSize.Y), color),
     };
+
+    if (flipY) {
+        vertices[0].UV.Y = 1.0f - vertices[0].UV.Y;
+        vertices[1].UV.Y = 1.0f - vertices[1].UV.Y;
+        vertices[2].UV.Y = 1.0f - vertices[2].UV.Y;
+        vertices[3].UV.Y = 1.0f - vertices[3].UV.Y;
+    }
 
     unsigned short indices[6] = {
         0, 1, 2,

@@ -15,17 +15,22 @@ void Initialize() {
 
     Ref<Prefab> prefab = ResourceManager::Load<Prefab>(Guid(L"97b9dcf3-1894-cc03-e0d7-f4c4d2c9e800"));
 
-    Ref<Node> node = prefab->Instantiate();
 
-    Scene::GetRoot()->AddChild(node);
+    Ref<Viewport> subViewport = new Viewport();
 
-    Ref<Camera3D> camera = new Camera3D();
+    {
+        Ref<Node> node = prefab->Instantiate();
 
-    camera->SetLocalPosition(Vector3(0.0f, 0.25f, 1.0f));
+        subViewport->AddChild(node);
 
-    Scene::GetRoot()->AddChild(camera);
+        Ref<Camera3D> camera = new Camera3D();
 
-    return;
+        camera->SetLocalPosition(Vector3(0.0f, 0.25f, 1.0f));
+
+        subViewport->AddChild(camera);
+    }
+
+    // Scene::GetRoot()->AddChild(subViewport);
 
     Ref<WindowContainer> windowContainer = new WindowContainer();
     windowContainer->SetName(L"WindowContainer");
@@ -114,6 +119,11 @@ void Initialize() {
                 section->SetMinimumSize(Vector2(100.0f, 100.0f));
                 section->SetVerticalExpand(true);
                 section->SetText(L"Viewport");
+
+                Ref<ViewportContainer> viewportContainer = new ViewportContainer();
+                viewportContainer->AddChild(subViewport);
+                section->AddChild(viewportContainer);
+
                 centerContainer->AddChild(section);
             }
 

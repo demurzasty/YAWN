@@ -7,7 +7,7 @@ void RendererDriver::SetClearColor(const Color& color) {
     mClearColor = color;
 }
 
-int RendererDriver::CreateViewport(int width, int height) {
+int RendererDriver::CreateViewport(int width, int height, bool directToScreen) {
     return mViewportPool.Acquire();
 }
 

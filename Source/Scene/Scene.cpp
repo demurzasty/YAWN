@@ -1,17 +1,22 @@
 #include <YAWN/Scene/Scene.hpp>
 #include <YAWN/Scene/UI/Control.hpp>
 #include <YAWN/Graphics/Renderer.hpp>
+#include <YAWN/Platform/Window.hpp>
 
 using namespace YAWN;
 
-Ref<Node> Scene::sRoot;
+Ref<Viewport> Scene::sRoot;
 
 void Scene::Initialize() {
-    sRoot = new Node();
+    sRoot = new Viewport();
     sRoot->SetName(L"Root");
+    sRoot->SetRenderDirectToScreen(true);
+    sRoot->SetSize(Window::GetSize());
+    sRoot->OnEnter();
 }
 
 void Scene::Release() {
+    sRoot->Exit();
     sRoot.Reset();
 }
 
@@ -88,6 +93,6 @@ void Scene::Redraw(const Ref<Node>& node) {
     }
 }
 
-const Ref<Node>& Scene::GetRoot() {
+const Ref<Viewport>& Scene::GetRoot() {
     return sRoot;
 }

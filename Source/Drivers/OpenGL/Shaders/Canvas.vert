@@ -19,6 +19,7 @@ struct GlobalData {
     int InstanceCount;
     int LightCount;
     int TextureId;
+    int CurrentViewportId;
     float Time;
 };
 

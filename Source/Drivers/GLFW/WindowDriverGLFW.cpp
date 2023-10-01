@@ -238,3 +238,7 @@ Vector2 WindowDriverGLFW::GetSize() {
     glfwGetWindowSize(mWindow, &width, &height);
     return Vector2(float(width), float(height));
 }
+
+double WindowDriverGLFW::GetTime() {
+    return glfwGetTime();
+}

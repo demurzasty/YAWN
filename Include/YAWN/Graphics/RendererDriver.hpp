@@ -38,7 +38,7 @@ namespace YAWN {
 
         virtual void SetCameraTransform(const Matrix4& transform) = 0;
 
-        virtual int CreateViewport(int width, int height);
+        virtual int CreateViewport(int width, int height, bool directToScreen);
 
         virtual void DestroyViewport(int id);
 
@@ -46,7 +46,7 @@ namespace YAWN {
 
         virtual void SetViewportSize(int id, int width, int height) = 0;
 
-        virtual int GetViewportColorTextureId(int id) const = 0;
+        virtual int GetViewportColorTexture(int id) const = 0;
 
         virtual int CreateTexture(int width, int height, TextureFormat format, TextureFilter filter, TextureWrapping wrapping, int mipmapCount);
 
@@ -77,6 +77,8 @@ namespace YAWN {
         virtual void SetInstanceTransform(int id, const Matrix4& transform) = 0;
 
         virtual void SetInstanceMesh(int id, int meshId) = 0;
+
+        virtual void SetInstanceViewport(int id, int viewportId) = 0;
 
         virtual int CreateCanvasItem();
 
@@ -130,6 +132,7 @@ namespace YAWN {
             int InstanceCount = 0;
             int LightCount = 0;
             int TextureId = 0;
+            int CurrentViewportId = Pool::None;
             float Time = 0.0f;
         };
 
@@ -164,7 +167,7 @@ namespace YAWN {
             int Visible = 0;
             int MeshId = Pool::None;
             int MaterialId = Pool::None;
-            int Padding = 0;
+            int ViewportId = Pool::None;
         };
 
         struct GPUCanvasItemData {

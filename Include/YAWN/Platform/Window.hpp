@@ -18,6 +18,8 @@ namespace YAWN {
 
         static Vector2 GetSize();
 
+        static double GetTime();
+
     private:
         static Ref<WindowDriver> sDriver;
         static ExclusiveMutex sMutex;

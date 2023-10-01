@@ -16,6 +16,7 @@ struct GlobalData {
     int InstanceCount;
     int LightCount;
     int TextureId;
+    int CurrentViewportId;
     float Time;
 };
 
@@ -24,7 +25,7 @@ struct InstanceData {
     int Visible;
     int MeshId;
     int MaterialId;
-    int Padding;
+    int ViewportId;
 };
 
 layout (std140, binding = 0) uniform GlobalUniform {

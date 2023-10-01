@@ -1,6 +1,6 @@
 #pragma once 
 
-#include "Node.hpp"
+#include "Viewport.hpp"
 
 namespace YAWN {
     class Scene {
@@ -19,7 +19,7 @@ namespace YAWN {
 
         static void Redraw();
 
-        static const Ref<Node>& GetRoot();
+        static const Ref<Viewport>& GetRoot();
 
     private:
         static void Update(const Ref<Node>& node, float timeStep);
@@ -33,6 +33,6 @@ namespace YAWN {
         static void Redraw(const Ref<Node>& node);
 
     private:
-        static Ref<Node> sRoot;
+        static Ref<Viewport> sRoot;
     };
 }

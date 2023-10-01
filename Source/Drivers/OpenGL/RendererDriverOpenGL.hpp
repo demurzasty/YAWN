@@ -18,29 +18,6 @@ namespace YAWN {
     class RendererDriverOpenGL : public RendererDriver {
         YAWN_OBJECT(RendererDriverOpenGL, RendererDriver);
 
-        struct GPUDrawElementsIndirectCommand {
-            int IndexCount = 0;
-            int InstanceCount = 0;
-            int IndexOffset = 0;
-            int VertexOffset = 0;
-            int FirstInstance = 0;
-        };
-
-        struct GPUViewportData {
-            GLuint FramebufferId = 0;
-            int ColorTextureId = 0;
-            int DepthTextureId = 0;
-            int Width = 0;
-            int Height = 0;
-        };
-
-        struct CanvasDrawCommand {
-            int CanvasItemId;
-            int VertexOffset;
-            int IndexOffset;
-            int IndexCount;
-        };
-
     public:
         RendererDriverOpenGL();
 
@@ -52,13 +29,13 @@ namespace YAWN {
 
         void SetCameraTransform(const Matrix4& transform) override;
 
-        int CreateViewport(int width, int height) override;
+        int CreateViewport(int width, int height, bool directToScreen) override;
 
         void DestroyViewport(int id) override;
 
         void SetViewportSize(int id, int width, int height) override;
 
-        int GetViewportColorTextureId(int id) const override;
+        int GetViewportColorTexture(int id) const override;
 
         int CreateTexture(int width, int height, TextureFormat format, TextureFilter filter, TextureWrapping wrapping, int mipmapCount) override;
 
@@ -83,6 +60,8 @@ namespace YAWN {
         void SetInstanceTransform(int id, const Matrix4& transform) override;
 
         void SetInstanceMesh(int id, int meshId) override;
+
+        void SetInstanceViewport(int id, int viewportId) override;
 
         int CreateCanvasItem() override;
 
@@ -119,6 +98,29 @@ namespace YAWN {
         void DefragmentateCanvasItemData();
 
     private:
+        struct GPUDrawElementsIndirectCommand {
+            int IndexCount = 0;
+            int InstanceCount = 0;
+            int IndexOffset = 0;
+            int VertexOffset = 0;
+            int FirstInstance = 0;
+        };
+
+        struct GPUViewportData {
+            GLuint FramebufferId = 0;
+            int ColorTextureId = 0;
+            int DepthTextureId = 0;
+            int Width = 0;
+            int Height = 0;
+        };
+
+        struct CanvasDrawCommand {
+            int CanvasItemId;
+            int VertexOffset;
+            int IndexOffset;
+            int IndexCount;
+        };
+
         GLuint mGlobalBufferId = 0;
         GLuint mInstanceBufferId = 0;
         GLuint mMeshBufferId = 0;

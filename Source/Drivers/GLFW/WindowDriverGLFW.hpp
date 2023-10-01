@@ -22,6 +22,8 @@ namespace YAWN {
 
         Vector2 GetSize() override;
 
+        double GetTime() override;
+
     private:
         GLFWwindow* mWindow = nullptr;
     };

@@ -45,12 +45,12 @@ void Renderer::SetCameraTransform(const Matrix4& transform) {
     sDriver->SetCameraTransform(transform);
 }
 
-int Renderer::CreateViewport(int width, int height) {
+int Renderer::CreateViewport(int width, int height, bool directToScreen) {
     ExclusiveLock lock(sMutex);
 
     YAWN_ASSERT(sDriver);
 
-    return sDriver->CreateViewport(width, height);
+    return sDriver->CreateViewport(width, height, directToScreen);
 }
 
 void Renderer::DestroyViewport(int id) {
@@ -77,6 +77,15 @@ void Renderer::SetViewportSize(int id, int width, int height) {
     YAWN_ASSERT(sDriver->IsViewportValid(id));
 
     sDriver->SetViewportSize(id, width, height);
+}
+
+int Renderer::GetViewportColorTexture(int id) {
+    ExclusiveLock lock(sMutex);
+
+    YAWN_ASSERT(sDriver);
+    YAWN_ASSERT(sDriver->IsViewportValid(id));
+
+    return sDriver->GetViewportColorTexture(id);
 }
 
 int Renderer::CreateTexture(int width, int height, TextureFormat format, TextureFilter filter, TextureWrapping wrapping, int mipmapCount) {
@@ -203,6 +212,16 @@ void Renderer::SetInstanceMesh(int id, int meshId) {
     YAWN_ASSERT(meshId == Pool::None || sDriver->IsMeshValid(meshId));
 
     sDriver->SetInstanceMesh(id, meshId);
+}
+
+void Renderer::SetInstanceViewport(int id, int viewportId) {
+    ExclusiveLock lock(sMutex);
+
+    YAWN_ASSERT(sDriver);
+    YAWN_ASSERT(sDriver->IsInstanceValid(id));
+    YAWN_ASSERT(viewportId == Pool::None || sDriver->IsViewportValid(viewportId));
+
+    sDriver->SetInstanceViewport(id, viewportId);
 }
 
 int Renderer::CreateCanvasItem() {

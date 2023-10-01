@@ -52,16 +52,28 @@ void Application::Run() {
         sInitializations[i]();
     }
 
+    double lastTime = Window::GetTime();
+    double accTime = 0.0;
+
     while (Window::IsOpen()) {
         Input::Refresh();
 
         Window::PollEvents();
 
-        Scene::Update(1.0f / 60.0f);
+        double currTime = Window::GetTime();
+        double elapsedTime = currTime - lastTime;
+        lastTime = currTime;
 
-        Scene::FixedUpdate(1.0f / 60.0f);
+        Scene::Update(float(elapsedTime));
 
-        Scene::LateUpdate(1.0f / 60.0f);
+        accTime += elapsedTime;
+        while (accTime >= 1.0 / 60.0) {
+            Scene::FixedUpdate(1.0f / 60.0f);
+
+            accTime -= 1.0 / 60.0;
+        }
+
+        Scene::LateUpdate(elapsedTime);
 
         Renderer::Render();
 

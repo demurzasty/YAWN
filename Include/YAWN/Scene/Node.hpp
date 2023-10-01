@@ -11,6 +11,8 @@
 #include "../Platform/Event.hpp"
 
 namespace YAWN {
+    class Viewport;
+
     class Node : public Reference {
         YAWN_OBJECT(Node, Reference);
 
@@ -21,16 +23,12 @@ namespace YAWN {
         virtual ~Node();
 
         //////////////////////////
-        //////// Events //////////
+        ///////// Hooks //////////
         //////////////////////////
 
         virtual void Enter();
 
         virtual void Exit();
-
-        //////////////////////////
-        /////// Frame Loop ///////
-        //////////////////////////
 
         virtual void Update(float timeStep);
 
@@ -86,6 +84,8 @@ namespace YAWN {
 
         bool IsLastChild() const;
 
+        Ref<Viewport> GetViewport() const;
+
     protected:
         ///////////////////////////
         ////////// Events /////////
@@ -97,7 +97,7 @@ namespace YAWN {
         //// Drawing Utilities ////
         ///////////////////////////
 
-        void DrawTexture(int textureId, const Rectangle& destination, const Rectangle& source, const Color4& color);
+        void DrawTexture(int textureId, const Rectangle& destination, const Rectangle& source, const Color4& color, bool flipY = false);
 
         void DrawFillRect(const Rectangle& destination, const Color4& color);
 
@@ -110,7 +110,11 @@ namespace YAWN {
     private:
         void SetChildren(const Array<Ref<Node>>& children);
 
+        void OnEnter();
+
     private:
+        friend class Scene;
+
         //////////////////////////
         //////// Structs /////////
         //////////////////////////
@@ -149,6 +153,7 @@ namespace YAWN {
         ///////// State //////////
         //////////////////////////
 
+        bool mEntered = false;
         mutable bool mNeedRedraw = true;
     };
 }

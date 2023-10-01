@@ -130,40 +130,62 @@ void RendererDriverOpenGL::SetCameraTransform(const Matrix4& transform) {
     mGlobalData.CameraPosition = Vector4(Matrix4::ExtractPosition(transform), 1.0f);
 }
 
-int RendererDriverOpenGL::CreateViewport(int width, int height) {
-    int id = Base::CreateViewport(width, height);
+int RendererDriverOpenGL::CreateViewport(int width, int height, bool directToScreen) {
+    int id = Base::CreateViewport(width, height, directToScreen);
 
     mViewports.Expand(id + 1);
+
+    mViewports[id] = GPUViewportData();
 
     mViewports[id].Width = width;
     mViewports[id].Height = height;
 
-    mViewports[id].ColorTextureId = CreateTexture(width, height, TextureFormat::RGBA8, TextureFilter::Linear, TextureWrapping::ClampToEdge, 1);
-    mViewports[id].DepthTextureId = CreateTexture(width, height, TextureFormat::D24, TextureFilter::Linear, TextureWrapping::ClampToEdge, 1);
+    if (directToScreen) {
+        mViewports[id].FramebufferId = 0;
+    } else {
+        mViewports[id].ColorTextureId = CreateTexture(width, height, TextureFormat::RGBA8, TextureFilter::Linear, TextureWrapping::ClampToEdge, 1);
+        mViewports[id].DepthTextureId = CreateTexture(width, height, TextureFormat::D24, TextureFilter::Linear, TextureWrapping::ClampToEdge, 1);
 
-    YAWN_GL_CHECK(glCreateFramebuffers(1, &mViewports[id].FramebufferId));
-    YAWN_GL_CHECK(glNamedFramebufferTexture(mViewports[id].FramebufferId, GL_COLOR_ATTACHMENT0, mViewports[id].ColorTextureId, 0));
-    YAWN_GL_CHECK(glNamedFramebufferTexture(mViewports[id].FramebufferId, GL_DEPTH_ATTACHMENT, mViewports[id].DepthTextureId, 0));
+        YAWN_GL_CHECK(glCreateFramebuffers(1, &mViewports[id].FramebufferId));
+        YAWN_GL_CHECK(glNamedFramebufferTexture(mViewports[id].FramebufferId, GL_COLOR_ATTACHMENT0, mTextureIds[mViewports[id].ColorTextureId], 0));
+        YAWN_GL_CHECK(glNamedFramebufferTexture(mViewports[id].FramebufferId, GL_DEPTH_ATTACHMENT, mTextureIds[mViewports[id].DepthTextureId], 0));
 
-    YAWN_ASSERT(glCheckNamedFramebufferStatus(mViewports[id].FramebufferId, GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE);
+        YAWN_ASSERT(glCheckNamedFramebufferStatus(mViewports[id].FramebufferId, GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
+    }
 
     return id;
 }
 
 void RendererDriverOpenGL::DestroyViewport(int id) {
-    glDeleteFramebuffers(1, &mViewports[id].FramebufferId);
+    if (mViewports[id].FramebufferId) {
+        glDeleteFramebuffers(1, &mViewports[id].FramebufferId);
 
-    DestroyTexture(mViewports[id].DepthTextureId);
-    DestroyTexture(mViewports[id].ColorTextureId);
+        DestroyTexture(mViewports[id].DepthTextureId);
+        DestroyTexture(mViewports[id].ColorTextureId);
+    }
 
     Base::DestroyViewport(id);
 }
 
 void RendererDriverOpenGL::SetViewportSize(int id, int width, int height) {
+    if (mViewports[id].FramebufferId && (mViewports[id].Width != width || mViewports[id].Height != height)) {
+        DestroyTexture(mViewports[id].DepthTextureId);
+        DestroyTexture(mViewports[id].ColorTextureId);
 
+        mViewports[id].Width = width;
+        mViewports[id].Height = height;
+
+        mViewports[id].ColorTextureId = CreateTexture(width, height, TextureFormat::RGBA8, TextureFilter::Linear, TextureWrapping::ClampToEdge, 1);
+        mViewports[id].DepthTextureId = CreateTexture(width, height, TextureFormat::D24, TextureFilter::Linear, TextureWrapping::ClampToEdge, 1);
+
+        YAWN_GL_CHECK(glNamedFramebufferTexture(mViewports[id].FramebufferId, GL_COLOR_ATTACHMENT0, mTextureIds[mViewports[id].ColorTextureId], 0));
+        YAWN_GL_CHECK(glNamedFramebufferTexture(mViewports[id].FramebufferId, GL_DEPTH_ATTACHMENT, mTextureIds[mViewports[id].DepthTextureId], 0));
+
+        YAWN_ASSERT(glCheckNamedFramebufferStatus(mViewports[id].FramebufferId, GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
+    }
 }
 
-int RendererDriverOpenGL::GetViewportColorTextureId(int id) const {
+int RendererDriverOpenGL::GetViewportColorTexture(int id) const {
     return mViewports[id].ColorTextureId;
 }
 
@@ -196,6 +218,7 @@ int RendererDriverOpenGL::CreateTexture(int width, int height, TextureFormat for
     switch (format) {
     case TextureFormat::D24:
         YAWN_GL_CHECK(glTextureStorage2D(mTextureIds[id], mipmapCount, GL_DEPTH_COMPONENT24, width, height));
+        break;
     case TextureFormat::R8:
         YAWN_GL_CHECK(glTextureStorage2D(mTextureIds[id], mipmapCount, GL_R8, width, height));
         break;
@@ -343,6 +366,12 @@ void RendererDriverOpenGL::SetInstanceMesh(int id, int meshId) {
     YAWN_GL_CHECK(glNamedBufferSubData(mInstanceBufferId, id * sizeof(GPUInstanceData), sizeof(GPUInstanceData), &mInstances[id]));
 }
 
+void RendererDriverOpenGL::SetInstanceViewport(int id, int viewportId) {
+    mInstances[id].ViewportId = viewportId;
+
+    YAWN_GL_CHECK(glNamedBufferSubData(mInstanceBufferId, id * sizeof(GPUInstanceData), sizeof(GPUInstanceData), &mInstances[id]));
+}
+
 int RendererDriverOpenGL::CreateCanvasItem() {
     int id = Base::CreateCanvasItem();
 
@@ -418,24 +447,44 @@ void RendererDriverOpenGL::Render() {
 
     YAWN_GL_CHECK(glDisable(GL_SCISSOR_TEST));
 
-    YAWN_GL_CHECK(glClearColor(mClearColor.R, mClearColor.G, mClearColor.B, mClearColor.A));
-    YAWN_GL_CHECK(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
-
-    YAWN_GL_CHECK(glBindProgramPipeline(mCullingProgramId));
-
-    YAWN_GL_CHECK(glDispatchCompute(Math::Align(mGlobalData.InstanceCount, 64) / 64, 1, 1));
-
-    YAWN_GL_CHECK(glBindProgramPipeline(mForwardProgramId));
-
     YAWN_GL_CHECK(glEnable(GL_DEPTH_TEST));
     YAWN_GL_CHECK(glEnable(GL_CULL_FACE));
     YAWN_GL_CHECK(glDisable(GL_BLEND));
 
-    YAWN_GL_CHECK(glBindVertexArray(mVertexArrayObjectId));
+    for (int viewportId = 0; viewportId < mViewportPool.GetSize(); ++viewportId) {
+        if (mViewportPool.IsValid(viewportId)) {
+            mGlobalData.CurrentViewportId = viewportId;
 
-    YAWN_GL_CHECK(glBindBuffer(GL_DRAW_INDIRECT_BUFFER, mDrawBufferId));
+            YAWN_GL_CHECK(glNamedBufferSubData(mGlobalBufferId, offsetof(GPUGlobalData, CurrentViewportId), sizeof(int), &mGlobalData.CurrentViewportId));
 
-    YAWN_GL_CHECK(glMultiDrawElementsIndirect(GL_TRIANGLES, GL_UNSIGNED_INT, nullptr, mGlobalData.InstanceCount, sizeof(GPUDrawElementsIndirectCommand)));
+            YAWN_GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, mViewports[viewportId].FramebufferId));
+
+            YAWN_GL_CHECK(glViewport(0, 0, mViewports[viewportId].Width, mViewports[viewportId].Height));
+
+            YAWN_GL_CHECK(glClearColor(mClearColor.R, mClearColor.G, mClearColor.B, mClearColor.A));
+            YAWN_GL_CHECK(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
+
+            YAWN_GL_CHECK(glMemoryBarrier(GL_BUFFER_UPDATE_BARRIER_BIT));
+
+            YAWN_GL_CHECK(glBindProgramPipeline(mCullingProgramId));
+
+            YAWN_GL_CHECK(glDispatchCompute(Math::Align(mGlobalData.InstanceCount, 64) / 64, 1, 1));
+
+            YAWN_GL_CHECK(glBindProgramPipeline(mForwardProgramId));
+
+            YAWN_GL_CHECK(glBindVertexArray(mVertexArrayObjectId));
+
+            YAWN_GL_CHECK(glBindBuffer(GL_DRAW_INDIRECT_BUFFER, mDrawBufferId));
+
+            YAWN_GL_CHECK(glMemoryBarrier(GL_COMMAND_BARRIER_BIT | GL_SHADER_STORAGE_BARRIER_BIT));
+
+            YAWN_GL_CHECK(glMultiDrawElementsIndirect(GL_TRIANGLES, GL_UNSIGNED_INT, nullptr, mGlobalData.InstanceCount, sizeof(GPUDrawElementsIndirectCommand)));
+        }
+    }
+
+    YAWN_GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, 0));
+
+    YAWN_GL_CHECK(glViewport(0, 0, Math::FastFloatToInt(mGlobalData.FramebufferSize.X), Math::FastFloatToInt(mGlobalData.FramebufferSize.Y)));
 
     YAWN_GL_CHECK(glBindProgramPipeline(mCanvasProgramId));
 
@@ -504,7 +553,7 @@ void RendererDriverOpenGL::LLDraw2D(Topology topology, int vertexOffset, int ind
         }
 
         if (type != GL_NONE) {
-            glDrawElementsBaseVertex(type, indexCount, GL_UNSIGNED_SHORT, (void*)(intptr_t)(indexOffset * sizeof(unsigned short)), vertexOffset);
+            YAWN_GL_CHECK(glDrawElementsBaseVertex(type, indexCount, GL_UNSIGNED_SHORT, (void*)(intptr_t)(indexOffset * sizeof(unsigned short)), vertexOffset));
         }
     }
 }

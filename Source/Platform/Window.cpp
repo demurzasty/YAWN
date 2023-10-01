@@ -52,3 +52,11 @@ Vector2 Window::GetSize() {
 
     return sDriver->GetSize();
 }
+
+double Window::GetTime() {
+    ExclusiveLock lock(sMutex);
+
+    YAWN_ASSERT(sDriver);
+
+    return sDriver->GetTime();
+}
