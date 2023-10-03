@@ -25,6 +25,9 @@ Node::~Node() {
 }
 
 void Node::Enter() {
+    if (GetName().IsEmpty()) {
+        SetName(GetTypeName());
+    }
 }
 
 void Node::Exit() {

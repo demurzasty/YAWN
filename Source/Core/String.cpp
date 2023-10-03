@@ -31,7 +31,13 @@ String String::FromUTF8(const char* utf8) {
 String String::Format(const wchar_t* format, ...) {
     va_list args;
     va_start(args, format);
+
+#ifdef _MSC_VER
+    vswprintf(sBuffer, 2048, format, args);
+#else
     vswprintf(sBuffer, format, args);
+#endif
+
     va_end(args);
 
     return sBuffer;
@@ -40,7 +46,13 @@ String String::Format(const wchar_t* format, ...) {
 String String::Format(const String& format, ...) {
     va_list args;
     va_start(args, &format);
+
+#ifdef _MSC_VER
+    vswprintf(sBuffer, 2048, format.GetData(), args);
+#else
     vswprintf(sBuffer, format.GetData(), args);
+#endif
+
     va_end(args);
 
     return sBuffer;
@@ -300,6 +312,10 @@ bool String::IsDecimal() const {
 
 const wchar_t* String::GetData() const { 
     return mString ? mString : L"";
+}
+
+bool String::IsEmpty() const {
+    return mSize == 0;
 }
 
 int String::GetSize() const { 

@@ -8,6 +8,7 @@
 using namespace YAWN;
 
 static Key MapKey(int key) {
+    YAWN_ASSUME(key <= GLFW_KEY_LAST);
     switch (key) {
         case GLFW_KEY_SPACE: return Key::Space;
         case GLFW_KEY_APOSTROPHE: return Key::Apostrophe;

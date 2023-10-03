@@ -60,6 +60,8 @@ namespace YAWN {
 
         const wchar_t* GetData() const;
 
+        bool IsEmpty() const;
+
         int GetSize() const;
 
         int GetHash() const;
