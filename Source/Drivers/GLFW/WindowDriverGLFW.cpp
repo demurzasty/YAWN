@@ -198,6 +198,15 @@ static void ScrollCallback(GLFWwindow* window, double xoffset, double yoffset) {
     Scene::HandleEvent(MouseWheelEvent(float(yoffset)));
 }
 
+static void TextInputCallback(GLFWwindow* window, unsigned int codepoint) {
+    wchar_t text[2] = {
+        (wchar_t)codepoint,
+        0
+    };
+
+    Scene::HandleEvent(TextInputEvent(text));
+}
+
 WindowDriverGLFW::WindowDriverGLFW() {
     glfwInit();
 
@@ -208,6 +217,7 @@ WindowDriverGLFW::WindowDriverGLFW() {
     glfwSetCursorPosCallback(mWindow, &CursorPositionCallback);
     glfwSetFramebufferSizeCallback(mWindow, &FramebufferSizeCallback);
     glfwSetScrollCallback(mWindow, &ScrollCallback);
+    glfwSetCharCallback(mWindow, &TextInputCallback);
 
     glfwMakeContextCurrent(mWindow);
 

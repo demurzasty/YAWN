@@ -29,19 +29,6 @@ static void WriteMesh(const Path& outputPath, const Array<Vertex3D>& vertices, c
     file.Write(indices.GetData(), indices.GetSizeInBytes());
 }
 
-static void WriteTexture(const Path& outputPath, const Ref<Image>& image) {
-    YAWN_ASSERT(image);
-
-    File file;
-    file.Open(outputPath, FileModeFlags::Write);
-    YAWN_ASSERT(file.IsOpen());
-
-    file.Write32(image->GetInfo().GetWidth());
-    file.Write32(image->GetInfo().GetHeight());
-    file.Write32(image->GetInfo().GetChannels());
-    file.Write(image->GetData().GetData(), image->GetData().GetSizeInBytes());
-}
-
 static Guid GetTextureGuid(const Path& texturePath) {
     Path metaPath = texturePath.ToString() + L".meta";
 
@@ -167,27 +154,6 @@ void ModelImporter::Import(const Path& inputPath, const Path& outputPath, const 
                 sMeshes.Add(uniqueId, guid);
             }
         }
-
-        ////
-        //// 2. Import textures.
-        ////
-        //sTextures.Clear();
-        //for (int i = 0; i < data->textures_count; ++i) {
-        //    cgltf_texture* texture = &data->textures[i];
-
-        //    Guid guid = Guid::Generate();
-        //    Path materialPath = outputPath / L".." / guid.ToString();
-
-        //    String uri = String::FromUTF8(texture->image->uri);
-
-        //    Path imagePath = inputPath / L".." / uri;
-
-        //    Ref<Image> image = Image::FromFile(imagePath, 4);
-
-        //    WriteTexture(outputPath / L".." / guid.ToString(), image);
-
-        //    sTextures.Add(i, guid);
-        //}
 
         //
         // 3. Import materials.

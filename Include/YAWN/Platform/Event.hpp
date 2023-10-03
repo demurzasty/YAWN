@@ -14,6 +14,7 @@ namespace YAWN {
         MouseButtonUp,
         MouseWheel,
         WindowResize,
+        TextInput
     };
 
     struct Event {
@@ -73,5 +74,11 @@ namespace YAWN {
         constexpr WindowResizeEvent(Vector2 size) : Event(EventType::WindowResize), Size(size) {}
 
         Vector2 Size;
+    };
+
+    struct TextInputEvent : public Event {
+        TextInputEvent(const String& textInput) : Event(EventType::TextInput), TextInput(textInput) {}
+
+        String TextInput;
     };
 }
