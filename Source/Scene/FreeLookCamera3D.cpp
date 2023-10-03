@@ -55,20 +55,6 @@ void FreeLookCamera3D::Update(float timeStep) {
         }
     }
 
-    SetLocalPosition(Smooth(GetLocalPosition(), mTargetCameraPosition, timeStep));
-    SetLocalRotation(Smooth(GetLocalRotation(), mTargetCameraRotation, timeStep));
-}
-
-Vector3 FreeLookCamera3D::Smooth(const Vector3& origin, const Vector3& target, float timeStep) {
-    const Vector3 diff = target - origin;
-    if (diff != Vector3::Zero) {
-        const float len = Vector3::Length(diff);
-        if (len > 0.0f) {
-            const Vector3 dir = diff / len;
-            const float ftr = Math::Max(len * 40.0f, 0.01f);
-            const float off = Math::Min(timeStep * ftr, len);
-            return origin + dir * off;
-        }
-    }
-    return target;
+    SetLocalPosition(Vector3::Lerp(GetLocalPosition(), mTargetCameraPosition, 40.0f * timeStep));
+    SetLocalRotation(Vector3::Lerp(GetLocalRotation(), mTargetCameraRotation, 40.0f * timeStep));
 }

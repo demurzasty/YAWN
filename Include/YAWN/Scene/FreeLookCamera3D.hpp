@@ -17,9 +17,6 @@ namespace YAWN {
         virtual void Update(float timeStep) override;
 
     private:
-        Vector3 Smooth(const Vector3& origin, const Vector3& target, float timeStep);
-
-    private:
         Vector2 mLastMousePosition = Vector2::Zero;
         Vector3 mTargetCameraPosition = Vector3::Zero;
         Vector3 mTargetCameraRotation = Vector3::Zero;

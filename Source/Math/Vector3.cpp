@@ -30,6 +30,10 @@ Vector3 Vector3::Normalize(const Vector3& vec) {
     return Vector3(vec.X / length, vec.Y / length, vec.Z / length);
 }
 
+Vector3 Vector3::Lerp(const Vector3& from, const Vector3& to, float factor) {
+    return from + (to - from) * factor;
+}
+
 bool Vector3::AlmostEquals(const Vector3& lhs, const Vector3& rhs) {
     return Math::AlmostEquals(lhs.X, rhs.X) &&
         Math::AlmostEquals(lhs.Y, rhs.Y) &&
