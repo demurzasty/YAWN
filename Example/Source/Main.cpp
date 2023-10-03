@@ -22,7 +22,7 @@ void Initialize() {
 
         subViewport->AddChild(node);
 
-        Ref<Camera3D> camera = new Camera3D();
+        Ref<Camera3D> camera = new FreeLookCamera3D();
 
         camera->SetLocalPosition(Vector3(0.0f, 0.25f, 1.0f));
 

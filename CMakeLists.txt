@@ -105,6 +105,7 @@ set (SRC
 	"Source/Scene/UI/ViewportContainer.cpp"
 	"Source/Scene/UI/WindowContainer.cpp"
 	"Source/Scene/Camera3D.cpp"
+	"Source/Scene/FreeLookCamera3D.cpp"
 	"Source/Scene/Geometry3D.cpp"
 	"Source/Scene/Node.cpp"
 	"Source/Scene/Node2D.cpp"

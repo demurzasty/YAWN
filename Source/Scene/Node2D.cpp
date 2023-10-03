@@ -6,8 +6,6 @@
 using namespace YAWN;
 
 void Node2D::Register(Meta<Node2D>& meta) {
-    meta.SetBase<Node>();
-    meta.SetName(L"Node2D");
     meta.SetConstructable();
     meta.AddField<&Node2D::SetLocalPosition, &Node2D::GetLocalPosition>(L"Position");
     meta.AddField<&Node2D::SetLocalRotation, &Node2D::GetLocalRotation>(L"Rotation");

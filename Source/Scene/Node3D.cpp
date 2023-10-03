@@ -3,8 +3,6 @@
 using namespace YAWN;
 
 void Node3D::Register(Meta<Node3D>& meta) {
-    meta.SetBase<Node>();
-    meta.SetName(L"Node3D");
     meta.SetConstructable();
     meta.AddField<&Node3D::SetLocalPosition, &Node3D::GetLocalPosition>(L"Position");
     meta.AddField<&Node3D::SetLocalRotation, &Node3D::GetLocalRotation>(L"Rotation");

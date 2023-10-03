@@ -6,8 +6,6 @@
 using namespace YAWN;
 
 void Geometry3D::Register(Meta<Geometry3D>& meta) {
-    meta.SetBase<Node3D>();
-    meta.SetName(L"Geometry3D");
     meta.SetConstructable();
     meta.AddField<&Geometry3D::SetMesh, &Geometry3D::GetMesh>(L"Mesh");
     meta.AddField<&Geometry3D::SetMaterial, &Geometry3D::GetMaterial>(L"Material");

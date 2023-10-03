@@ -97,6 +97,7 @@
 #include "Scene/UI/ViewportContainer.hpp"
 #include "Scene/UI/WindowContainer.hpp"
 #include "Scene/Camera3D.hpp"
+#include "Scene/FreeLookCamera3D.hpp"
 #include "Scene/Geometry3D.hpp"
 #include "Scene/Node.hpp"
 #include "Scene/Node2D.hpp"

@@ -1,6 +1,8 @@
 #include <YAWN/Scene/Node.hpp>
 #include <YAWN/Graphics/Renderer.hpp>
 #include <YAWN/Scene/Viewport.hpp>
+#include <YAWN/Scene/UI/ViewportContainer.hpp>
+#include <YAWN/Platform/Input.hpp>
 
 using namespace YAWN;
 
@@ -165,6 +167,8 @@ bool Node::IsLastChild() const {
 }
 
 Ref<Viewport> Node::GetViewport() const {
+    // TODO: Should be cached.
+
     if (mParent) {
         Viewport* viewport = CastTo<Viewport>(mParent);
         if (viewport) {
@@ -175,6 +179,20 @@ Ref<Viewport> Node::GetViewport() const {
     }
 
     return nullptr;
+}
+
+Vector2 Node::GetMousePosition() const {
+    const Vector2& globalMousePosition = Input::GetMousePosition();
+
+    Ref<Viewport> viewport = GetViewport();
+    if (viewport) {
+        Ref<ViewportContainer> container = CastTo<ViewportContainer>(viewport->GetParent());
+        if (container) {
+            return globalMousePosition - container->GetGlobalPosition();
+        }
+    }
+
+    return globalMousePosition;
 }
 
 void Node::SetChildren(const Array<Ref<Node>>& children) {

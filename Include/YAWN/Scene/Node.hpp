@@ -84,7 +84,17 @@ namespace YAWN {
 
         bool IsLastChild() const;
 
+        //////////////////////////
+        //////// Viewport ////////
+        //////////////////////////
+
         Ref<Viewport> GetViewport() const;
+
+        //////////////////////////
+        //// Input Utilities /////
+        //////////////////////////
+
+        Vector2 GetMousePosition() const;
 
     protected:
         ///////////////////////////

@@ -135,15 +135,17 @@ static Key MapKey(int key) {
 }
 
 static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-    Key mappedKey = MapKey(key);
-    if (mappedKey != Key::Last) {
-        Input::SetKeyState(mappedKey, action == GLFW_PRESS);
-    }
+    if (action != GLFW_REPEAT) {
+        Key mappedKey = MapKey(key);
+        if (mappedKey != Key::Last) {
+            Input::SetKeyState(mappedKey, action == GLFW_PRESS);
+        }
 
-    if (action == GLFW_PRESS) {
-        Scene::HandleEvent(KeyDownEvent(mappedKey));
-    } else {
-        Scene::HandleEvent(KeyUpEvent(mappedKey));
+        if (action == GLFW_PRESS) {
+            Scene::HandleEvent(KeyDownEvent(mappedKey));
+        } else {
+            Scene::HandleEvent(KeyUpEvent(mappedKey));
+        }
     }
 }
 
@@ -210,6 +212,8 @@ static void TextInputCallback(GLFWwindow* window, unsigned int codepoint) {
 WindowDriverGLFW::WindowDriverGLFW() {
     glfwInit();
 
+    glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
+
     mWindow = glfwCreateWindow(Settings::GetWindowWidth(), Settings::GetWindowHeight(), Settings::GetWindowTitle().ToUTF8().GetData(), nullptr, nullptr);
 
     glfwSetKeyCallback(mWindow, &KeyCallback);
@@ -232,7 +236,7 @@ WindowDriverGLFW::~WindowDriverGLFW() {
 }
 
 void WindowDriverGLFW::PollEvents() {
-    glfwWaitEvents();
+    glfwPollEvents();
 }
 
 bool WindowDriverGLFW::IsOpen() const {

@@ -12,7 +12,6 @@ namespace YAWN {
     public:
         virtual ~Camera3D() = default;
 
-    protected:
         virtual void Enter() override;
 
         virtual void Exit() override;
