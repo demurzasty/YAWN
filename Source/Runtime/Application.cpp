@@ -21,10 +21,12 @@ void Application::Setup() {
 
     Types::Register<Texture>();
     Types::Register<Font>();
+    Types::Register<Material>();
     Types::Register<Mesh>();
     Types::Register<Prefab>();
 
     Types::Register<FontLoader>();
+    Types::Register<MaterialLoader>();
     Types::Register<MeshLoader>();
     Types::Register<PrefabLoader>();
     Types::Register<TextureLoader>();
@@ -53,7 +55,7 @@ void Application::Run() {
     }
 
     double lastTime = Window::GetTime();
-    double accTime = 0.0;
+    float accTime = 0.0;
 
     while (Window::IsOpen()) {
         Input::Refresh();
@@ -61,16 +63,16 @@ void Application::Run() {
         Window::PollEvents();
 
         double currTime = Window::GetTime();
-        double elapsedTime = currTime - lastTime;
+        float elapsedTime = float(currTime - lastTime);
         lastTime = currTime;
 
-        Scene::Update(float(elapsedTime));
+        Scene::Update(elapsedTime);
 
         accTime += elapsedTime;
-        while (accTime >= 1.0 / 60.0) {
+        while (accTime >= 1.0f / 60.0f) {
             Scene::FixedUpdate(1.0f / 60.0f);
 
-            accTime -= 1.0 / 60.0;
+            accTime -= 1.0f / 60.0f;
         }
 
         Scene::LateUpdate(elapsedTime);

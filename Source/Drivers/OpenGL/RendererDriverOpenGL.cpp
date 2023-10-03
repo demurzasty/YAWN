@@ -20,6 +20,9 @@ RendererDriverOpenGL::RendererDriverOpenGL() {
     YAWN_GL_CHECK(glCreateBuffers(1, &mInstanceBufferId));
     YAWN_GL_CHECK(glNamedBufferStorage(mInstanceBufferId, sizeof(GPUInstanceData) * MaxInstanceCount, nullptr, GL_MAP_COHERENT_BIT | GL_MAP_PERSISTENT_BIT | GL_MAP_READ_BIT | GL_MAP_WRITE_BIT | GL_DYNAMIC_STORAGE_BIT));
 
+    YAWN_GL_CHECK(glCreateBuffers(1, &mMaterialBufferId));
+    YAWN_GL_CHECK(glNamedBufferStorage(mMaterialBufferId, sizeof(GPUMaterialData) * MaxMaterialCount, nullptr, GL_MAP_COHERENT_BIT | GL_MAP_PERSISTENT_BIT | GL_MAP_READ_BIT | GL_MAP_WRITE_BIT | GL_DYNAMIC_STORAGE_BIT));
+
     YAWN_GL_CHECK(glCreateBuffers(1, &mMeshBufferId));
     YAWN_GL_CHECK(glNamedBufferStorage(mMeshBufferId, sizeof(GPUMeshData) * MaxMeshCount, nullptr, GL_MAP_COHERENT_BIT | GL_MAP_PERSISTENT_BIT | GL_MAP_READ_BIT | GL_MAP_WRITE_BIT | GL_DYNAMIC_STORAGE_BIT));
 
@@ -80,6 +83,7 @@ RendererDriverOpenGL::RendererDriverOpenGL() {
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, mMeshBufferId);
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, mSamplerBufferId);
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 4, mDrawBufferId);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 5, mMaterialBufferId);
 
     mCullingProgramId = CompileShader(Culling_comp);
     mForwardProgramId = CompileShader(Forward_vert, Forward_frag);
@@ -111,6 +115,7 @@ RendererDriverOpenGL::~RendererDriverOpenGL() {
     YAWN_GL_CHECK(glDeleteBuffers(1, &mDrawBufferId));
     YAWN_GL_CHECK(glDeleteBuffers(1, &mSamplerBufferId));
     YAWN_GL_CHECK(glDeleteBuffers(1, &mMeshBufferId));
+    YAWN_GL_CHECK(glDeleteBuffers(1, &mMaterialBufferId));
     YAWN_GL_CHECK(glDeleteBuffers(1, &mInstanceBufferId));
     YAWN_GL_CHECK(glDeleteBuffers(1, &mGlobalBufferId));
 }
@@ -299,6 +304,79 @@ int RendererDriverOpenGL::GetWhiteTexture() {
     return mWhiteTextureId;
 }
 
+int RendererDriverOpenGL::CreateMaterial() {
+    int id = Base::CreateMaterial();
+
+    mMaterials.Expand(id + 1);
+    mMaterials[id] = GPUMaterialData();
+
+    YAWN_GL_CHECK(glNamedBufferSubData(mMaterialBufferId, id * sizeof(GPUMaterialData), sizeof(GPUMaterialData), &mMaterials[id]));
+
+    return id;
+}
+
+void RendererDriverOpenGL::DestroyMaterial(int id) {
+    mMaterials[id] = GPUMaterialData();
+
+    YAWN_GL_CHECK(glNamedBufferSubData(mMaterialBufferId, id * sizeof(GPUMaterialData), sizeof(GPUMaterialData), &mMaterials[id]));
+
+    Base::DestroyMaterial(id);
+}
+
+void RendererDriverOpenGL::SetMaterialBaseColor(int id, const Color4& color) {
+    mMaterials[id].BaseColor = color;
+
+    YAWN_GL_CHECK(glNamedBufferSubData(mMaterialBufferId, id * sizeof(GPUMaterialData), sizeof(GPUMaterialData), &mMaterials[id]));
+}
+
+void RendererDriverOpenGL::SetMaterialRoughness(int id, float roughness) {
+    mMaterials[id].Roughness = roughness;
+
+    YAWN_GL_CHECK(glNamedBufferSubData(mMaterialBufferId, id * sizeof(GPUMaterialData), sizeof(GPUMaterialData), &mMaterials[id]));
+}
+
+void RendererDriverOpenGL::SetMaterialMetallic(int id, float metallic) {
+    mMaterials[id].Metallic = metallic;
+
+    YAWN_GL_CHECK(glNamedBufferSubData(mMaterialBufferId, id * sizeof(GPUMaterialData), sizeof(GPUMaterialData), &mMaterials[id]));
+}
+
+void RendererDriverOpenGL::SetMaterialOcclusionStrength(int id, float strength) {
+    mMaterials[id].OcclusionStrength = strength;
+
+    YAWN_GL_CHECK(glNamedBufferSubData(mMaterialBufferId, id * sizeof(GPUMaterialData), sizeof(GPUMaterialData), &mMaterials[id]));
+}
+
+void RendererDriverOpenGL::SetMaterialAlbedoTexture(int id, int textureId) {
+    mMaterials[id].AlbedoTextureId = IsTextureValid(textureId) ? textureId : Pool::None;
+
+    YAWN_GL_CHECK(glNamedBufferSubData(mMaterialBufferId, id * sizeof(GPUMaterialData), sizeof(GPUMaterialData), &mMaterials[id]));
+}
+
+void RendererDriverOpenGL::SetMaterialNormalTexture(int id, int textureId) {
+    mMaterials[id].NormalTextureId = IsTextureValid(textureId) ? textureId : Pool::None;
+
+    YAWN_GL_CHECK(glNamedBufferSubData(mMaterialBufferId, id * sizeof(GPUMaterialData), sizeof(GPUMaterialData), &mMaterials[id]));
+}
+
+void RendererDriverOpenGL::SetMaterialMetallicRoughnessTexture(int id, int textureId) {
+    mMaterials[id].MetallicRoughnessTextureId = IsTextureValid(textureId) ? textureId : Pool::None;
+
+    YAWN_GL_CHECK(glNamedBufferSubData(mMaterialBufferId, id * sizeof(GPUMaterialData), sizeof(GPUMaterialData), &mMaterials[id]));
+}
+
+void RendererDriverOpenGL::SetMaterialEmissiveTexture(int id, int textureId) {
+    mMaterials[id].EmissiveTextureId = IsTextureValid(textureId) ? textureId : Pool::None;
+
+    YAWN_GL_CHECK(glNamedBufferSubData(mMaterialBufferId, id * sizeof(GPUMaterialData), sizeof(GPUMaterialData), &mMaterials[id]));
+}
+
+void RendererDriverOpenGL::SetMaterialOcclusionTexture(int id, int textureId) {
+    mMaterials[id].OcclusionTextureId = IsTextureValid(textureId) ? textureId : Pool::None;
+
+    YAWN_GL_CHECK(glNamedBufferSubData(mMaterialBufferId, id * sizeof(GPUMaterialData), sizeof(GPUMaterialData), &mMaterials[id]));
+}
+
 int RendererDriverOpenGL::CreateMesh(int vertexCount, int indexCount) {
     int id = Base::CreateMesh(vertexCount, indexCount);
 
@@ -359,15 +437,20 @@ void RendererDriverOpenGL::SetInstanceTransform(int id, const Matrix4& transform
     YAWN_GL_CHECK(glNamedBufferSubData(mInstanceBufferId, id * sizeof(GPUInstanceData), sizeof(GPUInstanceData), &mInstances[id]));
 }
 
+void RendererDriverOpenGL::SetInstanceMaterial(int id, int materialId) {
+    mInstances[id].MaterialId = IsMaterialValid(materialId) ? materialId : Pool::None;
+
+    YAWN_GL_CHECK(glNamedBufferSubData(mInstanceBufferId, id * sizeof(GPUInstanceData), sizeof(GPUInstanceData), &mInstances[id]));
+}
+
 void RendererDriverOpenGL::SetInstanceMesh(int id, int meshId) {
-    mInstances[id].MeshId = meshId;
-    mInstances[id].Visible = 1;
+    mInstances[id].MeshId = IsMeshValid(meshId) ? meshId : Pool::None;
 
     YAWN_GL_CHECK(glNamedBufferSubData(mInstanceBufferId, id * sizeof(GPUInstanceData), sizeof(GPUInstanceData), &mInstances[id]));
 }
 
 void RendererDriverOpenGL::SetInstanceViewport(int id, int viewportId) {
-    mInstances[id].ViewportId = viewportId;
+    mInstances[id].ViewportId = IsViewportValid(viewportId) ? viewportId : Pool::None;
 
     YAWN_GL_CHECK(glNamedBufferSubData(mInstanceBufferId, id * sizeof(GPUInstanceData), sizeof(GPUInstanceData), &mInstances[id]));
 }

@@ -15,7 +15,6 @@ void Initialize() {
 
     Ref<Prefab> prefab = ResourceManager::Load<Prefab>(Guid(L"97b9dcf3-1894-cc03-e0d7-f4c4d2c9e800"));
 
-
     Ref<Viewport> subViewport = new Viewport();
 
     {
@@ -29,8 +28,6 @@ void Initialize() {
 
         subViewport->AddChild(camera);
     }
-
-    // Scene::GetRoot()->AddChild(subViewport);
 
     Ref<WindowContainer> windowContainer = new WindowContainer();
     windowContainer->SetName(L"WindowContainer");

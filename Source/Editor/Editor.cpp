@@ -40,6 +40,7 @@ void Editor::Reimport() {
     Directory::Create(L"Package");
     Directory::Create(L"Cache");
 
+    Directory::EnumerateFiles(L"Data", Delegate<void(const FileInfo&)>::Bind<&Editor::CreateMetaFiles>(this));
     Directory::EnumerateFiles(L"Data", Delegate<void(const FileInfo&)>::Bind<&Editor::EnumerateFile>(this));
 }
 
@@ -55,6 +56,24 @@ void Editor::InitializeImporter(const Ref<Type>& type) {
 void Editor::EnumerateFile(const FileInfo& info) {
     // TODO: Run task on thread pool.
     ImportFile(info);
+}
+
+void Editor::CreateMetaFiles(const FileInfo& info) {
+    String extension = info.GetPath().GetExtension();
+    if (extension == L".meta") {
+        return;
+    }
+
+    if (!FindImporterForExtension(extension)) {
+        return;
+    }
+
+    Path metadataPath = info.GetPath().ToString() + L".meta";
+    if (!File::Exists(metadataPath)) {
+        Map<String, Variant> metadata;
+        metadata.Add(L"Guid", Guid::Generate().ToString());
+        File::WriteAllText(metadataPath, YTXT::Stringify(metadata));
+    }
 }
 
 void Editor::ImportFile(const FileInfo& info) {

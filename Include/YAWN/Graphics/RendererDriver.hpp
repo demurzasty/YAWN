@@ -17,6 +17,8 @@ namespace YAWN {
 
         static constexpr int MaxInstanceCount = 0x10000;
 
+        static constexpr int MaxMaterialCount = 0x400;
+
         static constexpr int MaxMeshCount = 0x1000;
 
         static constexpr int MaxVertexCount = 0x1000000;
@@ -34,9 +36,17 @@ namespace YAWN {
 
         virtual void SetClearColor(const Color& color);
 
+        ///////////////////////////
+        ////////// Camera /////////
+        ///////////////////////////
+
         virtual void SetCameraProjection(const Matrix4& projection) = 0;
 
         virtual void SetCameraTransform(const Matrix4& transform) = 0;
+
+        ///////////////////////////
+        ///////// Viewport ////////
+        ///////////////////////////
 
         virtual int CreateViewport(int width, int height, bool directToScreen);
 
@@ -47,6 +57,10 @@ namespace YAWN {
         virtual void SetViewportSize(int id, int width, int height) = 0;
 
         virtual int GetViewportColorTexture(int id) const = 0;
+
+        ///////////////////////////
+        ///////// Texture /////////
+        ///////////////////////////
 
         virtual int CreateTexture(int width, int height, TextureFormat format, TextureFilter filter, TextureWrapping wrapping, int mipmapCount);
 
@@ -60,6 +74,38 @@ namespace YAWN {
 
         virtual int GetWhiteTexture() = 0;
 
+        ///////////////////////////
+        ///////// Material ////////
+        ///////////////////////////
+
+        virtual int CreateMaterial();
+
+        virtual void DestroyMaterial(int id);
+
+        virtual bool IsMaterialValid(int id);
+
+        virtual void SetMaterialBaseColor(int id, const Color4& color) = 0;
+
+        virtual void SetMaterialRoughness(int id, float roughness) = 0;
+
+        virtual void SetMaterialMetallic(int id, float metallic) = 0;
+
+        virtual void SetMaterialOcclusionStrength(int id, float strength) = 0;
+
+        virtual void SetMaterialAlbedoTexture(int id, int textureId) = 0;
+
+        virtual void SetMaterialNormalTexture(int id, int textureId) = 0;
+
+        virtual void SetMaterialMetallicRoughnessTexture(int id, int textureId) = 0;
+
+        virtual void SetMaterialEmissiveTexture(int id, int textureId) = 0;
+
+        virtual void SetMaterialOcclusionTexture(int id, int textureId) = 0;
+
+        ///////////////////////////
+        ////////// Mesh ///////////
+        ///////////////////////////
+
         virtual int CreateMesh(int vertexCount, int indexCount);
 
         virtual void DestroyMesh(int id);
@@ -67,6 +113,10 @@ namespace YAWN {
         virtual bool IsMeshValid(int id);
 
         virtual void SetMeshData(int id, const ArrayView<const Vertex3D>& vertices, const ArrayView<const int>& indices) = 0;
+
+        ///////////////////////////
+        ///////// Instance ////////
+        ///////////////////////////
 
         virtual int CreateInstance();
 
@@ -76,9 +126,15 @@ namespace YAWN {
 
         virtual void SetInstanceTransform(int id, const Matrix4& transform) = 0;
 
+        virtual void SetInstanceMaterial(int id, int materialId) = 0;
+
         virtual void SetInstanceMesh(int id, int meshId) = 0;
 
         virtual void SetInstanceViewport(int id, int viewportId) = 0;
+
+        ///////////////////////////
+        /// Canvas (deprecated) ///
+        ///////////////////////////
 
         virtual int CreateCanvasItem();
 
@@ -145,14 +201,15 @@ namespace YAWN {
         };
 
         struct GPUMaterialData {
-            Vector4 BaseColor = Vector4::One;
+            Color BaseColor = Color::White;
+
             float Roughness = 0.8f;
             float Metallic = 0.0f;
             float OcclusionStrength = 1.0f;
             int AlbedoTextureId = Pool::None;
+
             int NormalTextureId = Pool::None;
-            int RoughnessTextureId = Pool::None;
-            int MetallicTextureId = Pool::None;
+            int MetallicRoughnessTextureId = Pool::None;
             int EmissiveTextureId = Pool::None;
             int OcclusionTextureId = Pool::None;
         };
@@ -164,7 +221,7 @@ namespace YAWN {
 
         struct GPUInstanceData {
             Matrix4 Transform = Matrix4::Identity;
-            int Visible = 0;
+            int Visible = 1;
             int MeshId = Pool::None;
             int MaterialId = Pool::None;
             int ViewportId = Pool::None;

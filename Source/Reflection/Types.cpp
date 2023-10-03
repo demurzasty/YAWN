@@ -9,8 +9,7 @@ Ref<Type> Types::GetType(int id) {
     if (sTypes.TryGet(id, type)) {
         return type;
     }
-
-    return sTypes.Add(id, new Type());
+    return nullptr;
 }
 
 Ref<Type> Types::GetTypeByName(const String& name) {
@@ -32,3 +31,5 @@ void Types::EnumerateTypesOfBase(int base, const Delegate<void(const Ref<Type>&)
         }
     }
 }
+
+

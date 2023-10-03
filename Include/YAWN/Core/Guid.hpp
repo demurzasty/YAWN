@@ -29,6 +29,8 @@ namespace YAWN {
 
         bool operator>(const Guid& guid) const;
 
+        bool IsEmpty() const;
+
         String ToString() const;
 
     private:

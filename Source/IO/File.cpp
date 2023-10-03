@@ -258,6 +258,18 @@ void File::Write64(long long value) {
     fwrite(&value, 8, 1, (FILE*)mHandle);
 }
 
+void File::WriteColor4(const Color4& value) {
+    YAWN_ASSERT(IsOpen());
+
+    fwrite(&value, sizeof(Color4), 1, (FILE*)mHandle);
+}
+
+void File::WriteGuid(const Guid& value) {
+    YAWN_ASSERT(IsOpen());
+
+    fwrite(&value, sizeof(Guid), 1, (FILE*)mHandle);
+}
+
 void File::WriteFloat(float value) {
     YAWN_ASSERT(IsOpen());
 

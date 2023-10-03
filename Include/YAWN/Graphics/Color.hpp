@@ -1,6 +1,8 @@
 #pragma once 
 
 namespace YAWN {
+    struct Color4;
+
     struct Color {
         static const Color White;
 
@@ -21,6 +23,10 @@ namespace YAWN {
         Color(float r, float g, float b);
 
         Color(float r, float g, float b, float a);
+
+        Color(const Color4& color);
+
+        explicit Color(const float color[4]);
 
         float R, G, B, A;
     };

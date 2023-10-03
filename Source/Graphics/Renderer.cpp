@@ -138,6 +138,111 @@ int Renderer::GetWhiteTexture() {
     return sDriver->GetWhiteTexture();
 }
 
+int Renderer::CreateMaterial() {
+    ExclusiveLock lock(sMutex);
+
+    YAWN_ASSERT(sDriver);
+
+    return sDriver->CreateMaterial();
+}
+
+void Renderer::DestroyMaterial(int id) {
+    ExclusiveLock lock(sMutex);
+
+    YAWN_ASSERT(sDriver);
+
+    sDriver->DestroyMaterial(id);
+}
+
+bool Renderer::IsMaterialValid(int id) {
+    ExclusiveLock lock(sMutex);
+
+    YAWN_ASSERT(sDriver);
+
+    return sDriver->IsMaterialValid(id);
+}
+
+void Renderer::SetMaterialBaseColor(int id, const Color4& color) {
+    ExclusiveLock lock(sMutex);
+
+    YAWN_ASSERT(sDriver);
+    YAWN_ASSERT(sDriver->IsMaterialValid(id));
+
+    sDriver->SetMaterialBaseColor(id, color);
+}
+
+void Renderer::SetMaterialRoughness(int id, float roughness) {
+    ExclusiveLock lock(sMutex);
+
+    YAWN_ASSERT(sDriver);
+    YAWN_ASSERT(sDriver->IsMaterialValid(id));
+
+    sDriver->SetMaterialRoughness(id, roughness);
+}
+
+void Renderer::SetMaterialMetallic(int id, float metallic) {
+    ExclusiveLock lock(sMutex);
+
+    YAWN_ASSERT(sDriver);
+    YAWN_ASSERT(sDriver->IsMaterialValid(id));
+
+    sDriver->SetMaterialMetallic(id, metallic);
+}
+
+void Renderer::SetMaterialOcclusionStrength(int id, float strength) {
+    ExclusiveLock lock(sMutex);
+
+    YAWN_ASSERT(sDriver);
+    YAWN_ASSERT(sDriver->IsMaterialValid(id));
+
+    sDriver->SetMaterialOcclusionStrength(id, strength);
+}
+
+void Renderer::SetMaterialAlbedoTexture(int id, int textureId) {
+    ExclusiveLock lock(sMutex);
+
+    YAWN_ASSERT(sDriver);
+    YAWN_ASSERT(sDriver->IsMaterialValid(id));
+
+    sDriver->SetMaterialAlbedoTexture(id, textureId);
+}
+
+void Renderer::SetMaterialNormalTexture(int id, int textureId) {
+    ExclusiveLock lock(sMutex);
+
+    YAWN_ASSERT(sDriver);
+    YAWN_ASSERT(sDriver->IsMaterialValid(id));
+
+    sDriver->SetMaterialNormalTexture(id, textureId);
+}
+
+void Renderer::SetMaterialMetallicRoughnessTexture(int id, int textureId) {
+    ExclusiveLock lock(sMutex);
+
+    YAWN_ASSERT(sDriver);
+    YAWN_ASSERT(sDriver->IsMaterialValid(id));
+
+    sDriver->SetMaterialMetallicRoughnessTexture(id, textureId);
+}
+
+void Renderer::SetMaterialEmissiveTexture(int id, int textureId) {
+    ExclusiveLock lock(sMutex);
+
+    YAWN_ASSERT(sDriver);
+    YAWN_ASSERT(sDriver->IsMaterialValid(id));
+
+    sDriver->SetMaterialEmissiveTexture(id, textureId);
+}
+
+void Renderer::SetMaterialOcclusionTexture(int id, int textureId) {
+    ExclusiveLock lock(sMutex);
+
+    YAWN_ASSERT(sDriver);
+    YAWN_ASSERT(sDriver->IsMaterialValid(id));
+
+    sDriver->SetMaterialOcclusionTexture(id, textureId);
+}
+
 int Renderer::CreateMesh(int vertexCount, int indexCount) {
     ExclusiveLock lock(sMutex);
 
@@ -202,6 +307,16 @@ void Renderer::SetInstanceTransform(int id, const Matrix4& transform) {
     YAWN_ASSERT(sDriver->IsInstanceValid(id));
 
     sDriver->SetInstanceTransform(id, transform);
+}
+
+void Renderer::SetInstanceMaterial(int id, int materialId) {
+    ExclusiveLock lock(sMutex);
+
+    YAWN_ASSERT(sDriver);
+    YAWN_ASSERT(sDriver->IsInstanceValid(id));
+    YAWN_ASSERT(materialId == Pool::None || sDriver->IsMaterialValid(materialId));
+
+    sDriver->SetInstanceMaterial(id, materialId);
 }
 
 void Renderer::SetInstanceMesh(int id, int meshId) {

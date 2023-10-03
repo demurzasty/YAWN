@@ -22,6 +22,12 @@ Ref<Resource> TextureLoader::Load(const Path& path) {
     Array<char> data(width * height * channels);
     file.Read(data.GetData(), data.GetSize());
 
+    TextureFormat format = TextureFormat::RGBA8;
+    switch (channels) {
+        case 1: format = TextureFormat::R8; break;
+        case 2: format = TextureFormat::RG8; break;
+    }
+
     Ref<Texture> texture = new Texture(width, height, TextureFormat::RGBA8, TextureFilter::Anisotropic, TextureWrapping::Repeat, 1);
     texture->SetData(0, data.GetData());
     return texture;

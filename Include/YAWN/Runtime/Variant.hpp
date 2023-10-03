@@ -6,6 +6,7 @@
 #include "../Math/Vector2.hpp"
 #include "../Math/Vector3.hpp"
 #include "../Math/Vector4.hpp"
+#include "../Graphics/Color.hpp"
 #include "Reference.hpp"
 
 namespace YAWN {
@@ -68,7 +69,12 @@ namespace YAWN {
         /**
          * @brief Holds Vector4.
          */
-        Vector4
+        Vector4,
+
+        /**
+         * @brief Holds Color4.
+         */
+         Color
     };
 
     class Variant {
@@ -82,7 +88,8 @@ namespace YAWN {
             Ref<Reference>,
             Vector2,
             Vector3,
-            Vector4
+            Vector4,
+            Color4
         >::Value;
 
     public:
@@ -147,6 +154,8 @@ namespace YAWN {
 
         Variant(const Vector4& value);
 
+        Variant(const Color4& value);
+
         Variant(const Variant& variant);
 
         Variant(Variant&& variant) noexcept;
@@ -192,6 +201,8 @@ namespace YAWN {
 
         operator const Vector4& () const;
 
+        operator const Color4& () const;
+
         operator const Ref<Reference>& () const;
 
         template<typename T>
@@ -229,6 +240,8 @@ namespace YAWN {
         const Vector3& AsVector3() const;
 
         const Vector4& AsVector4() const;
+
+        const Color4& AsColor() const;
 
         VariantType GetType() const;
 

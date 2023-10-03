@@ -10,6 +10,7 @@ void Geometry3D::Register(Meta<Geometry3D>& meta) {
     meta.SetName(L"Geometry3D");
     meta.SetConstructable();
     meta.AddField<&Geometry3D::SetMesh, &Geometry3D::GetMesh>(L"Mesh");
+    meta.AddField<&Geometry3D::SetMaterial, &Geometry3D::GetMaterial>(L"Material");
 }
 
 void Geometry3D::SetMesh(const Ref<Mesh>& mesh) {
@@ -26,6 +27,22 @@ void Geometry3D::SetMesh(const Ref<Mesh>& mesh) {
 
 const Ref<Mesh>& Geometry3D::GetMesh() const {
     return mMesh;
+}
+
+void Geometry3D::SetMaterial(const Ref<Material>& material) {
+    mMaterial = material;
+
+    if (mMaterial && Renderer::IsMeshValid(mMaterial->GetId())) {
+        if (mId == Pool::None) {
+            mId = Renderer::CreateInstance();
+        }
+    }
+
+    Renderer::SetInstanceMaterial(mId, mMaterial ? mMaterial->GetId() : Pool::None);
+}
+
+const Ref<Material>& Geometry3D::GetMaterial() const {
+    return mMaterial;
 }
 
 void Geometry3D::Enter() {

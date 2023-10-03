@@ -42,7 +42,7 @@ bool Type::HasField(const String& name) {
 const Field& Type::GetField(const String& name) {
     if (mBase) {
         Ref<Type> base = Types::GetType(mBase);
-        if (base->HasField(name)) {
+        if (base && base->HasField(name)) {
             return base->GetField(name);
         }
     }
@@ -87,7 +87,9 @@ bool Type::IsDerivedFrom(int id) const {
     }
 
     if (mBase) {
-        return Types::GetType(mBase)->IsDerivedFrom(id);
+        if (Ref<Type> baseType = Types::GetType(mBase); baseType) {
+            return baseType->IsDerivedFrom(id);
+        }
     }
 
     return false;

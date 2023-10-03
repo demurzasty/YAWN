@@ -84,6 +84,10 @@ Variant::Variant(const Vector4& value) : mType(VariantType::Vector4) {
     Memory::Construct((Vector4*)mData, value);
 }
 
+Variant::Variant(const Color4& value) : mType(VariantType::Color) {
+    Memory::Construct((Color4*)mData, value);
+}
+
 Variant::Variant(const Variant& variant) : mData() {
     Construct(variant);
 }
@@ -166,6 +170,10 @@ Variant::operator const Vector3& () const {
 
 Variant::operator const Vector4& () const {
     return AsVector4();
+}
+
+Variant::operator const Color4& () const {
+    return AsColor();
 }
 
 Variant::operator const Ref<Reference>& () const {
@@ -258,6 +266,13 @@ const Vector4& Variant::AsVector4() const {
     return *(const Vector4*)mData;
 }
 
+const Color4& Variant::AsColor() const {
+    YAWN_ASSERT(mType == VariantType::Color);
+
+    return *(const Color4*)mData;
+}
+
+
 VariantType Variant::GetType() const {
     return mType;
 }
@@ -296,6 +311,9 @@ void Variant::Construct(const Variant& variant) {
     case VariantType::Vector4:
         Memory::Construct((Vector4*)mData, variant.AsVector4());
         break;
+    case VariantType::Color:
+        Memory::Construct((Color4*)mData, variant.AsColor());
+        break;
     }
 }
 
@@ -330,6 +348,9 @@ void Variant::Destroy() {
         break;
     case VariantType::Vector4:
         Memory::Destroy((Vector4*)mData);
+        break;
+    case VariantType::Color:
+        Memory::Destroy((Color4*)mData);
         break;
     }
 

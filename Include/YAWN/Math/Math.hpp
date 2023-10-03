@@ -2,7 +2,7 @@
 
 namespace YAWN {
     struct Math {
-        static constexpr float Epsilon = 0.00001f;
+        static constexpr float Epsilon = 1.401298e-45f;
 
         static constexpr float PI = 3.1415926535897932384626433833f;
 

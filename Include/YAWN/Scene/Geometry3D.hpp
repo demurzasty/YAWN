@@ -2,6 +2,7 @@
 
 #include "Node3D.hpp"
 #include "../Graphics/Mesh.hpp"
+#include "../Graphics/Material.hpp"
 #include "../Runtime/Pool.hpp"
 
 namespace YAWN {
@@ -18,6 +19,10 @@ namespace YAWN {
 
         const Ref<Mesh>& GetMesh() const;
 
+        void SetMaterial(const Ref<Material>& material);
+
+        const Ref<Material>& GetMaterial() const;
+
     protected:
         virtual void Enter() override;
 
@@ -29,5 +34,6 @@ namespace YAWN {
     private:
         int mId = Pool::None;
         Ref<Mesh> mMesh;
+        Ref<Material> mMaterial;
     };
 }

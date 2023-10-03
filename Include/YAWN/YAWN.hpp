@@ -28,6 +28,8 @@
 
 #include "Graphics/Image.hpp"
 #include "Graphics/ImageInfo.hpp"
+#include "Graphics/Material.hpp"
+#include "Graphics/Mesh.hpp"
 #include "Graphics/Renderer.hpp"
 #include "Graphics/RendererDriver.hpp"
 #include "Graphics/Shader.hpp"
@@ -60,6 +62,7 @@
 #include "Reflection/Types.hpp"
 
 #include "Runtime/Loaders/FontLoader.hpp"
+#include "Runtime/Loaders/MaterialLoader.hpp"
 #include "Runtime/Loaders/MeshLoader.hpp"
 #include "Runtime/Loaders/PrefabLoader.hpp"
 #include "Runtime/Loaders/TextureLoader.hpp"

@@ -3,6 +3,7 @@
 #include <YAWN/Runtime/Console.hpp>
 #include <YAWN/IO/File.hpp>
 #include <YAWN/Math/Matrix4.hpp>
+#include <YAWN/Graphics/Image.hpp>
 
 #include <Windows.h>
 #include <stdio.h>
@@ -11,7 +12,9 @@
 
 using namespace YAWN;
 
-static thread_local Map<String, Guid> sMeshes;
+static thread_local Map<int, Guid> sMeshes;
+static thread_local Map<int, Guid> sTextures;
+static thread_local Map<int, Guid> sMaterials;
 
 static void WriteMesh(const Path& outputPath, const Array<Vertex3D>& vertices, const Array<unsigned int>& indices) {
     File file;
@@ -23,6 +26,19 @@ static void WriteMesh(const Path& outputPath, const Array<Vertex3D>& vertices, c
 
     file.Write(vertices.GetData(), vertices.GetSizeInBytes());
     file.Write(indices.GetData(), indices.GetSizeInBytes());
+}
+
+static void WriteTexture(const Path& outputPath, const Ref<Image>& image) {
+    YAWN_ASSERT(image);
+
+    File file;
+    file.Open(outputPath, FileModeFlags::Write);
+    YAWN_ASSERT(file.IsOpen());
+
+    file.Write32(image->GetInfo().GetWidth());
+    file.Write32(image->GetInfo().GetHeight());
+    file.Write32(image->GetInfo().GetChannels());
+    file.Write(image->GetData().GetData(), image->GetData().GetSizeInBytes());
 }
 
 void ModelImporter::Register(Meta<ModelImporter>& meta) {
@@ -131,12 +147,112 @@ void ModelImporter::Import(const Path& inputPath, const Path& outputPath, const 
                 Path meshPath = outputPath / L".." / guid.ToString();
                 WriteMesh(meshPath, vertices, indices);
 
-                sMeshes.Add(String::Format(L"%d:%d", i, j), guid);
+                int uniqueId = (i & 0xFFFF) | ((j & 0xFFFF) << 16);
+                sMeshes.Add(uniqueId, guid);
             }
         }
 
         //
-        // 2. Import nodes.
+        // 2. Import textures.
+        //
+        sTextures.Clear();
+        for (int i = 0; i < data->textures_count; ++i) {
+            cgltf_texture* texture = &data->textures[i];
+
+            Guid guid = Guid::Generate();
+            Path materialPath = outputPath / L".." / guid.ToString();
+
+            String uri = String::FromUTF8(texture->image->uri);
+
+            Path imagePath = inputPath / L".." / uri;
+
+            Ref<Image> image = Image::FromFile(imagePath, 4);
+
+            WriteTexture(outputPath / L".." / guid.ToString(), image);
+
+            sTextures.Add(i, guid);
+        }
+
+        //
+        // 3. Import materials.
+        //
+        sMaterials.Clear();
+        for (int i = 0; i < data->materials_count; ++i) {
+            cgltf_material* material = &data->materials[i];
+
+            Guid guid = Guid::Generate();
+            Path materialPath = outputPath / L".." / guid.ToString();
+            
+            File file;
+            file.Open(materialPath, FileModeFlags::Write);
+            YAWN_ASSERT(file.IsOpen());
+
+            if (material->has_pbr_metallic_roughness) {
+                Color4 baseColor = Color(material->pbr_metallic_roughness.base_color_factor);
+                file.WriteColor4(baseColor);
+                file.WriteFloat(material->pbr_metallic_roughness.roughness_factor);
+                file.WriteFloat(material->pbr_metallic_roughness.metallic_factor);
+                file.WriteFloat(1.0f);
+
+                cgltf_texture* texture = material->pbr_metallic_roughness.base_color_texture.texture;
+                if (texture && texture->image) {
+                    int index = (int)(material->pbr_metallic_roughness.base_color_texture.texture - data->textures);
+
+                    file.WriteGuid(sTextures[index]);
+                } else {
+                    file.WriteGuid(Guid());
+                }
+
+                texture = material->pbr_metallic_roughness.metallic_roughness_texture.texture;
+                if (texture && texture->image) {
+                    int index = (int)(material->pbr_metallic_roughness.metallic_roughness_texture.texture - data->textures);
+
+                    file.WriteGuid(sTextures[index]);
+                } else {
+                    file.WriteGuid(Guid());
+                }
+            } else {
+                file.WriteColor4(Color::White);
+                file.WriteFloat(0.8f);
+                file.WriteFloat(0.0f);
+                file.WriteFloat(1.0f);
+                file.WriteGuid(Guid());
+                file.WriteGuid(Guid());
+            }
+
+            cgltf_texture* texture = material->normal_texture.texture;
+            if (texture && texture->image) {
+                int index = (int)(material->normal_texture.texture - data->textures);
+
+                file.WriteGuid(sTextures[index]);
+            } else {
+                file.WriteGuid(Guid());
+            }
+
+            texture = material->emissive_texture.texture;
+            if (texture && texture->image) {
+                int index = (int)(material->emissive_texture.texture - data->textures);
+
+                file.WriteGuid(sTextures[index]);
+            } else {
+                file.WriteGuid(Guid());
+            }
+
+            texture = material->occlusion_texture.texture;
+            if (texture && texture->image) {
+                int index = (int)(material->occlusion_texture.texture - data->textures);
+
+                file.WriteGuid(sTextures[index]);
+            } else {
+                file.WriteGuid(Guid());
+            }
+
+            sMaterials.Add(i, guid);
+        }
+
+
+        //
+        // 3. Import nodes.
         //
 
         Map<String, Variant> prefab;
@@ -160,6 +276,10 @@ void ModelImporter::Import(const Path& inputPath, const Path& outputPath, const 
 
         cgltf_free(data);
     }
+
+    sMeshes.Clear();
+    sTextures.Clear();
+    sMaterials.Clear();
 }
 
 void ModelImporter::Import(Map<String, Variant>& prefab, const Path& basePath, const Path& outputPath, cgltf_data* data, cgltf_node* node) {
@@ -227,14 +347,23 @@ void ModelImporter::Import(Map<String, Variant>& prefab, const Path& basePath, c
                     child.Add(L"Rotation", Vector3::Zero);
                     child.Add(L"Scale", Vector3::One);
 
-                    String meshId = String::Format(L"%d:%d", i, j);
-                    Guid guid = sMeshes[meshId];
+                    int uniqueId = (i & 0xFFFF) | ((j & 0xFFFF) << 16);
+                    Guid guid = sMeshes[uniqueId];
 
                     Map<String, Variant> mesh;
                     mesh.Add(L"$Type", L"ResourceLink");
                     mesh.Add(L"ResourceType", L"Mesh");
                     mesh.Add(L"Guid", guid.ToString());
                     child.Add(L"Mesh", mesh);
+
+                    int materialIndex = (int)(node->mesh->primitives[j].material - data->materials);
+                    guid = sMaterials[materialIndex];
+
+                    Map<String, Variant> material;
+                    material.Add(L"$Type", L"ResourceLink");
+                    material.Add(L"ResourceType", L"Material");
+                    material.Add(L"Guid", guid.ToString());
+                    child.Add(L"Material", material);
 
                     children.Add(child);
                 }

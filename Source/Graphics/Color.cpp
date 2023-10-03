@@ -25,6 +25,14 @@ Color::Color(float r, float g, float b, float a)
     : R(r), G(g), B(b), A(a) {
 }
 
+Color::Color(const Color4& color)
+    : R(color.R / 255.0f), G(color.G / 255.0f), B(color.B / 255.0f), A(color.A / 255.0f) {
+}
+
+Color::Color(const float color[4])
+    : R(color[0]), G(color[1]), B(color[2]), A(color[3]) {
+}
+
 Color4::Color4(const Color& color)
     : R(Math::FastFloatToInt(color.R * 255.0f))
     , G(Math::FastFloatToInt(color.G * 255.0f))

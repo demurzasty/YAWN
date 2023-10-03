@@ -90,6 +90,12 @@ bool Guid::operator>(const Guid& guid) const {
     return Memory::Compare(mData, guid.mData, sizeof(mData)) > 0;
 }
 
+bool Guid::IsEmpty() const {
+    static Guid empty;
+
+    return *this == empty;
+}
+
 String Guid::ToString() const {
     wchar_t string[37];
     ByteToString(mBytes[0], &string[0]);

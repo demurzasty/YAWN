@@ -31,6 +31,18 @@ bool RendererDriver::IsTextureValid(int id) {
     return mTexturePool.IsValid(id);
 }
 
+int RendererDriver::CreateMaterial() {
+    return mMaterialPool.Acquire();
+}
+
+void RendererDriver::DestroyMaterial(int id) {
+    mMaterialPool.Dispose(id);
+}
+
+bool RendererDriver::IsMaterialValid(int id) {
+    return mMaterialPool.IsValid(id);
+}
+
 int RendererDriver::CreateMesh(int vertexCount, int indexCount) {
     return mMeshPool.Acquire();
 }

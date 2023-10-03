@@ -40,6 +40,30 @@ namespace YAWN {
 
         static int GetWhiteTexture();
 
+        static int CreateMaterial();
+
+        static void DestroyMaterial(int id);
+
+        static bool IsMaterialValid(int id);
+
+        static void SetMaterialBaseColor(int id, const Color4& color);
+
+        static void SetMaterialRoughness(int id, float roughness);
+
+        static void SetMaterialMetallic(int id, float metallic);
+
+        static void SetMaterialOcclusionStrength(int id, float strength);
+
+        static void SetMaterialAlbedoTexture(int id, int textureId);
+
+        static void SetMaterialNormalTexture(int id, int textureId);
+
+        static void SetMaterialMetallicRoughnessTexture(int id, int textureId);
+
+        static void SetMaterialEmissiveTexture(int id, int textureId);
+
+        static void SetMaterialOcclusionTexture(int id, int textureId);
+
         static int CreateMesh(int vertexCount, int indexCount);
 
         static void DestroyMesh(int id);
@@ -55,6 +79,8 @@ namespace YAWN {
         static bool IsInstanceValid(int id);
 
         static void SetInstanceTransform(int id, const Matrix4& transform);
+
+        static void SetInstanceMaterial(int id, int materialId);
 
         static void SetInstanceMesh(int id, int meshId);
 

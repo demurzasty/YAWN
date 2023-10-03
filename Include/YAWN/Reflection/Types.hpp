@@ -14,8 +14,8 @@ namespace YAWN {
         static Meta<T> Reflect() {
             constexpr int hash = TypeID::Hash<T>();
 
-            if (sTypes.Contains(hash)) {
-                return Meta<T>(sTypes[hash]);
+            if (Ref<Type> type = GetType(hash); type) {
+                return Meta<T>(type);
             }
 
             return Meta<T>(sTypes.Add(hash, new Type()));

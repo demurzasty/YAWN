@@ -47,6 +47,28 @@ namespace YAWN {
 
         int GetWhiteTexture() override;
 
+        int CreateMaterial() override;
+
+        void DestroyMaterial(int id) override;
+
+        void SetMaterialBaseColor(int id, const Color4& color) override;
+
+        void SetMaterialRoughness(int id, float roughness) override;
+
+        void SetMaterialMetallic(int id, float metallic) override;
+
+        void SetMaterialOcclusionStrength(int id, float strength) override;
+
+        void SetMaterialAlbedoTexture(int id, int textureId) override;
+
+        void SetMaterialNormalTexture(int id, int textureId) override;
+
+        void SetMaterialMetallicRoughnessTexture(int id, int textureId) override;
+
+        void SetMaterialEmissiveTexture(int id, int textureId) override;
+
+        void SetMaterialOcclusionTexture(int id, int textureId) override;
+
         int CreateMesh(int vertexCount, int indexCount) override;
 
         void DestroyMesh(int id) override;
@@ -58,6 +80,8 @@ namespace YAWN {
         void DestroyInstance(int id) override;
 
         void SetInstanceTransform(int id, const Matrix4& transform) override;
+
+        void SetInstanceMaterial(int id, int materialId) override;
 
         void SetInstanceMesh(int id, int meshId) override;
 
@@ -123,6 +147,7 @@ namespace YAWN {
 
         GLuint mGlobalBufferId = 0;
         GLuint mInstanceBufferId = 0;
+        GLuint mMaterialBufferId = 0;
         GLuint mMeshBufferId = 0;
         GLuint mSamplerBufferId = 0;
         GLuint mDrawBufferId = 0;
@@ -141,6 +166,7 @@ namespace YAWN {
         GPUGlobalData mGlobalData;
         Array<GPUInstanceData> mInstances;
         Array<GPUMeshData> mMeshes;
+        Array<GPUMaterialData> mMaterials;
 
         int mGlobalVertexOffset = 0;
         int mGlobalIndexOffset = 0;

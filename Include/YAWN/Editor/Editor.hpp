@@ -23,6 +23,8 @@ namespace YAWN {
 
         void EnumerateFile(const FileInfo& info);
 
+        void CreateMetaFiles(const FileInfo& info);
+
         void ImportFile(const FileInfo& info);
 
         Ref<Importer> FindImporterForExtension(const String& extension);

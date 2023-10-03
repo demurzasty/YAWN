@@ -1,6 +1,7 @@
 #pragma once 
 
 #include "Path.hpp"
+#include "../Core/Guid.hpp"
 #include "../Runtime/Reference.hpp"
 #include "../Runtime/Variant.hpp"
 #include "../Reflection/Type.hpp"
@@ -69,6 +70,10 @@ namespace YAWN {
         void Write32(int value);
 
         void Write64(long long value);
+
+        void WriteColor4(const Color4& value);
+
+        void WriteGuid(const Guid& value);
 
         void WriteFloat(float value);
 
