@@ -8,7 +8,6 @@
 #include <YAWN/Core/StringBuilder.hpp>
 #include <YAWN/Runtime/Console.hpp>
 
-#include <imgui.h>
 #include <stdio.h>
 
 // TODO: Use JSON instead of YTXT.

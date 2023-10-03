@@ -30,11 +30,6 @@ namespace YAWN {
         Ref<Importer> FindImporterForExtension(const String& extension);
 
     private:
-        void Hierarchy();
-
-        void Hierarchy(const Ref<Node>& node);
-
-    private:
         Array<Ref<Importer>> sImporters;
     };
 }

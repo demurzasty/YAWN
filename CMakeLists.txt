@@ -44,7 +44,6 @@ set (SRC
 	"Source/Editor/Importers/PrefabImporter.cpp"
 	"Source/Editor/Importers/TextureImporter.cpp"
 	"Source/Editor/Editor.cpp"
-	"Source/Editor/EditorUI.cpp"
 	"Source/Graphics/Color.cpp"
 	"Source/Graphics/Compute.cpp"
 	"Source/Graphics/Font.cpp"
@@ -107,7 +106,6 @@ set (SRC
 	"Source/Scene/UI/WindowContainer.cpp"
 	"Source/Scene/Camera3D.cpp"
 	"Source/Scene/Geometry3D.cpp"
-	"Source/Scene/ImGui2D.cpp"
 	"Source/Scene/Node.cpp"
 	"Source/Scene/Node2D.cpp"
 	"Source/Scene/Node3D.cpp"
@@ -138,7 +136,7 @@ endif ()
 add_library (YAWN STATIC ${SRC})
 target_compile_features (YAWN PUBLIC cxx_std_20)
 target_include_directories (YAWN PUBLIC "Include")
-target_link_libraries (YAWN PRIVATE duktape json-c miniz imgui meshoptimizer rgbcx cgltf stb glew glfw)
+target_link_libraries (YAWN PRIVATE duktape json-c miniz meshoptimizer rgbcx cgltf stb glew glfw)
 add_dependencies (YAWN Shaders)
 
 if (MSVC)
