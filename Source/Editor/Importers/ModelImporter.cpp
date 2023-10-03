@@ -4,6 +4,7 @@
 #include <YAWN/IO/File.hpp>
 #include <YAWN/Math/Matrix4.hpp>
 #include <YAWN/Graphics/Image.hpp>
+#include <YAWN/Runtime/YTXT.hpp>
 
 #include <Windows.h>
 #include <stdio.h>
@@ -39,6 +40,21 @@ static void WriteTexture(const Path& outputPath, const Ref<Image>& image) {
     file.Write32(image->GetInfo().GetHeight());
     file.Write32(image->GetInfo().GetChannels());
     file.Write(image->GetData().GetData(), image->GetData().GetSizeInBytes());
+}
+
+static Guid GetTextureGuid(const Path& texturePath) {
+    Path metaPath = texturePath.ToString() + L".meta";
+
+    if (File::Exists(metaPath)) {
+        Map<String, Variant> meta = YTXT::Parse(File::ReadAllText(metaPath));
+
+        Variant guid;
+        if (meta.TryGet(L"Guid", guid) && guid.GetType() == VariantType::String) {
+            return Guid(guid.AsString());
+        }
+    }
+
+    return Guid();
 }
 
 void ModelImporter::Register(Meta<ModelImporter>& meta) {
@@ -152,26 +168,26 @@ void ModelImporter::Import(const Path& inputPath, const Path& outputPath, const 
             }
         }
 
-        //
-        // 2. Import textures.
-        //
-        sTextures.Clear();
-        for (int i = 0; i < data->textures_count; ++i) {
-            cgltf_texture* texture = &data->textures[i];
+        ////
+        //// 2. Import textures.
+        ////
+        //sTextures.Clear();
+        //for (int i = 0; i < data->textures_count; ++i) {
+        //    cgltf_texture* texture = &data->textures[i];
 
-            Guid guid = Guid::Generate();
-            Path materialPath = outputPath / L".." / guid.ToString();
+        //    Guid guid = Guid::Generate();
+        //    Path materialPath = outputPath / L".." / guid.ToString();
 
-            String uri = String::FromUTF8(texture->image->uri);
+        //    String uri = String::FromUTF8(texture->image->uri);
 
-            Path imagePath = inputPath / L".." / uri;
+        //    Path imagePath = inputPath / L".." / uri;
 
-            Ref<Image> image = Image::FromFile(imagePath, 4);
+        //    Ref<Image> image = Image::FromFile(imagePath, 4);
 
-            WriteTexture(outputPath / L".." / guid.ToString(), image);
+        //    WriteTexture(outputPath / L".." / guid.ToString(), image);
 
-            sTextures.Add(i, guid);
-        }
+        //    sTextures.Add(i, guid);
+        //}
 
         //
         // 3. Import materials.
@@ -196,18 +212,18 @@ void ModelImporter::Import(const Path& inputPath, const Path& outputPath, const 
 
                 cgltf_texture* texture = material->pbr_metallic_roughness.base_color_texture.texture;
                 if (texture && texture->image) {
-                    int index = (int)(material->pbr_metallic_roughness.base_color_texture.texture - data->textures);
+                    Path texturePath = inputPath / L".." / String::FromUTF8(texture->image->uri);
 
-                    file.WriteGuid(sTextures[index]);
+                    file.WriteGuid(GetTextureGuid(texturePath));
                 } else {
                     file.WriteGuid(Guid());
                 }
 
                 texture = material->pbr_metallic_roughness.metallic_roughness_texture.texture;
                 if (texture && texture->image) {
-                    int index = (int)(material->pbr_metallic_roughness.metallic_roughness_texture.texture - data->textures);
+                    Path texturePath = inputPath / L".." / String::FromUTF8(texture->image->uri);
 
-                    file.WriteGuid(sTextures[index]);
+                    file.WriteGuid(GetTextureGuid(texturePath));
                 } else {
                     file.WriteGuid(Guid());
                 }
@@ -222,27 +238,27 @@ void ModelImporter::Import(const Path& inputPath, const Path& outputPath, const 
 
             cgltf_texture* texture = material->normal_texture.texture;
             if (texture && texture->image) {
-                int index = (int)(material->normal_texture.texture - data->textures);
+                Path texturePath = inputPath / L".." / String::FromUTF8(texture->image->uri);
 
-                file.WriteGuid(sTextures[index]);
+                file.WriteGuid(GetTextureGuid(texturePath));
             } else {
                 file.WriteGuid(Guid());
             }
 
             texture = material->emissive_texture.texture;
             if (texture && texture->image) {
-                int index = (int)(material->emissive_texture.texture - data->textures);
+                Path texturePath = inputPath / L".." / String::FromUTF8(texture->image->uri);
 
-                file.WriteGuid(sTextures[index]);
+                file.WriteGuid(GetTextureGuid(texturePath));
             } else {
                 file.WriteGuid(Guid());
             }
 
             texture = material->occlusion_texture.texture;
             if (texture && texture->image) {
-                int index = (int)(material->occlusion_texture.texture - data->textures);
+                Path texturePath = inputPath / L".." / String::FromUTF8(texture->image->uri);
 
-                file.WriteGuid(sTextures[index]);
+                file.WriteGuid(GetTextureGuid(texturePath));
             } else {
                 file.WriteGuid(Guid());
             }

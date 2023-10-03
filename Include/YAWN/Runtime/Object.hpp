@@ -10,11 +10,13 @@
             return L#TSelf; \
         } \
         virtual int GetTypeId() const override { \
-            return YAWN::TypeID::Hash<TSelf>(); \
+            constexpr int typeId = YAWN::TypeID::Hash<TSelf>(); \
+            return typeId; \
         } \
     protected: \
         virtual bool _IsInstanceOf(int id) const override { \
-            return id == YAWN::TypeID::Hash<TSelf>() || TBase::_IsInstanceOf(id); \
+            constexpr int typeId = YAWN::TypeID::Hash<TSelf>(); \
+            return id == typeId || TBase::_IsInstanceOf(id); \
         } 
 
 namespace YAWN {
