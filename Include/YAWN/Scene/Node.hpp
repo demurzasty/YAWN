@@ -109,6 +109,8 @@ namespace YAWN {
 
         void DrawTexture(int textureId, const Rectangle& destination, const Rectangle& source, const Color4& color, bool flipY = false);
 
+        void DrawLine(const Vector2& from, const Vector2& to, const Color4& color);
+
         void DrawFillRect(const Rectangle& destination, const Color4& color);
 
         void DrawRect(const Rectangle& destination, const Color4& color);

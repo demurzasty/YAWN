@@ -16,6 +16,8 @@ namespace YAWN {
 
         virtual void SwapBuffers() = 0;
 
+        virtual void Invalidate() = 0;
+
         virtual Vector2 GetSize() = 0;
 
         virtual double GetTime() = 0;

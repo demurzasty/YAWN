@@ -14,6 +14,8 @@ void Viewport::Enter() {
 void Viewport::Exit() {
 	Base::Exit();
 
+	SetFocus(nullptr);
+
 	Renderer::DestroyViewport(mViewportId);
 }
 
@@ -45,6 +47,14 @@ void Viewport::SetRenderDirectToScreen(bool directToScreen) {
 
 bool Viewport::IsRenderDirectToScreen() const {
 	return mDirectToScreen;
+}
+
+void Viewport::SetFocus(const Ref<Control>& control) {
+	mFocus = control;
+}
+
+const Ref<Control> Viewport::GetFocus() const {
+	return mFocus;
 }
 
 int Viewport::GetId() const {

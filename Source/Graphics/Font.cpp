@@ -46,7 +46,7 @@ const FontGlyph& Font::GetGlyph(int codepoint, int size) const {
 
     int width, height, xoff, yoff;
     float scale = stbtt_ScaleForPixelHeight(&mInternalData->Info, float(size));
-    unsigned char* bitmap = stbtt_GetCodepointBitmap(&mInternalData->Info, 0.0f, scale, codepoint, &width, &height, &xoff, &yoff);
+    unsigned char* bitmap = stbtt_GetCodepointBitmap(&mInternalData->Info, scale, scale, codepoint, &width, &height, &xoff, &yoff);
 
     glyph.Advance = 8.0f;
     Rectangle rect = Pack(Vector2(float(width), float(height)));
@@ -65,7 +65,7 @@ const FontGlyph& Font::GetGlyph(int codepoint, int size) const {
     int advance, lsb;
     stbtt_GetCodepointHMetrics(&mInternalData->Info, codepoint, &advance, &lsb);
 
-    glyph.Advance = float(advance) * scale;
+    glyph.Advance = (advance) * scale;
     glyph.Offset = { float(xoff), float(yoff) };
     glyph.Rectangle = rect;
     return glyph;

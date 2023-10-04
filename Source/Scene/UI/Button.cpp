@@ -13,7 +13,7 @@ void Button::Update(float timeStep) {
         const Vector2& mousePosition = Input::GetMousePosition();
         Rectangle globalRect = GetGlobalRectangle();
 
-        if (globalRect.Contains(mousePosition)) {
+        if (Rectangle::Contains(globalRect, mousePosition)) {
             if (Input::IsMouseButtonPressed(MouseButton::Left)) {
                     mState = ButtonState::Active;
             } 
@@ -30,7 +30,7 @@ void Button::Update(float timeStep) {
         if (Input::IsMouseButtonReleased(MouseButton::Left)) {
             if (mState == ButtonState::Active) {
 
-                if (globalRect.Contains(mousePosition)) {
+                if (Rectangle::Contains(globalRect, mousePosition)) {
                     GetClickedSignal().Emit(this);
 
                     mState = ButtonState::Hover;

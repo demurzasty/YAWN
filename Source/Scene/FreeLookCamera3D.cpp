@@ -1,5 +1,6 @@
 #include <YAWN/Scene/FreeLookCamera3D.hpp>
 #include <YAWN/Platform/Input.hpp>
+#include <YAWN/Platform/Window.hpp>
 
 using namespace YAWN;
 
@@ -53,8 +54,10 @@ void FreeLookCamera3D::Update(float timeStep) {
             mTargetCameraPosition.X -= Math::Sin(mTargetCameraRotation.Y + Math::PI * 0.5f) * timeStep * speed;
             mTargetCameraPosition.Z -= Math::Cos(mTargetCameraRotation.Y + Math::PI * 0.5f) * timeStep * speed;
         }
+
+        Window::Invalidate();
     }
 
-    SetLocalPosition(Vector3::Lerp(GetLocalPosition(), mTargetCameraPosition, 40.0f * timeStep));
-    SetLocalRotation(Vector3::Lerp(GetLocalRotation(), mTargetCameraRotation, 40.0f * timeStep));
+    SetLocalPosition(mTargetCameraPosition);
+    SetLocalRotation(mTargetCameraRotation);
 }

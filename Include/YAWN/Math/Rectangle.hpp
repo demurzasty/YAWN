@@ -6,20 +6,15 @@ namespace YAWN {
     struct Rectangle {
         Rectangle() = default;
 
-        constexpr Rectangle(float x, float y, float width, float height) : Position(x, y), Size(width, height) {}
+        Rectangle(float x, float y, float width, float height);
 
-        constexpr Rectangle(const Vector2& position, const Vector2& size) : Position(position), Size(size) {}
+        Rectangle(const Vector2& position, const Vector2& size);
 
-        constexpr bool Contains(const Vector2& point) const {
-            return point.X >= Position.X && point.X < Position.X + Size.X &&
-                point.Y >= Position.Y && point.Y < Position.Y + Size.Y;
-        }
+        static bool Contains(const Rectangle& rect, const Vector2& point);
 
-        Rectangle Intersect(const Rectangle& rect) const;
+        static Rectangle Intersect(const Rectangle& rect1, const Rectangle& rect2);
 
-        inline Vector2 GetEnd() const {
-            return Position + Size;
-        }
+        Vector2 GetEnd() const;
 
         Vector2 Position;
         Vector2 Size;

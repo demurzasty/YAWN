@@ -92,6 +92,14 @@ namespace YAWN {
             return mReference;
         }
 
+        bool operator==(TReference* ref) const {
+            return mReference == ref;
+        }
+
+        bool operator!=(TReference* ref) const {
+            return mReference != ref;
+        }
+
         bool operator==(const Ref<TReference>& ref) const {
             return mReference == ref.mReference;
         }

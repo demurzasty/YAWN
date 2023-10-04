@@ -81,7 +81,7 @@ bool RendererDriver::IsCanvasItemValid(int id) {
 
 void RendererDriver::LLPushClipRect(const Rectangle& clipRect) {
     if (!mClipRects.IsEmpty()) {
-        Rectangle newClipRect = clipRect.Intersect(mClipRects.GetBack());
+        Rectangle newClipRect = Rectangle::Intersect(clipRect, mClipRects.GetBack());
 
         LLSetClipRect(newClipRect);
 

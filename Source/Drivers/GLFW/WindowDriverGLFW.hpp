@@ -20,6 +20,8 @@ namespace YAWN {
 
         void SwapBuffers() override;
 
+        void Invalidate() override;
+
         Vector2 GetSize() override;
 
         double GetTime() override;

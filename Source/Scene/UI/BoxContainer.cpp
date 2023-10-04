@@ -39,7 +39,7 @@ void BoxContainer::Update(float timeStep) {
 
         const Vector4& padding = GetPadding();
         Vector2 size = GetLocalSize() - Vector2(padding.X + padding.Z, padding.Y + padding.W);
-        Vector2 diffSize = size - (minimumSize + GetMargin() * (notExpandedChildCount - 1));
+        Vector2 diffSize = size - (minimumSize + GetMargin() * (notExpandedChildCount));
         Vector2 expandedElementSize = Vector2::Floor((diffSize - GetMargin() * float(expandedChildCount - 1)) / float(expandedChildCount));
 
         Vector2 position = Vector2(padding.X, padding.Y);
@@ -97,12 +97,12 @@ void BoxContainer::HandleEvent(const Event& event) {
         event.Type == EventType::MouseButtonUp ||
         event.Type == EventType::MouseMove) {
         const Vector2& mousePosition = Input::GetMousePosition();
-        if (event.Type == EventType::MouseButtonDown && GetGlobalRectangle().Contains(mousePosition)) {
+        if (event.Type == EventType::MouseButtonDown && Rectangle::Contains(GetGlobalRectangle(), mousePosition)) {
             event.Consume();
         }
 
         if (IsSplitter()) { 
-            if (GetGlobalRectangle().Contains(mousePosition)) {
+            if (Rectangle::Contains(GetGlobalRectangle(), mousePosition)) {
                 if (Input::IsMouseButtonPressed(MouseButton::Left)) {
                     for (int i = 0; i < GetChildCount() - 1; ++i) {
                         const Ref<Node>& child = GetChild(i);

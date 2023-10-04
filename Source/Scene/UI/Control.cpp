@@ -2,6 +2,7 @@
 #include <YAWN/Graphics/Renderer.hpp>
 #include <YAWN/Runtime/ResourceManager.hpp>
 #include <YAWN/Platform/Window.hpp>
+#include <YAWN/Scene/Viewport.hpp>
 
 using namespace YAWN;
 
@@ -57,6 +58,15 @@ Rectangle Control::GetGlobalRectangle() const {
     return Rectangle(GetGlobalPosition(), GetLocalSize());
 }
 
+Rectangle Control::GetGlobalClientRectangle() const {
+    Rectangle globalRectangle = GetGlobalRectangle();
+
+    return Rectangle(
+        globalRectangle.Position + Vector2(mPadding.X, mPadding.Y),
+        globalRectangle.Size - Vector2(mPadding.X + mPadding.Z, mPadding.Y + mPadding.W)
+    );
+}
+
 Control* Control::GetControlParent() const {
     return mControlParent;
 }
@@ -99,6 +109,27 @@ void Control::SetPadding(const Vector4& padding) {
 
 const Vector4& Control::GetPadding() const {
     return mPadding;
+}
+
+void Control::GrabFocus() {
+    Ref<Viewport> viewport = GetViewport();
+    YAWN_ASSERT(viewport);
+    viewport->SetFocus(this);
+}
+
+void Control::LoseFocus() {
+    Ref<Viewport> viewport = GetViewport();
+    YAWN_ASSERT(viewport);
+
+    if (viewport->GetFocus() == this) {
+        viewport->SetFocus(nullptr);
+    }
+}
+
+bool Control::HasFocus() const {
+    Ref<Viewport> viewport = GetViewport();
+    YAWN_ASSERT(viewport);
+    return viewport->GetFocus() == this;
 }
 
 void Control::OnReparent() {

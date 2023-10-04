@@ -8,7 +8,7 @@ void Popup::HandleEvent(const Event& event) {
     if (event.Type == EventType::MouseButtonDown) {
         const MouseButtonDownEvent& buttonEvent = (const MouseButtonDownEvent&)event;
         if (buttonEvent.Button == MouseButton::Left) {
-            if (!GetGlobalRectangle().Contains(buttonEvent.Position)) {
+            if (!Rectangle::Contains(GetGlobalRectangle(), buttonEvent.Position)) {
                 GetParent()->RemoveChild(this);
             }
         }

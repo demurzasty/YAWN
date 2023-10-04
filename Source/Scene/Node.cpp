@@ -3,6 +3,7 @@
 #include <YAWN/Scene/Viewport.hpp>
 #include <YAWN/Scene/UI/ViewportContainer.hpp>
 #include <YAWN/Platform/Input.hpp>
+#include <YAWN/Runtime/Console.hpp>
 
 using namespace YAWN;
 
@@ -238,6 +239,13 @@ void Node::DrawTexture(int textureId, const Rectangle& destination, const Rectan
         Vertex2D(position + Vector2(size.X, 0.0f), Vector2(source.GetEnd().X / textureSize.X, source.Position.Y / textureSize.Y), color),
     };
 
+
+    vertices[0].Position += Vector2(0.25f);
+    vertices[1].Position += Vector2(0.25f);
+    vertices[2].Position += Vector2(0.25f);
+    vertices[3].Position += Vector2(0.25f);
+
+
     if (flipY) {
         vertices[0].UV.Y = 1.0f - vertices[0].UV.Y;
         vertices[1].UV.Y = 1.0f - vertices[1].UV.Y;
@@ -251,6 +259,19 @@ void Node::DrawTexture(int textureId, const Rectangle& destination, const Rectan
     };
 
     AddDrawCommand(Topology::Triangles, textureId, vertices, indices);
+}
+
+void Node::DrawLine(const Vector2& from, const Vector2& to, const Color4& color) {
+    Vertex2D vertices[2] = {
+        Vertex2D(from, Vector2::Zero, color),
+        Vertex2D(to, Vector2::One, color)
+    };
+
+    unsigned short indices[2] = {
+        0, 1
+    };
+
+    AddDrawCommand(Topology::Lines, Renderer::GetWhiteTexture(), vertices, indices);
 }
 
 void Node::DrawFillRect(const Rectangle& destination, const Color4& color) {
@@ -286,7 +307,7 @@ void Node::DrawText(const Ref<Font>& font, int size, const Vector2& destination,
         const FontGlyph& glyph = font->GetGlyph(text[i], size);
 
         DrawTexture(font->GetTextureId(),
-            Rectangle(position.X + glyph.Offset.X, position.Y + glyph.Offset.Y + size, glyph.Rectangle.Size.X, glyph.Rectangle.Size.Y),
+            Rectangle(Math::Floor(position.X + glyph.Offset.X), position.Y + glyph.Offset.Y + size, glyph.Rectangle.Size.X, glyph.Rectangle.Size.Y),
             glyph.Rectangle,
             color);
 

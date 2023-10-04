@@ -131,3 +131,11 @@ const Color4& Theme::GetTreeItemOddColor() const {
     return mTreeItemOddColor;
 }
 
+void Theme::SetTextBoxBorderColor(const Color4& color) {
+    mTextBoxBorderColor = color;
+}
+
+const Color4& Theme::GetTextBoxBorderColor() const {
+    return mTextBoxBorderColor;
+}
+

@@ -35,6 +35,8 @@ namespace YAWN {
 
         Rectangle GetGlobalRectangle() const;
 
+        Rectangle GetGlobalClientRectangle() const;
+
         Control* GetControlParent() const;
 
         void SetTheme(const Ref<Theme>& theme);
@@ -52,6 +54,12 @@ namespace YAWN {
         void SetPadding(const Vector4& padding);
 
         const Vector4& GetPadding() const;
+
+        void GrabFocus();
+
+        void LoseFocus();
+
+        bool HasFocus() const;
 
     protected:
         virtual void OnReparent() override;

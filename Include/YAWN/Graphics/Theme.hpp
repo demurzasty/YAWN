@@ -69,6 +69,10 @@ namespace YAWN {
 
         const Color4& GetTreeItemOddColor() const;
 
+        void SetTextBoxBorderColor(const Color4& color);
+
+        const Color4& GetTextBoxBorderColor() const;
+
     private:
         Ref<Font> mDefaultFont;
         Ref<Texture> mIconsTexture;
@@ -84,5 +88,6 @@ namespace YAWN {
         Color4 mFrameBorderColor = Color4(86, 86, 86);
         Color4 mTreeItemEvenColor = Color4(54, 54, 54);
         Color4 mTreeItemOddColor = Color4(48, 48, 48);
+        Color4 mTextBoxBorderColor = Color4(47, 180, 149);
     };
 }

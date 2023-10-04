@@ -8,7 +8,7 @@
 using namespace YAWN;
 
 static Key MapKey(int key) {
-    YAWN_ASSUME(key <= GLFW_KEY_LAST);
+    YAWN_ASSUME(key >= GLFW_KEY_SPACE && key <= GLFW_KEY_LAST);
     switch (key) {
         case GLFW_KEY_SPACE: return Key::Space;
         case GLFW_KEY_APOSTROPHE: return Key::Apostrophe;
@@ -136,17 +136,15 @@ static Key MapKey(int key) {
 }
 
 static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-    if (action != GLFW_REPEAT) {
-        Key mappedKey = MapKey(key);
-        if (mappedKey != Key::Last) {
-            Input::SetKeyState(mappedKey, action == GLFW_PRESS);
-        }
+    Key mappedKey = MapKey(key);
+    if (mappedKey != Key::Last) {
+        Input::SetKeyState(mappedKey, action != GLFW_RELEASE);
+    }
 
-        if (action == GLFW_PRESS) {
-            Scene::HandleEvent(KeyDownEvent(mappedKey));
-        } else {
-            Scene::HandleEvent(KeyUpEvent(mappedKey));
-        }
+    if (action != GLFW_RELEASE) {
+        Scene::HandleEvent(KeyDownEvent(mappedKey));
+    } else {
+        Scene::HandleEvent(KeyUpEvent(mappedKey));
     }
 }
 
@@ -237,7 +235,7 @@ WindowDriverGLFW::~WindowDriverGLFW() {
 }
 
 void WindowDriverGLFW::PollEvents() {
-    glfwPollEvents();
+    glfwWaitEvents();
 }
 
 bool WindowDriverGLFW::IsOpen() const {
@@ -246,6 +244,10 @@ bool WindowDriverGLFW::IsOpen() const {
 
 void WindowDriverGLFW::SwapBuffers() {
     glfwSwapBuffers(mWindow);
+}
+
+void WindowDriverGLFW::Invalidate() {
+    glfwPostEmptyEvent();
 }
 
 Vector2 WindowDriverGLFW::GetSize() {

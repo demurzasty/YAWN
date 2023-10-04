@@ -1,6 +1,6 @@
 #pragma once 
 
-#include "Node.hpp"
+#include "UI/Control.hpp"
 #include "../Runtime/Pool.hpp"
 
 namespace YAWN {
@@ -24,6 +24,10 @@ namespace YAWN {
 
         bool IsRenderDirectToScreen() const;
 
+        void SetFocus(const Ref<Control>& control);
+
+        const Ref<Control> GetFocus() const;
+
         int GetId() const;
 
     private:
@@ -31,5 +35,6 @@ namespace YAWN {
         bool mDirectToScreen = false;
         Vector2 mSize = Vector2(512.0f, 512.0f);
         bool mDirty = true;
+        Ref<Control> mFocus;
     };
 }

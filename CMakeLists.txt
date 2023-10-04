@@ -101,6 +101,7 @@ set (SRC
 	"Source/Scene/UI/MenuButton.cpp"
 	"Source/Scene/UI/Popup.cpp"
 	"Source/Scene/UI/Section.cpp"
+	"Source/Scene/UI/TextBox.cpp"
 	"Source/Scene/UI/Tree.cpp"
 	"Source/Scene/UI/ViewportContainer.cpp"
 	"Source/Scene/UI/WindowContainer.cpp"

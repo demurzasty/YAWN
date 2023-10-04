@@ -33,6 +33,23 @@ Color::Color(const float color[4])
     : R(color[0]), G(color[1]), B(color[2]), A(color[3]) {
 }
 
+Color Color::Lerp(const Color& from, const Color& to, float factor) {
+    return Color(
+        from.R + (to.R - from.R) * factor,
+        from.G + (to.G - from.G) * factor,
+        from.B + (to.B - from.B) * factor,
+        from.A + (to.A - from.A) * factor
+    );
+}
+
+Color4::Color4(int r, int g, int b)
+    : R(r), G(g), B(b), A(255) {
+}
+
+Color4::Color4(int r, int g, int b, int a)
+    : R(r), G(g), B(b), A(a) {
+}
+
 Color4::Color4(const Color& color)
     : R(Math::FastFloatToInt(color.R * 255.0f))
     , G(Math::FastFloatToInt(color.G * 255.0f))

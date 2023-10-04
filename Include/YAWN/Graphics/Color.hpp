@@ -28,6 +28,8 @@ namespace YAWN {
 
         explicit Color(const float color[4]);
 
+        static Color Lerp(const Color& from, const Color& to, float factor);
+
         float R, G, B, A;
     };
 
@@ -36,9 +38,9 @@ namespace YAWN {
 
         Color4(const Color& color);
 
-        constexpr Color4(int r, int g, int b) : R(r), G(g), B(b), A(255) {}
+        Color4(int r, int g, int b);
 
-        constexpr Color4(int r, int g, int b, int a) : R(r), G(g), B(b), A(a) {}
+        Color4(int r, int g, int b, int a);
 
         unsigned char R, G, B, A;
     };

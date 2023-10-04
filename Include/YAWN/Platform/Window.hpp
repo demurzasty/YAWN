@@ -16,6 +16,8 @@ namespace YAWN {
 
         static void SwapBuffers();
 
+        static void Invalidate();
+
         static Vector2 GetSize();
 
         static double GetTime();

@@ -60,8 +60,7 @@ void Tree::HandleEvent(const Event& event, const Ref<TreeItem>& item, Vector2& o
     if (event.Type == EventType::MouseButtonDown) {
         const MouseButtonDownEvent& buttonEvent = (const MouseButtonDownEvent&)event;
 
-        if (buttonEvent.Button == MouseButton::Left &&
-            rectangle.Contains(buttonEvent.Position)) {
+        if (buttonEvent.Button == MouseButton::Left && Rectangle::Contains(rectangle, buttonEvent.Position)) {
             item->SetCollapsed(!item->IsCollapsed());
 
             event.Consume();
