@@ -619,11 +619,11 @@ void RendererDriverOpenGL::LLSetClipRect(const Rectangle& clipRect) {
     glGetIntegerv(GL_VIEWPORT, viewport);
 
     YAWN_GL_CHECK(glScissor(
-        Math::FastFloatToInt(Math::Floor(clipRect.Position.X)),
-        Math::FastFloatToInt(float(viewport[3]) - clipRect.GetEnd().Y), 
-        Math::FastFloatToInt(Math::Ceil(clipRect.Size.X + 0.25f)),
-        Math::FastFloatToInt(Math::Ceil(clipRect.Size.Y + 0.25f)))
-    );
+        Math::FastFloatToInt(clipRect.Position.X),
+        Math::FastFloatToInt(viewport[3] - clipRect.GetEnd().Y), 
+        Math::FastFloatToInt(clipRect.Size.X),
+        Math::FastFloatToInt(clipRect.Size.Y)
+    ));
 }
 
 void RendererDriverOpenGL::LLDraw2D(Topology topology, int vertexOffset, int indexOffset, int indexCount) {
