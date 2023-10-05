@@ -49,6 +49,9 @@ void Node::HandleEvent(const Event& event) {
 void Node::Draw() {
 }
 
+void Node::PostDraw() {
+}
+
 void Node::Redraw() {
     if (mNeedRedraw) {
         mVertices.Clear();
@@ -56,6 +59,8 @@ void Node::Redraw() {
         mDrawCommands.Clear();
 
         Draw();
+
+        PostDraw();
 
         for (const Ref<Node>& node : GetChildren()) {
             node->RequestRedraw();
@@ -131,6 +136,12 @@ void Node::RemoveChild(const Ref<Node>& node) {
 
     node->mParent = nullptr;
     mChildren.Remove(node);
+
+    RequestRedraw();
+}
+
+void Node::RemoveAllChildren() {
+    mChildren.Clear();
 
     RequestRedraw();
 }
@@ -279,11 +290,11 @@ void Node::DrawFillRect(const Rectangle& destination, const Color4& color) {
 }
 
 void Node::DrawRect(const Rectangle& destination, const Color4& color) {
-    const Vector2& position = destination.Position;
-    const Vector2& size = destination.Size;
+    const Vector2 position = Vector2::Round(destination.Position);
+    const Vector2 size = Vector2::Floor(destination.Size);
 
     Vertex2D vertices[4] = {
-        Vertex2D(position + Vector2(0.25f, 0.0f), Vector2(0.0f, 0.0f), color),
+        Vertex2D(position + Vector2(0.25f, 0.25f), Vector2(0.0f, 0.0f), color),
         Vertex2D(position + Vector2(0.25f, size.Y - 0.25f), Vector2(0.0f, 1.0f), color),
         Vertex2D(position + Vector2(size.X - 0.25f, size.Y - 0.25f), Vector2(1.0f, 1.0f), color),
         Vertex2D(position + Vector2(size.X - 0.25f, 0.25f), Vector2(1.0f, 0.0f), color),
@@ -307,7 +318,7 @@ void Node::DrawText(const Ref<Font>& font, int size, const Vector2& destination,
         const FontGlyph& glyph = font->GetGlyph(text[i], size);
 
         DrawTexture(font->GetTextureId(),
-            Rectangle(Math::Floor(position.X + glyph.Offset.X), position.Y + glyph.Offset.Y + size, glyph.Rectangle.Size.X, glyph.Rectangle.Size.Y),
+            Rectangle(position.X + glyph.Offset.X, position.Y + glyph.Offset.Y + size, glyph.Rectangle.Size.X, glyph.Rectangle.Size.Y),
             glyph.Rectangle,
             color);
 
@@ -317,6 +328,8 @@ void Node::DrawText(const Ref<Font>& font, int size, const Vector2& destination,
             position.X += font->GetKerning(text[i], text[i + 1], size);
         }
     }
+
+    font->Validate();
 }
 
 void Node::AddDrawCommand(Topology topology, int textureId, const ArrayView<const Vertex2D>& vertices, const ArrayView<const unsigned short>& indices) {

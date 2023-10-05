@@ -12,6 +12,8 @@ Ref<Theme> Theme::CreateDefault() {
 
     Ref<Image> iconsImage = Image::FromMemory(ArrayView<const unsigned char>(IconsImageData, sizeof(IconsImageData)), 4);
 
+    iconsImage = Image::Resize(iconsImage, iconsImage->GetInfo().GetWidth() / 2, iconsImage->GetInfo().GetHeight() / 2);
+
     Ref<Texture> iconsTexture = new Texture(iconsImage->GetInfo().GetWidth(), iconsImage->GetInfo().GetHeight(), TextureFormat::RGBA8, TextureFilter::Linear, TextureWrapping::ClampToEdge, 1);
     iconsTexture->SetData(0, iconsImage->GetData().GetData());
     theme->SetIconsTexture(iconsTexture);

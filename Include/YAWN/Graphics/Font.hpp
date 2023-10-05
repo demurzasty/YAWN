@@ -25,6 +25,8 @@ namespace YAWN {
 
         virtual ~Font() override;
 
+        void Validate();
+
         const FontGlyph& GetGlyph(int codepoint, int size) const;
 
         float GetKerning(int codepoint1, int codepoint2, int size) const;
@@ -45,5 +47,6 @@ namespace YAWN {
         mutable InternalData* mInternalData;
         mutable Array<Color4> mPixels;
         mutable Map<int, FontGlyph> mGlyphs;
+        mutable bool mDirty = true;
     };
 }

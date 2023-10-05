@@ -10,7 +10,7 @@ using namespace YAWN;
 struct Font::InternalData {
     stbtt_fontinfo Info;
     stbrp_context Context;
-    stbrp_node Nodes[512];
+    stbrp_node Nodes[256];
 };
 
 void Font::Register(Meta<Font>& meta) {
@@ -19,15 +19,15 @@ void Font::Register(Meta<Font>& meta) {
 }
 
 Font::Font(const Ref<Buffer>& data)
-    : mId(Renderer::CreateTexture(512, 512, TextureFormat::RGBA8, TextureFilter::Nearest, TextureWrapping::ClampToEdge, 1))
+    : mId(Renderer::CreateTexture(256, 256, TextureFormat::RGBA8, TextureFilter::Nearest, TextureWrapping::ClampToEdge, 1))
     , mData(data) {
     mInternalData = new InternalData();
 
-    stbrp_init_target(&mInternalData->Context, 512, 512, mInternalData->Nodes, 512);
+    stbrp_init_target(&mInternalData->Context, 256, 256, mInternalData->Nodes, 256);
 
     stbtt_InitFont(&mInternalData->Info, (const unsigned char*)mData->GetData(), 0);
 
-    mPixels.Resize(512 * 512, Color::Transparent);
+    mPixels.Resize(256 * 256, Color::Transparent);
 
     Renderer::SetTextureData(mId, 0, mPixels.GetData());
 }
@@ -38,8 +38,16 @@ Font::~Font() {
     Renderer::DestroyTexture(mId);
 }
 
+void Font::Validate() {
+    if (mDirty) {
+        Renderer::SetTextureData(mId, 0, mPixels.GetData());
+
+        mDirty = false;
+    }
+}
+
 const FontGlyph& Font::GetGlyph(int codepoint, int size) const {
-    FontGlyph& glyph = mGlyphs.GetOrAdd(codepoint);
+    FontGlyph& glyph = mGlyphs.GetOrAdd((codepoint & 0xFFFFF) | ((size & 0xFFF) << 20));
     if (glyph.Rectangle.Size.X > 0 && glyph.Rectangle.Size.Y > 0) {
         return glyph;
     }
@@ -47,20 +55,19 @@ const FontGlyph& Font::GetGlyph(int codepoint, int size) const {
     int width, height, xoff, yoff;
     float scale = stbtt_ScaleForPixelHeight(&mInternalData->Info, float(size));
     unsigned char* bitmap = stbtt_GetCodepointBitmap(&mInternalData->Info, scale, scale, codepoint, &width, &height, &xoff, &yoff);
-
-    glyph.Advance = 8.0f;
+   
     Rectangle rect = Pack(Vector2(float(width), float(height)));
 
     for (int y = 0; y < Math::FastFloatToInt(rect.Size.Y); ++y) {
         for (int x = 0; x < Math::FastFloatToInt(rect.Size.X); ++x) {
-            int index = (Math::FastFloatToInt(rect.Position.Y) + y) * 512 + (Math::FastFloatToInt(rect.Position.X) + x);
+            int index = (Math::FastFloatToInt(rect.Position.Y) + y) * 256 + (Math::FastFloatToInt(rect.Position.X) + x);
             mPixels[index] = Color4(255, 255, 255, int(bitmap[y * Math::FastFloatToInt(rect.Size.X) + x]));
         }
     }
 
     stbtt_FreeBitmap(bitmap, 0);
 
-    Renderer::SetTextureData(mId, 0, mPixels.GetData());
+    mDirty = true;
 
     int advance, lsb;
     stbtt_GetCodepointHMetrics(&mInternalData->Info, codepoint, &advance, &lsb);
@@ -103,8 +110,8 @@ int Font::GetTextureId() const {
 
 Rectangle Font::Pack(const Vector2& size) const {
     stbrp_rect rect;
-    rect.w = Math::FastFloatToInt(size.X + 2.0f);
-    rect.h = Math::FastFloatToInt(size.Y + 2.0f);
+    rect.w = Math::FastFloatToInt(size.X + 1.0f);
+    rect.h = Math::FastFloatToInt(size.Y + 1.0f);
     stbrp_pack_rects(&mInternalData->Context, &rect, 1);
 
     return Rectangle(rect.x + 1.0f, rect.y + 1.0f, size.X, size.Y);

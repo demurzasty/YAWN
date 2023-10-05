@@ -98,6 +98,22 @@ String::~String() {
     Memory::Deallocate(mString);
 }
 
+String& String::operator=(const wchar_t* string) {
+    int size = string ? int(wcslen(string)) : 0;
+
+    if (size > mSize) {
+        mString = (wchar_t*)Memory::Reallocate(mString, sizeof(wchar_t) * (size + 1));
+    }
+
+    mSize = size;
+
+    if (mSize > 0) {
+        Memory::Copy(mString, string, sizeof(wchar_t) * (mSize + 1));
+    }
+
+    return *this;
+}
+
 String& String::operator=(const String& string) {
     if (string.mSize > mSize) {
         mString = (wchar_t*)Memory::Reallocate(mString, sizeof(wchar_t) * (string.mSize + 1));

@@ -104,11 +104,10 @@ void Tree::Draw(const Ref<Theme>& theme, const Ref<TreeItem>& item, Vector2& off
         position.Y += 24.0f / 2.0f - 16.0f / 2.0f;
 
         if (item->IsCollapsed()) {
-            DrawTexture(theme->GetIconsTexture()->GetId(), Rectangle(position, Vector2(16.0f)), Rectangle(8.0f * 50.0f, 6.0f * 50.0f, 50.0f, 50.0f), Color::White);
+            DrawTexture(theme->GetIconsTexture()->GetId(), Rectangle(position, Vector2(16.0f)), Rectangle(8.0f * 25.0f, 6.0f * 25.0f, 25.0f, 25.0f), Color::White);
         } else {
-            DrawTexture(theme->GetIconsTexture()->GetId(), Rectangle(position, Vector2(16.0f)), Rectangle(7.0f * 50.0f, 7.0f * 50.0f, 50.0f, 50.0f), Color::White);
+            DrawTexture(theme->GetIconsTexture()->GetId(), Rectangle(position, Vector2(16.0f)), Rectangle(7.0f * 25.0f, 7.0f * 25.0f, 25.0f, 25.0f), Color::White);
         }
-
     }
 
     position = GetGlobalPosition() + offset;

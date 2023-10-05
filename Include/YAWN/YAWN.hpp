@@ -89,6 +89,8 @@
 #include "Scene/UI/Button.hpp"
 #include "Scene/UI/Container.hpp"
 #include "Scene/UI/Control.hpp"
+#include "Scene/UI/EditProperty.hpp"
+#include "Scene/UI/Label.hpp"
 #include "Scene/UI/MenuBar.hpp"
 #include "Scene/UI/MenuButton.hpp"
 #include "Scene/UI/Popup.hpp"

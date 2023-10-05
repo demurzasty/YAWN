@@ -67,12 +67,12 @@ void TextBox::Draw() {
 
         Rectangle clientRectangle = GetGlobalClientRectangle();
 
-        Vector2 textSize = theme->GetDefaultFont()->GetTextSize(mText, 16);
+        Vector2 textSize = theme->GetDefaultFont()->GetTextSize(mText, GetFontSize());
 
         Vector2 textPosition = clientRectangle.Position;
         textPosition.Y += clientRectangle.Size.Y / 2.0f - textSize.Y / 2.0f;
 
-        DrawText(theme->GetDefaultFont(), 16, textPosition, GetText(), Color::White);
+        DrawText(theme->GetDefaultFont(), GetFontSize(), textPosition, GetText(), Color::White);
 
         if (HasFocus() && mCaretTime < 0.5f) {
             Vector2 caretPosition = textPosition;
@@ -89,8 +89,20 @@ void TextBox::Draw() {
 
 void TextBox::SetText(const String& text) {
     mText = text;
+
+    RequestRedraw();
 }
 
 const String& TextBox::GetText() const {
     return mText;
+}
+
+void TextBox::SetFontSize(int fontSize) {
+    mFontSize = fontSize;
+
+    RequestRedraw();
+}
+
+int TextBox::GetFontSize() const {
+    return mFontSize;
 }

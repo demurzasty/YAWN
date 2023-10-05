@@ -47,6 +47,8 @@ namespace YAWN {
 
         template<auto VSetter, auto VGetter>
         void AddField(const String& name) {
+            constexpr VariantType type = VariantMethodReturnTypeDetector<VGetter>::Type;
+
             auto setter = [](void* instance, const Variant& value) {
                 (((T*)instance)->*VSetter)(value);
             };
@@ -55,7 +57,7 @@ namespace YAWN {
                 value = (((T*)instance)->*VGetter)();
             };
 
-            mType->AddField(name, Field(setter, getter));
+            mType->AddField(name, Field(setter, getter, type));
         }
 
     private:

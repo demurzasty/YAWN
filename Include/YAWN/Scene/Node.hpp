@@ -40,6 +40,8 @@ namespace YAWN {
 
         virtual void Draw();
 
+        virtual void PostDraw();
+
         //////////////////////////
         //////// Drawing /////////
         //////////////////////////
@@ -71,6 +73,8 @@ namespace YAWN {
         void AddSibling(const Ref<Node>& node);
 
         void RemoveChild(const Ref<Node>& node);
+
+        void RemoveAllChildren();
 
         ArrayView<const Ref<Node>> GetChildren() const;
 

@@ -13,14 +13,12 @@ void BuildTree(const Ref<Tree>& tree, const Ref<Node>& node, Ref<TreeItem> item)
 void Initialize() {
     Scene::GetRoot()->AddChild(new Editor());
 
-    // Ref<Prefab> prefab = ResourceManager::Load<Prefab>(Guid(L"97b9dcf3-1894-cc03-e0d7-f4c4d2c9e800"));
-
     Ref<Viewport> subViewport = new Viewport();
 
     {
-        // Ref<Node> node = prefab->Instantiate();
+        Ref<Node> node = new Node3D(); //prefab->Instantiate();
 
-        //subViewport->AddChild(node);
+        subViewport->AddChild(node);
 
         Ref<Camera3D> camera = new FreeLookCamera3D();
 
@@ -147,6 +145,10 @@ void Initialize() {
             control->SetPadding(16.0f);
 
             {
+                Ref<Label> label = new Label();
+                label->SetText(L"LocalPosition");
+                control->AddChild(label);
+
                 Ref<TextBox> textBox = new TextBox();
                 control->AddChild(textBox);
             }

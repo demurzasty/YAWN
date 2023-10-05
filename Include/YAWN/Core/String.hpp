@@ -24,6 +24,8 @@ namespace YAWN {
 
         ~String();
 
+        String& operator=(const wchar_t* string);
+
         String& operator=(const String& string);
 
         String& operator=(String&& string) noexcept;

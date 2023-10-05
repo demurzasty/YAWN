@@ -22,6 +22,10 @@ void Control::Draw() {
     Base::Draw();
 }
 
+void Control::PostDraw() {
+    Base::PostDraw();
+}
+
 void Control::SetLocalSize(const Vector2& size) {
     mLocalSize = Vector2::Max(size, mMinimumSize);
 

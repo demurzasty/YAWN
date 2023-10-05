@@ -77,6 +77,83 @@ namespace YAWN {
          Color
     };
 
+    template<typename T>
+    struct VariantTrait {
+        static constexpr VariantType Type = VariantType::Null;
+    };
+
+    template<>
+    struct VariantTrait<bool> {
+        static constexpr VariantType Type = VariantType::Boolean;
+    };
+
+    template<>
+    struct VariantTrait<int> {
+        static constexpr VariantType Type = VariantType::Integer;
+    };
+
+    template<>
+    struct VariantTrait<long long> {
+        static constexpr VariantType Type = VariantType::Integer;
+    };
+
+    template<>
+    struct VariantTrait<float> {
+        static constexpr VariantType Type = VariantType::FloatingPoint;
+    };
+
+    template<>
+    struct VariantTrait<double> {
+        static constexpr VariantType Type = VariantType::FloatingPoint;
+    };
+
+    template<>
+    struct VariantTrait<String> {
+        static constexpr VariantType Type = VariantType::String;
+    };
+
+    template<>
+    struct VariantTrait<Vector2> {
+        static constexpr VariantType Type = VariantType::Vector2;
+    };
+
+    template<>
+    struct VariantTrait<Vector3> {
+        static constexpr VariantType Type = VariantType::Vector3;
+    };
+
+    template<>
+    struct VariantTrait<Vector4> {
+        static constexpr VariantType Type = VariantType::Vector4;
+    };
+
+    template<>
+    struct VariantTrait<Color> {
+        static constexpr VariantType Type = VariantType::Color;
+    };
+
+    template<>
+    struct VariantTrait<Color4> {
+        static constexpr VariantType Type = VariantType::Color;
+    };
+
+    template<typename T>
+    struct VariantTypeDetector {
+        static constexpr VariantType Type = VariantTrait<typename RemoveConstReference<T>::Type>::Type;
+    };
+
+    namespace Internal {
+        template<typename A, typename B>
+        auto MethodProxy(B(A::* method)) {
+            return (((A*)0)->*method)();
+        }
+    }
+
+    template<auto VMethod>
+    struct VariantMethodReturnTypeDetector {
+        static constexpr VariantType Type = VariantTypeDetector<decltype(Internal::MethodProxy(VMethod))>::Type;
+    };
+
     class Variant {
         static constexpr int MaxSize = MaxTypesSize<
             bool,

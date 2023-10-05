@@ -3,17 +3,13 @@
 #include "Control.hpp"
 
 namespace YAWN {
-    class TextBox : public Control {
-        YAWN_OBJECT(TextBox, Control);
+    class Label : public Control {
+        YAWN_OBJECT(Label, Control);
 
     public:
-        TextBox();
-
-        virtual ~TextBox() = default;
+        virtual ~Label() = default;
 
         virtual void Update(float timeStep) override;
-
-        virtual void HandleEvent(const Event& event) override;
 
         virtual void Draw() override;
 
@@ -28,6 +24,5 @@ namespace YAWN {
     private:
         String mText;
         int mFontSize = 16;
-        float mCaretTime = 0.0f;
     };
 }

@@ -21,6 +21,8 @@ namespace YAWN {
 
         virtual void Draw() override;
 
+        virtual void PostDraw() override;
+
         void SetLocalSize(const Vector2& size);
 
         const Vector2& GetLocalSize() const;
