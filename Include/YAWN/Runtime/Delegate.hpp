@@ -58,7 +58,7 @@ namespace YAWN {
         }
 
         FunctionType GetFunction() const {
-            return mInstance;
+            return mFunction;
         }
 
     private:

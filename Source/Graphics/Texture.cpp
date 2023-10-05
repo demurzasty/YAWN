@@ -20,6 +20,10 @@ void Texture::SetData(int mipmap, const void* data) {
     Renderer::SetTextureData(mId, mipmap, data);
 }
 
+Vector2 Texture::GetSize() const {
+    return Renderer::GetTextureSize(mId);
+}
+
 int Texture::GetId() const {
     return mId;
 }

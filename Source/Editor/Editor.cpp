@@ -38,6 +38,7 @@ void Editor::Reimport() {
     Directory::Create(L"Data");
     Directory::Create(L"Package");
     Directory::Create(L"Cache");
+    Directory::Create(L"Cache/Thumbnails");
 
     Directory::EnumerateFiles(L"Data", Delegate<void(const FileInfo&)>::Bind<&Editor::CreateMetaFiles>(this));
     Directory::EnumerateFiles(L"Data", Delegate<void(const FileInfo&)>::Bind<&Editor::EnumerateFile>(this));

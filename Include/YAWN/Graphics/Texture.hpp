@@ -36,6 +36,8 @@ namespace YAWN {
 
         void SetData(int mipmap, const void* data);
 
+        Vector2 GetSize() const;
+
         int GetId() const;
 
     private:

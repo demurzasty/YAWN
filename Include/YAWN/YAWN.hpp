@@ -96,6 +96,7 @@
 #include "Scene/UI/MenuBar.hpp"
 #include "Scene/UI/MenuButton.hpp"
 #include "Scene/UI/Popup.hpp"
+#include "Scene/UI/ResourceContainer.hpp"
 #include "Scene/UI/Section.hpp"
 #include "Scene/UI/TextBox.hpp"
 #include "Scene/UI/Tree.hpp"

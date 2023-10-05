@@ -24,6 +24,18 @@ void TextureImporter::Import(const Path& inputPath, const Path& outputPath, cons
     file.Write32(image->GetInfo().GetHeight());
     file.Write32(image->GetInfo().GetChannels());
     file.Write(image->GetData().GetData(), image->GetData().GetSizeInBytes());
+
+    Ref<Image> thumbnail = Image::Resize(image, 64, 64);
+
+    Path thumbnailPath = Path(L"Cache/Thumbnails") / outputPath.GetFilename();
+
+    file.Open(thumbnailPath, FileModeFlags::Write);
+    if (file.IsOpen()) {
+        file.Write32(thumbnail->GetInfo().GetWidth());
+        file.Write32(thumbnail->GetInfo().GetHeight());
+        file.Write32(thumbnail->GetInfo().GetChannels());
+        file.Write(thumbnail->GetData().GetData(), thumbnail->GetData().GetSizeInBytes());
+    }
 }
 
 ArrayView<const String> TextureImporter::GetSupportedExtensions() const {

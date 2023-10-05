@@ -132,17 +132,8 @@ void Initialize() {
                 section->SetMinimumSize(Vector2(100.0f, 250.0f));
                 section->SetText(L"Resources");
 
-                Ref<GridContainer> resourceContainer = new GridContainer();
-                resourceContainer->AddChild(new TextBox());
-                resourceContainer->AddChild(new TextBox());
-                resourceContainer->AddChild(new TextBox());
-                resourceContainer->AddChild(new TextBox());
-                resourceContainer->AddChild(new TextBox());
-                resourceContainer->AddChild(new TextBox());
-                resourceContainer->AddChild(new TextBox());
-                resourceContainer->AddChild(new TextBox());
-                resourceContainer->AddChild(new TextBox());
-                resourceContainer->AddChild(new TextBox());
+                Ref<ResourceContainer> resourceContainer = new ResourceContainer();
+                resourceContainer->SetPath(L"Data/FlightHelmet");
                 section->AddChild(resourceContainer);
 
                 centerContainer->AddChild(section);
