@@ -151,6 +151,33 @@ wchar_t& String::operator[](int index) {
     return mString[index];
 }
 
+bool String::operator==(const wchar_t* string) const {
+    return wcscmp(GetData(), string) == 0;
+}
+
+bool String::operator!=(const wchar_t* string) const {
+    return wcscmp(GetData(), string) != 0;
+}
+
+bool String::operator>(const wchar_t* string) const {
+    return wcscmp(GetData(), string) > 0;
+}
+
+String String::operator+(const wchar_t* string) const {
+    String output;
+
+    int length = int(wcslen(string));
+    output.mSize = mSize + length;
+    if (output.mSize > 0) {
+        output.mString = (wchar_t*)Memory::Allocate(sizeof(wchar_t) * (output.mSize + 1));
+        memcpy(output.mString, GetData(), mSize * sizeof(wchar_t));
+        memcpy(output.mString + mSize, string, length * sizeof(wchar_t));
+        output.mString[output.mSize] = 0;
+    }
+
+    return output;
+}
+
 bool String::operator==(const String& string) const {
     if (mSize != string.GetSize()) {
         return false;

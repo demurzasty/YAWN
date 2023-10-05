@@ -34,6 +34,14 @@ namespace YAWN {
 
         wchar_t& operator[](int index);
 
+        bool operator==(const wchar_t* string) const;
+
+        bool operator!=(const wchar_t* string) const;
+
+        bool operator>(const wchar_t* string) const;
+
+        String operator+(const wchar_t* string) const;
+
         bool operator==(const String& string) const;
 
         bool operator!=(const String& string) const;
