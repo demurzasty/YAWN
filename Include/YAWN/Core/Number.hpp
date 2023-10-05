@@ -16,5 +16,10 @@ namespace YAWN {
         static String ToString(long long value);
 
         static String ToString(float value);
+
+        static String ToString(double value);
+
+    private:
+        static String TrimPaddingZeros(const String& string);
     };
 }

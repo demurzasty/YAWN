@@ -26,13 +26,13 @@ namespace YAWN {
 
         bool HasTag(const String& tag) const;
 
-        void AddField(const String& name, const Field& field);
+        void AddField(const Ref<Field>& field);
 
         bool HasField(const String& name);
 
-        const Field& GetField(const String& name);
+        Ref<Field> GetField(const String& name);
 
-        void EnumerateFields(const Delegate<void(const String&, const Field&)>& delegate);
+        void EnumerateFields(const Delegate<void(const Ref<Field>&)>& delegate);
 
         void SetConstructor(Ref<Reference>(*constructor)());
 
@@ -47,7 +47,7 @@ namespace YAWN {
     private:
         String mName;
         Array<String> mTags;
-        Map<String, Field> mFields;
+        Array<Ref<Field>> mFields;
         Ref<Reference>(*mConstructor)() = nullptr;
         int mId = 0;
         int mBase = 0;

@@ -2,8 +2,8 @@
 
 using namespace YAWN;
 
-Field::Field(void (*setter)(void*, const Variant&), void (*getter)(const void*, Variant&), VariantType type)
-    : mSetter(setter), mGetter(getter), mType(type) {
+Field::Field(const String& name, void (*setter)(void*, const Variant&), void (*getter)(const void*, Variant&), VariantType type)
+    : mName(name), mSetter(setter), mGetter(getter), mType(type) {
 }
 
 void Field::Set(void* instance, const Variant& value) const {
@@ -28,6 +28,10 @@ Variant Field::Get(const void* instance) const {
 
 bool Field::IsAssignable() const {
     return mSetter;
+}
+
+const String& Field::GetName() const {
+    return mName;
 }
 
 VariantType Field::GetType() const {

@@ -42,7 +42,7 @@ namespace YAWN {
                 value = (((T*)instance)->*VField);
             };
 
-            mType->AddField(name, Field(setter, getter));
+            mType->AddField(new Field(name, setter, getter));
         }
 
         template<auto VSetter, auto VGetter>
@@ -57,7 +57,7 @@ namespace YAWN {
                 value = (((T*)instance)->*VGetter)();
             };
 
-            mType->AddField(name, Field(setter, getter, type));
+            mType->AddField(new Field(name, setter, getter, type));
         }
 
     private:

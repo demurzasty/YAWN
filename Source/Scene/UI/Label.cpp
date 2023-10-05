@@ -27,6 +27,10 @@ void Label::Draw() {
 void Label::SetText(const String& text) {
     mText = text;
 
+    if (const Ref<Theme>& theme = GetTheme(); theme) {
+        SetMinimumSize(theme->GetDefaultFont()->GetTextSize(GetText(), GetFontSize()));
+    }
+
     RequestRedraw();
 }
 

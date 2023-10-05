@@ -1,15 +1,18 @@
 #pragma once 
 
-#include "Control.hpp"
+#include "BoxContainer.hpp"
+#include "../../Runtime/Signal.hpp"
 
 namespace YAWN {
-    class EditProperty : public Control {
-        YAWN_OBJECT(EditProperty, Control);
+    class EditProperty : public BoxContainer {
+        YAWN_OBJECT(EditProperty, BoxContainer);
 
     public:
         EditProperty();
 
         virtual ~EditProperty() = default;
+
+        virtual void Enter() override;
 
         virtual void Exit() override;
 
@@ -25,8 +28,16 @@ namespace YAWN {
 
         const String& GetEditedProperty() const;
 
+        Signal<const String&, const Variant&>& GetValueChangedSignal();
+
+    private:
+        void OnTextBoxValueChanged(const String& text);
+
+        void Check();
+
     private:
         Ref<Reference> mEditedObject;
         String mEditedProperty;
+        Signal<const String&, const Variant&> mValueChangedSignal;
     };
 }

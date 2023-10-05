@@ -15,10 +15,14 @@ void Initialize() {
 
     Ref<Viewport> subViewport = new Viewport();
 
-    {
-        Ref<Node> node = new Node3D(); //prefab->Instantiate();
+    Ref<Node3D> node3d = new Node3D();
+    node3d->SetName(L"TestNode");
+    node3d->SetLocalPosition(Vector3(0.4124f, 1.3452f, 312.455f));
 
-        subViewport->AddChild(node);
+    {
+         //prefab->Instantiate();
+
+        subViewport->AddChild(node3d);
 
         Ref<Camera3D> camera = new FreeLookCamera3D();
 
@@ -140,50 +144,9 @@ void Initialize() {
             section->SetVerticalExpand(true);
             section->SetText(L"Inspector");
 
-            Ref<BoxContainer> control = new BoxContainer();
-            control->SetVertical(true);
-            control->SetPadding(16.0f);
-
-            {
-                Ref<Label> label = new Label();
-                label->SetText(L"LocalPosition");
-                control->AddChild(label);
-
-                Ref<TextBox> textBox = new TextBox();
-                control->AddChild(textBox);
-            }
-
-            {
-                Ref<TextBox> textBox = new TextBox();
-                control->AddChild(textBox);
-            }
-
-            {
-                Ref<BoxContainer> control2 = new BoxContainer();
-                control2->SetMinimumSize(32.0f);
-
-                {
-                    Ref<TextBox> textBox = new TextBox();
-                    textBox->SetHorizontalExpand(true);
-                    control2->AddChild(textBox);
-                }
-
-                {
-                    Ref<TextBox> textBox = new TextBox();
-                    textBox->SetHorizontalExpand(true);
-                    control2->AddChild(textBox);
-                }
-
-                {
-                    Ref<TextBox> textBox = new TextBox();
-                    textBox->SetHorizontalExpand(true);
-                    control2->AddChild(textBox);
-                }
-
-                control->AddChild(control2);
-            }
-
-            section->AddChild(control);
+            Ref<Inspector> inspector = new Inspector();
+            inspector->SetEditedObject(node3d);
+            section->AddChild(inspector);
 
             boxContainer->AddChild(section);
         }
@@ -197,7 +160,7 @@ void Initialize() {
 
     Ref<TreeItem> item = tree->CreateItem();
     item->SetText(L"Root");
-    BuildTree(tree, Scene::GetRoot(), item);
+    BuildTree(tree, subViewport, item);
 }
 
 int Main(int argc, char* argv[]) {

@@ -29,38 +29,50 @@ bool Type::HasTag(const String& tag) const {
     return mTags.Find(tag) > -1;
 }
 
-void Type::AddField(const String& name, const Field& field) {
-    YAWN_ASSERT(!mFields.Contains(name));
+void Type::AddField(const Ref<Field>& field) {
+    YAWN_ASSERT(field);
+    YAWN_ASSERT(!HasField(field->GetName()));
 
-    mFields.Add(name, field);
+    mFields.Add(field);
 }
 
 bool Type::HasField(const String& name) {
-    return mFields.Contains(name);
+    for (const Ref<Field>& field : mFields) {
+        if (field->GetName() == name) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
-const Field& Type::GetField(const String& name) {
+Ref<Field> Type::GetField(const String& name) {
+    for (const Ref<Field>& field : mFields) {
+        if (field->GetName() == name) {
+            return field;
+        }
+    }
+
     if (mBase) {
-        Ref<Type> base = Types::GetType(mBase);
-        if (base && base->HasField(name)) {
+        if (Ref<Type> base = Types::GetType(mBase); base) {
             return base->GetField(name);
         }
     }
 
-    YAWN_ASSERT(HasField(name));
-
-    return mFields[name];
+    return nullptr;
 }
 
-void Type::EnumerateFields(const Delegate<void(const String&, const Field&)>& delegate) {
+void Type::EnumerateFields(const Delegate<void(const Ref<Field>&)>& delegate) {
     YAWN_ASSERT(delegate);
 
-    if (mBase) {
-        Types::GetType(mBase)->EnumerateFields(delegate);
+    for (const Ref<Field>& field : mFields) {
+        delegate(field);
     }
 
-    for (const KeyValue<String, Field>& field : mFields) {
-        delegate(field.Key, field.Value);
+    if (mBase) {
+        if (Ref<Type> base = Types::GetType(mBase); base) {
+            Types::GetType(mBase)->EnumerateFields(delegate);
+        }
     }
 }
 
@@ -87,8 +99,8 @@ bool Type::IsDerivedFrom(int id) const {
     }
 
     if (mBase) {
-        if (Ref<Type> baseType = Types::GetType(mBase); baseType) {
-            return baseType->IsDerivedFrom(id);
+        if (Ref<Type> base = Types::GetType(mBase); base) {
+            return base->IsDerivedFrom(id);
         }
     }
 

@@ -1,6 +1,7 @@
 #pragma once 
 
 #include "Control.hpp"
+#include "../../Runtime/Signal.hpp"
 
 namespace YAWN {
     class TextBox : public Control {
@@ -25,9 +26,12 @@ namespace YAWN {
 
         int GetFontSize() const;
 
+        Signal<const String&>& GetValueChangedSignal();
+
     private:
         String mText;
         int mFontSize = 16;
         float mCaretTime = 0.0f;
+        Signal<const String&> mValueChangedSignal;
     };
 }

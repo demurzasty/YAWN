@@ -8,6 +8,12 @@ namespace YAWN {
     template<typename... TArgs>
     class Signal {
     public:
+        Signal() = default;
+
+        Signal(const Signal<TArgs...>&) = delete;
+
+        Signal<TArgs...>& operator=(const Signal<TArgs...>&) = delete;
+
         template<auto VMethod>
         void Connect() {
             Delegate<void(TArgs...)> delegate;

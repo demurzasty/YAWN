@@ -70,7 +70,7 @@ struct FileTypeWriter : public Reference {
     File* File = nullptr;
     Ref<Reference> Object;
 
-    void WriteTypeFields(const String& name, const Field& field);
+    void WriteTypeFields(const Ref<Field>& field);
 };
 
 File::File(File&& file) noexcept
@@ -327,7 +327,7 @@ void File::WriteVariant(const Variant& variant) {
             writer.File = this;
             writer.Object = variant.AsObject();
 
-            Delegate<void(const String&, const Field&)> delegate;
+            Delegate<void(const Ref<Field>&)> delegate;
             delegate.Connect<&FileTypeWriter::WriteTypeFields>(&writer);
 
             type->EnumerateFields(delegate);
@@ -338,11 +338,11 @@ void File::WriteVariant(const Variant& variant) {
     }
 }
 
-void FileTypeWriter::WriteTypeFields(const String& name, const Field& field) {
-    File->Write32(name.GetSize());
-    for (int i = 0; i < name.GetSize(); ++i) {
-        File->Write32(name[i]);
+void FileTypeWriter::WriteTypeFields(const Ref<Field>& field) {
+    File->Write32(field->GetName().GetSize());
+    for (int i = 0; i < field->GetName().GetSize(); ++i) {
+        File->Write32(field->GetName()[i]);
     }
 
-    File->WriteVariant(field.Get(Object.Get()));
+    File->WriteVariant(field->Get(Object.Get()));
 }

@@ -25,9 +25,9 @@ static void ParseObject(json_object* json, Variant& output) {
             Variant value;
             ParseJson(val, value);
 
-            const Field& field = type->GetField(String::FromUTF8(key));
-            if (field.IsAssignable()) {
-                field.Set(ref.Get(), value);
+            Ref<Field> field = type->GetField(String::FromUTF8(key));
+            if (field->IsAssignable()) {
+                field->Set(ref.Get(), value);
             }
         }
     }
@@ -162,10 +162,10 @@ class ObjectBuilder : public Reference {
 public:
     ObjectBuilder(json_object* object, Ref<Reference> ref) : mObject(object), mRef(ref) {}
 
-    void BuildMember(const String& name, const Field& field) {
+    void BuildMember(const Ref<Field>& field) {
         Variant value;
-        field.Get(mRef.Get(), value);
-        json_object_object_add(mObject, name.ToUTF8().GetData(), BuildJson(value));
+        field->Get(mRef.Get(), value);
+        json_object_object_add(mObject, field->GetName().ToUTF8().GetData(), BuildJson(value));
     }
 
 private:
@@ -179,7 +179,7 @@ static json_object* BuildObject(const Ref<Reference>& ref) {
     Ref<Type> type = Types::GetType(ref->GetTypeId());
 
     Ref<ObjectBuilder> builder = new ObjectBuilder(object, ref);
-    type->EnumerateFields(Delegate<void(const String&, const Field&)>::Bind<&ObjectBuilder::BuildMember>(builder.Get()));
+    type->EnumerateFields(Delegate<void(const Ref<Field>&)>::Bind<&ObjectBuilder::BuildMember>(builder.Get()));
 
     json_object_object_add(object, "$Type", json_object_new_string(String(ref->GetTypeName()).ToUTF8().GetData()));
 

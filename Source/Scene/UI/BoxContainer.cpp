@@ -99,6 +99,7 @@ void BoxContainer::HandleEvent(const Event& event) {
         const Vector2& mousePosition = Input::GetMousePosition();
         if (event.Type == EventType::MouseButtonDown && Rectangle::Contains(GetGlobalRectangle(), mousePosition)) {
             event.Consume();
+            LoseFocus();
         }
 
         if (IsSplitter()) { 

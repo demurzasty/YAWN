@@ -98,6 +98,8 @@ set (SRC
 	"Source/Scene/UI/Container.cpp"
 	"Source/Scene/UI/Control.cpp"
 	"Source/Scene/UI/EditProperty.cpp"
+	"Source/Scene/UI/GridContainer.cpp"
+	"Source/Scene/UI/Inspector.cpp"
 	"Source/Scene/UI/Label.cpp"
 	"Source/Scene/UI/MenuBar.cpp"
 	"Source/Scene/UI/MenuButton.cpp"

@@ -90,6 +90,8 @@
 #include "Scene/UI/Container.hpp"
 #include "Scene/UI/Control.hpp"
 #include "Scene/UI/EditProperty.hpp"
+#include "Scene/UI/GridContainer.hpp"
+#include "Scene/UI/Inspector.hpp"
 #include "Scene/UI/Label.hpp"
 #include "Scene/UI/MenuBar.hpp"
 #include "Scene/UI/MenuButton.hpp"
