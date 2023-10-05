@@ -131,6 +131,20 @@ void Initialize() {
                 section->SetName(L"Section");
                 section->SetMinimumSize(Vector2(100.0f, 250.0f));
                 section->SetText(L"Resources");
+
+                Ref<GridContainer> resourceContainer = new GridContainer();
+                resourceContainer->AddChild(new TextBox());
+                resourceContainer->AddChild(new TextBox());
+                resourceContainer->AddChild(new TextBox());
+                resourceContainer->AddChild(new TextBox());
+                resourceContainer->AddChild(new TextBox());
+                resourceContainer->AddChild(new TextBox());
+                resourceContainer->AddChild(new TextBox());
+                resourceContainer->AddChild(new TextBox());
+                resourceContainer->AddChild(new TextBox());
+                resourceContainer->AddChild(new TextBox());
+                section->AddChild(resourceContainer);
+
                 centerContainer->AddChild(section);
             }
 
