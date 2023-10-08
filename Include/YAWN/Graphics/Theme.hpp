@@ -78,8 +78,8 @@ namespace YAWN {
         Ref<Texture> mIconsTexture;
         Color4 mContainerColor = Color4(54, 54, 54);
         Color4 mButtonDefaultColor = Color4(54, 54, 54);
-        Color4 mButtonHoverColor = Color4(86, 86, 86);
-        Color4 mButtonActiveColor = Color4(42, 42, 42);
+        Color4 mButtonHoverColor = Color4(48, 48, 48);
+        Color4 mButtonActiveColor = Color4(40, 40, 40);
         Color4 mButtonTextColor = Color4(255, 255, 255);
         Color4 mSplitterColor = Color4(42, 42, 42);
         Color4 mActiveSplitterColor = Color4(64, 64, 64);

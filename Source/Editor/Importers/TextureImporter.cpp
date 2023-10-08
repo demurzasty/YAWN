@@ -25,7 +25,7 @@ void TextureImporter::Import(const Path& inputPath, const Path& outputPath, cons
     file.Write32(image->GetInfo().GetChannels());
     file.Write(image->GetData().GetData(), image->GetData().GetSizeInBytes());
 
-    Ref<Image> thumbnail = Image::Resize(image, 64, 64);
+    Ref<Image> thumbnail = Image::Resize(image, 128, 128);
 
     Path thumbnailPath = Path(L"Cache/Thumbnails") / outputPath.GetFilename();
 

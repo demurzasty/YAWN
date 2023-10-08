@@ -160,7 +160,7 @@ void BoxContainer::Draw() {
     Base::Draw();
 
     if (const Ref<Theme>& theme = GetTheme(); theme) {
-        DrawFillRect(GetGlobalRectangle(), theme->GetContainerColor());
+        // DrawFillRect(GetGlobalRectangle(), theme->GetContainerColor());
 
         if (IsSplitter()) {
             for (int i = 0; i < GetChildCount() - 1; ++i) {

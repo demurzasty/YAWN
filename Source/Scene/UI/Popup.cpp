@@ -19,6 +19,7 @@ void Popup::Draw() {
     Base::Draw();
 
     if (const Ref<Theme>& theme = GetTheme(); theme) {
+        DrawFillRect(GetGlobalRectangle(), theme->GetContainerColor());
         DrawRect(GetGlobalRectangle(), theme->GetFrameBorderColor());
     }
 }

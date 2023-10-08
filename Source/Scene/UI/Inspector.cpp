@@ -7,7 +7,8 @@ using namespace YAWN;
 
 Inspector::Inspector() {
     SetVertical(true);
-    SetPadding(16.0f);
+    SetPadding(8.0f);
+    SetMargin(0.0f);
 }
 
 void Inspector::SetEditedObject(const Ref<Reference>& object) {

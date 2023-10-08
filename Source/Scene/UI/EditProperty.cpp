@@ -7,8 +7,9 @@
 using namespace YAWN;
 
 EditProperty::EditProperty() {
-    SetMinimumSize(Vector2(16.0f, 64.0f));
+    SetMinimumSize(Vector2(16.0f, 72.0f));
     SetVertical(true);
+    SetPadding(8.0f);
 }
 
 void EditProperty::Enter() {
@@ -32,6 +33,13 @@ void EditProperty::Update(float timeStep) {
 
 void EditProperty::Draw() {
     Base::Draw();
+
+    if (const Ref<Theme> theme = GetTheme(); theme) {
+        Rectangle rect(GetGlobalPosition(), Vector2(4.0f, GetLocalSize().Y));
+        // DrawFillRect(rect, theme->GetFrameBorderColor());
+
+        // DrawRect(GetGlobalRectangle(), theme->GetFrameBorderColor());
+    }
 }
 
 void EditProperty::SetEditedObject(const Ref<Reference>& object) {

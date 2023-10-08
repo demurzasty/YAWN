@@ -5,9 +5,9 @@ using namespace YAWN;
 void Label::Update(float timeStep) {
     Base::Update(timeStep);
 
-    if (const Ref<Theme>& theme = GetTheme(); theme) {
-        SetMinimumSize(theme->GetDefaultFont()->GetTextSize(GetText(), GetFontSize()));
-    }
+    //if (const Ref<Theme>& theme = GetTheme(); theme) {
+    ////    SetMinimumSize(theme->GetDefaultFont()->GetTextSize(GetText(), GetFontSize()));
+    //}
 }
 
 void Label::Draw() {
@@ -27,9 +27,9 @@ void Label::Draw() {
 void Label::SetText(const String& text) {
     mText = text;
 
-    if (const Ref<Theme>& theme = GetTheme(); theme) {
-        SetMinimumSize(theme->GetDefaultFont()->GetTextSize(GetText(), GetFontSize()));
-    }
+    //if (const Ref<Theme>& theme = GetTheme(); theme) {
+    ////    SetMinimumSize(theme->GetDefaultFont()->GetTextSize(GetText(), GetFontSize()));
+    //}
 
     RequestRedraw();
 }

@@ -34,6 +34,7 @@ void Input::Release() {
 void Input::Refresh() {
     Memory::Copy(sLastKeyStates, sKeyStates, sizeof(sKeyStates));
     Memory::Copy(sLastMouseButtonStates, sMouseButtonStates, sizeof(sMouseButtonStates));
+    sMouseWheel = 0.0f;
 }
 
 bool Input::IsKeyDown(Key key) {

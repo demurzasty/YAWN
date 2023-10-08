@@ -1,4 +1,5 @@
 #include <YAWN/Scene/UI/GridContainer.hpp>
+#include <YAWN/Platform/Input.hpp>
 
 using namespace YAWN;
 
@@ -28,6 +29,8 @@ void GridContainer::Update(float timeStep) {
 
 void GridContainer::SetCellSize(const Vector2& cellSize) {
     mCellSize = cellSize;
+
+    RequestRedraw();
 }
 
 const Vector2& GridContainer::GetCellSize() const {
