@@ -18,6 +18,5 @@ namespace YAWN {
         static constexpr int Hash() {
             return Internal::TypeHash<typename RemoveConstReference<T>::Type>();
         }
-
     };
 }

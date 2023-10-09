@@ -227,7 +227,7 @@ WindowDriverGLFW::WindowDriverGLFW() {
 
     Ref<Image> icon = Image::FromMemory(IconPNG, 4);
 
-    GLFWimage image;
+    GLFWimage image = GLFWimage();
     image.pixels = icon->GetData().GetData();
     image.width = icon->GetInfo().GetWidth();
     image.height = icon->GetInfo().GetHeight();
