@@ -114,6 +114,7 @@ set (SRC
 	"Source/Scene/Camera3D.cpp"
 	"Source/Scene/FreeLookCamera3D.cpp"
 	"Source/Scene/Geometry3D.cpp"
+	"Source/Scene/Gizmo3D.cpp"
 	"Source/Scene/Node.cpp"
 	"Source/Scene/Node2D.cpp"
 	"Source/Scene/Node3D.cpp"

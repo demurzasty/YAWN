@@ -10,7 +10,7 @@ Ref<Theme> Theme::CreateDefault() {
     Ref<Theme> theme = new Theme();
     theme->SetDefaultFont(new Font(new Buffer(RobotoMediumFontData, sizeof(RobotoMediumFontData))));
 
-    Ref<Image> iconsImage = Image::FromMemory(ArrayView<const unsigned char>(IconsImageData, sizeof(IconsImageData)), 4);
+    Ref<Image> iconsImage = Image::FromMemory(ArrayView<const unsigned char>(IconsPNG, sizeof(IconsPNG)), 4);
 
     iconsImage = Image::Resize(iconsImage, iconsImage->GetInfo().GetWidth() / 2, iconsImage->GetInfo().GetHeight() / 2);
 

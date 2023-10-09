@@ -3,7 +3,10 @@
 #include <YAWN/Runtime/Settings.hpp>
 #include <YAWN/Platform/Input.hpp>
 #include <YAWN/Graphics/Renderer.hpp>
+#include <YAWN/Graphics/Image.hpp>
 #include <YAWN/Scene/Scene.hpp>
+
+#include "../../Graphics/BuiltIn/Icon.png.h"
 
 using namespace YAWN;
 
@@ -221,6 +224,63 @@ WindowDriverGLFW::WindowDriverGLFW() {
     glfwSetFramebufferSizeCallback(mWindow, &FramebufferSizeCallback);
     glfwSetScrollCallback(mWindow, &ScrollCallback);
     glfwSetCharCallback(mWindow, &TextInputCallback);
+
+    Ref<Image> icon = Image::FromMemory(IconPNG, 4);
+
+    GLFWimage image;
+    image.pixels = icon->GetData().GetData();
+    image.width = icon->GetInfo().GetWidth();
+    image.height = icon->GetInfo().GetHeight();
+    glfwSetWindowIcon(mWindow, 1, &image);
+
+#ifdef _WIN32
+    {
+        HWND hwnd = glfwGetWin32Window(mWindow);
+        HDC hdc = GetDC(hwnd);
+
+        HBRUSH blackBrush = CreateSolidBrush(RGB(0, 0, 0));
+
+        RECT rect;
+        GetClientRect(hwnd, &rect);
+        FillRect(hdc, &rect, blackBrush);
+
+        DeleteObject(blackBrush);
+
+        ArrayView<Color4> pixels((Color4*)image.pixels, image.width * image.height);
+        for (Color4& pixel : pixels) {
+            unsigned char r = pixel.R;
+            pixel.R = pixel.B;
+            pixel.B = r;
+
+            pixel = Color::Lerp(pixel, Color::Black, 1.0f - pixel.A / 255.0f);
+        }
+
+        HBITMAP hBitmap = (HBITMAP)CreateBitmap(image.width, image.height, 1, 32, pixels.GetData());
+        {
+            PAINTSTRUCT     ps;
+            HDC             hdc;
+            BITMAP          bitmap;
+            HDC             hdcMem;
+            HGDIOBJ         oldBitmap;
+
+            hdc = BeginPaint(hwnd, &ps);
+
+            hdcMem = CreateCompatibleDC(hdc);
+            oldBitmap = SelectObject(hdcMem, hBitmap);
+
+            GetObject(hBitmap, sizeof(bitmap), &bitmap);
+            BitBlt(hdc, rect.right / 2 - image.width / 2, rect.bottom / 2 - image.height / 2, bitmap.bmWidth, bitmap.bmHeight, hdcMem, 0, 0, SRCCOPY);
+
+            SelectObject(hdcMem, oldBitmap);
+            DeleteDC(hdcMem);
+
+            EndPaint(hwnd, &ps);
+        }
+        DeleteObject(hBitmap);
+
+        ReleaseDC(hwnd, hdc);
+    }
+#endif
 
     glfwMakeContextCurrent(mWindow);
 

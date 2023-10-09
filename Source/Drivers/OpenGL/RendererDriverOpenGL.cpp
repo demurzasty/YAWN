@@ -531,7 +531,7 @@ void RendererDriverOpenGL::Render() {
     YAWN_GL_CHECK(glDisable(GL_SCISSOR_TEST));
 
     YAWN_GL_CHECK(glEnable(GL_DEPTH_TEST));
-    YAWN_GL_CHECK(glEnable(GL_CULL_FACE));
+    YAWN_GL_CHECK(glDisable(GL_CULL_FACE));
     YAWN_GL_CHECK(glDisable(GL_BLEND));
 
     for (int viewportId = 0; viewportId < mViewportPool.GetSize(); ++viewportId) {

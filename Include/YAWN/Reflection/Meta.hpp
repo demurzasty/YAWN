@@ -8,9 +8,7 @@ namespace YAWN {
     class Meta {
     public:
         Meta(const Ref<Type>& type) : mType(type) {
-            type->SetName(T::TypeName);
-            type->SetBase(TypeID::Hash<T::Base>());
-            type->SetId(TypeID::Hash<T>());
+            YAWN_ASSERT(type);
         }
 
         void SetConstructable() {

@@ -32,4 +32,10 @@ void Types::EnumerateTypesOfBase(int base, const Delegate<void(const Ref<Type>&)
     }
 }
 
+Ref<Type> Types::GetOrAddType(int id) {
+    if (Ref<Type> type = GetType(id); type) {
+        return type;
+    }
 
+    return sTypes.Add(id, new Type());
+}

@@ -57,8 +57,8 @@ Image::~Image() {
     Memory::Deallocate(mData);
 }
 
-ArrayView<const unsigned char> Image::GetData() const {
-    return ArrayView<const unsigned char>(mData, mInfo.GetDataSize());
+ArrayView<unsigned char> Image::GetData() const {
+    return ArrayView<unsigned char>(mData, mInfo.GetDataSize());
 }
 
 const ImageInfo& Image::GetInfo() const {

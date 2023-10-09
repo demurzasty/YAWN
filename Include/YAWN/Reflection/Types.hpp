@@ -14,11 +14,11 @@ namespace YAWN {
         static Meta<T> Reflect() {
             constexpr int hash = TypeID::Hash<T>();
 
-            if (Ref<Type> type = GetType(hash); type) {
-                return Meta<T>(type);
-            }
-
-            return Meta<T>(sTypes.Add(hash, new Type()));
+            Ref<Type> type = GetOrAddType(hash);
+            type->SetName(T::TypeName);
+            type->SetBase(TypeID::Hash<typename T::Base>());
+            type->SetId(hash);
+            return Meta<T>(type);
         }
 
         template<typename T>
@@ -48,6 +48,8 @@ namespace YAWN {
         static void EnumerateTypesOfBase(int base, const Delegate<void(const Ref<Type>&)>& delegate);
 
     private:
+        static Ref<Type> GetOrAddType(int id);
+
         static Map<int, Ref<Type>> sTypes;
     };
 }

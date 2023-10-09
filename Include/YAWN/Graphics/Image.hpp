@@ -21,7 +21,7 @@ namespace YAWN {
 
         ~Image();
 
-        ArrayView<const unsigned char> GetData() const;
+        ArrayView<unsigned char> GetData() const;
 
         const ImageInfo& GetInfo() const;
 
