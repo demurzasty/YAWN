@@ -284,7 +284,7 @@ WindowDriverGLFW::WindowDriverGLFW() {
 
     glfwMakeContextCurrent(mWindow);
 
-    glfwSwapInterval(0);
+    glfwSwapInterval(1);
 
     glewInit();
 }
