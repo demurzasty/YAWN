@@ -37,9 +37,9 @@ namespace YAWN {
 
         constexpr bool operator!=(const TypeId& typeId) const noexcept { return typeId.mInternalId != mInternalId; }
 
-        constexpr bool operator<(const TypeId& typeId) const noexcept { return typeId.mInternalId < mInternalId; }
+        constexpr bool operator<(const TypeId& typeId) const noexcept { return mInternalId < typeId.mInternalId; }
 
-        constexpr bool operator>(const TypeId& typeId) const noexcept { return typeId.mInternalId > mInternalId; }
+        constexpr bool operator>(const TypeId& typeId) const noexcept { return mInternalId > typeId.mInternalId; }
 
         constexpr bool IsValid() const noexcept { return mInternalId; }
 

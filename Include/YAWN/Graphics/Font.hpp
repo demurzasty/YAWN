@@ -33,7 +33,7 @@ namespace YAWN {
 
         Vector2 GetTextSize(const String& text, int size) const;
 
-        int GetTextureId() const;
+        OID GetTextureId() const;
 
     private:
         Rectangle Pack(const Vector2& size) const;
@@ -42,7 +42,7 @@ namespace YAWN {
         struct InternalData;
 
     private:
-        const int mId;
+        const OID mId;
         Ref<Buffer> mData;
         mutable InternalData* mInternalData;
         mutable Array<Color4> mPixels;

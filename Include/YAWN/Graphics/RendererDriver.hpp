@@ -48,105 +48,105 @@ namespace YAWN {
         ///////// Viewport ////////
         ///////////////////////////
 
-        virtual int CreateViewport(int width, int height, bool directToScreen);
+        virtual OID CreateViewport(int width, int height, bool directToScreen);
 
-        virtual void DestroyViewport(int id);
+        virtual void DestroyViewport(OID id);
 
-        virtual bool IsViewportValid(int id);
+        virtual bool IsViewportValid(OID id);
 
-        virtual void SetViewportSize(int id, int width, int height) = 0;
+        virtual void SetViewportSize(OID id, int width, int height) = 0;
 
-        virtual int GetViewportColorTexture(int id) const = 0;
+        virtual OID GetViewportColorTexture(OID id) const = 0;
 
         ///////////////////////////
         ///////// Texture /////////
         ///////////////////////////
 
-        virtual int CreateTexture(int width, int height, TextureFormat format, TextureFilter filter, TextureWrapping wrapping, int mipmapCount);
+        virtual OID CreateTexture(int width, int height, TextureFormat format, TextureFilter filter, TextureWrapping wrapping, int mipmapCount);
 
-        virtual void DestroyTexture(int id);
+        virtual void DestroyTexture(OID id);
 
-        virtual bool IsTextureValid(int id);
+        virtual bool IsTextureValid(OID id);
 
-        virtual void SetTextureData(int id, int mipmap, const void* data) = 0;
+        virtual void SetTextureData(OID id, int mipmap, const void* data) = 0;
 
-        virtual Vector2 GetTextureSize(int id) const = 0;
+        virtual Vector2 GetTextureSize(OID id) const = 0;
 
-        virtual int GetWhiteTexture() = 0;
+        virtual OID GetWhiteTexture() = 0;
 
         ///////////////////////////
         ///////// Material ////////
         ///////////////////////////
 
-        virtual int CreateMaterial();
+        virtual OID CreateMaterial();
 
-        virtual void DestroyMaterial(int id);
+        virtual void DestroyMaterial(OID id);
 
-        virtual bool IsMaterialValid(int id);
+        virtual bool IsMaterialValid(OID id);
 
-        virtual void SetMaterialBaseColor(int id, const Color4& color) = 0;
+        virtual void SetMaterialBaseColor(OID id, const Color4& color) = 0;
 
-        virtual void SetMaterialRoughness(int id, float roughness) = 0;
+        virtual void SetMaterialRoughness(OID id, float roughness) = 0;
 
-        virtual void SetMaterialMetallic(int id, float metallic) = 0;
+        virtual void SetMaterialMetallic(OID id, float metallic) = 0;
 
-        virtual void SetMaterialOcclusionStrength(int id, float strength) = 0;
+        virtual void SetMaterialOcclusionStrength(OID id, float strength) = 0;
 
-        virtual void SetMaterialAlbedoTexture(int id, int textureId) = 0;
+        virtual void SetMaterialAlbedoTexture(OID id, OID textureId) = 0;
 
-        virtual void SetMaterialNormalTexture(int id, int textureId) = 0;
+        virtual void SetMaterialNormalTexture(OID id, OID textureId) = 0;
 
-        virtual void SetMaterialMetallicRoughnessTexture(int id, int textureId) = 0;
+        virtual void SetMaterialMetallicRoughnessTexture(OID id, OID textureId) = 0;
 
-        virtual void SetMaterialEmissiveTexture(int id, int textureId) = 0;
+        virtual void SetMaterialEmissiveTexture(OID id, OID textureId) = 0;
 
-        virtual void SetMaterialOcclusionTexture(int id, int textureId) = 0;
+        virtual void SetMaterialOcclusionTexture(OID id, OID textureId) = 0;
 
         ///////////////////////////
         ////////// Mesh ///////////
         ///////////////////////////
 
-        virtual int CreateMesh(int vertexCount, int indexCount);
+        virtual OID CreateMesh(int vertexCount, int indexCount);
 
-        virtual void DestroyMesh(int id);
+        virtual void DestroyMesh(OID id);
 
-        virtual bool IsMeshValid(int id);
+        virtual bool IsMeshValid(OID id);
 
-        virtual void SetMeshData(int id, const ArrayView<const Vertex3D>& vertices, const ArrayView<const int>& indices) = 0;
+        virtual void SetMeshData(OID id, const ArrayView<const Vertex3D>& vertices, const ArrayView<const int>& indices) = 0;
 
         ///////////////////////////
         ///////// Instance ////////
         ///////////////////////////
 
-        virtual int CreateInstance();
+        virtual OID CreateInstance();
 
-        virtual void DestroyInstance(int id);
+        virtual void DestroyInstance(OID id);
 
-        virtual bool IsInstanceValid(int id);
+        virtual bool IsInstanceValid(OID id);
 
-        virtual void SetInstanceTransform(int id, const Matrix4& transform) = 0;
+        virtual void SetInstanceTransform(OID id, const Matrix4& transform) = 0;
 
-        virtual void SetInstanceMaterial(int id, int materialId) = 0;
+        virtual void SetInstanceMaterial(OID id, OID materialId) = 0;
 
-        virtual void SetInstanceMesh(int id, int meshId) = 0;
+        virtual void SetInstanceMesh(OID id, OID meshId) = 0;
 
-        virtual void SetInstanceViewport(int id, int viewportId) = 0;
+        virtual void SetInstanceViewport(OID id, OID viewportId) = 0;
 
         ///////////////////////////
         /// Canvas (deprecated) ///
         ///////////////////////////
 
-        virtual int CreateCanvasItem();
+        virtual OID CreateCanvasItem();
 
-        virtual void DestroyCanvasItem(int id);
+        virtual void DestroyCanvasItem(OID id);
 
-        virtual bool IsCanvasItemValid(int id);
+        virtual bool IsCanvasItemValid(OID id);
 
-        virtual void SetCanvasItemData(int id, const ArrayView<const Vertex2D>& vertices, const ArrayView<const int>& indices) = 0;
+        virtual void SetCanvasItemData(OID id, const ArrayView<const Vertex2D>& vertices, const ArrayView<const int>& indices) = 0;
 
-        virtual void SetCanvasItemTexture(int id, int textureId) = 0;
+        virtual void SetCanvasItemTexture(OID id, OID textureId) = 0;
 
-        virtual void DrawCanvasItem(int id, int vertexOffset, int indexOffset, int indexCount) = 0;
+        virtual void DrawCanvasItem(OID id, int vertexOffset, int indexOffset, int indexCount) = 0;
 
         virtual void Render() = 0;
 
@@ -155,7 +155,7 @@ namespace YAWN {
 
         virtual void LLSetIndexBufferData2D(const ArrayView<const unsigned short>& indices) = 0;
 
-        virtual void LLSetTexture2D(int textureId) = 0;
+        virtual void LLSetTexture2D(OID textureId) = 0;
 
         virtual void LLSetClipRect(const Rectangle& clipRect) = 0;
 
@@ -167,13 +167,13 @@ namespace YAWN {
 
     protected:
         struct GPUTextureData {
-            int SamplerId = Pool::None;
+            OID SamplerId = Pool::None;
         };
 
         struct GPUEnvironmentData {
-            int RadianceSamplerId = Pool::None;
-            int IrradianceSamplerId = Pool::None;
-            int PrefilterSamplerId = Pool::None;
+            OID RadianceSamplerId = Pool::None;
+            OID IrradianceSamplerId = Pool::None;
+            OID PrefilterSamplerId = Pool::None;
         };
 
         struct GPUGlobalData {
@@ -184,11 +184,11 @@ namespace YAWN {
             Vector4 CameraPosition = Vector4::Zero;
             Vector4 CameraFrustum = Vector4::Zero;
             Vector2 FramebufferSize = Vector2::Zero;
-            int CameraEnvironmentId = Pool::None;
+            OID CameraEnvironmentId = Pool::None;
             int InstanceCount = 0;
             int LightCount = 0;
-            int TextureId = 0;
-            int CurrentViewportId = Pool::None;
+            OID TextureId = Pool::None;
+            OID CurrentViewportId = Pool::None;
             float Time = 0.0f;
         };
 
@@ -206,12 +206,12 @@ namespace YAWN {
             float Roughness = 0.8f;
             float Metallic = 0.0f;
             float OcclusionStrength = 1.0f;
-            int AlbedoTextureId = Pool::None;
+            OID AlbedoTextureId = Pool::None;
 
-            int NormalTextureId = Pool::None;
-            int MetallicRoughnessTextureId = Pool::None;
-            int EmissiveTextureId = Pool::None;
-            int OcclusionTextureId = Pool::None;
+            OID NormalTextureId = Pool::None;
+            OID MetallicRoughnessTextureId = Pool::None;
+            OID EmissiveTextureId = Pool::None;
+            OID OcclusionTextureId = Pool::None;
         };
 
         struct GPULightData {
@@ -222,9 +222,9 @@ namespace YAWN {
         struct GPUInstanceData {
             Matrix4 Transform = Matrix4::Identity;
             int Visible = 1;
-            int MeshId = Pool::None;
-            int MaterialId = Pool::None;
-            int ViewportId = Pool::None;
+            OID MeshId = Pool::None;
+            OID MaterialId = Pool::None;
+            OID ViewportId = Pool::None;
         };
 
         struct GPUCanvasItemData {

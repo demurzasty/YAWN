@@ -57,7 +57,7 @@ const Ref<Control> Viewport::GetFocus() const {
 	return mFocus;
 }
 
-int Viewport::GetId() const {
+OID Viewport::GetId() const {
 	return mViewportId;
 }
 

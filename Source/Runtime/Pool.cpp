@@ -2,31 +2,32 @@
 
 using namespace YAWN;
 
-int Pool::Acquire() {
+OID Pool::Acquire() {
     if (mDisposed == None) {
-        return mPool.Add(mPool.GetSize());
+        return mPool.Add(OID(mPool.GetSize(), 0));
     }
 
-    int recycled = mDisposed;
-    mDisposed = mPool[mDisposed];
-    return mPool[recycled] = recycled;
+    OID recycled = mDisposed;
+    mDisposed = mPool[mDisposed.GetIndex()];
+    return mPool[recycled.GetIndex()] = recycled.Bump();
 }
 
-void Pool::Dispose(int id) {
+void Pool::Dispose(OID id) {
     YAWN_ASSERT(IsValid(id));
 
-    mPool[id] = mDisposed;
+    mPool[id.GetIndex()] = mDisposed;
     mDisposed = id;
 }
 
-bool Pool::IsValid(int id) const {
-    return id >= 0 && id < mPool.GetSize() && mPool[id] == id;
+bool Pool::IsValid(OID id) const {
+    int index = id.GetIndex();
+    return index >= 0 && index < mPool.GetSize() && mPool[index] == id;
 }
 
 int Pool::GetSize() const {
     return mPool.GetSize();
 }
 
-const int* Pool::GetData() const {
+const OID* Pool::GetData() const {
     return mPool.GetData();
 }

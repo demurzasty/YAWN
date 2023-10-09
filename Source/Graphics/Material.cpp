@@ -114,6 +114,6 @@ const Ref<Texture>& Material::GetOcclusionTexture() const {
     return mOcclusionTexture;
 }
 
-int Material::GetId() const {
+OID Material::GetId() const {
     return mId;
 }

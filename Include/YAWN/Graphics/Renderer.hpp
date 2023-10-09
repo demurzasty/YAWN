@@ -18,85 +18,85 @@ namespace YAWN {
 
         static void SetCameraTransform(const Matrix4& transform);
 
-        static int CreateViewport(int width, int height, bool directToScreen);
+        static OID CreateViewport(int width, int height, bool directToScreen);
 
-        static void DestroyViewport(int id);
+        static void DestroyViewport(OID id);
 
-        static bool IsViewportValid(int id);
+        static bool IsViewportValid(OID id);
 
-        static void SetViewportSize(int id, int width, int height);
+        static void SetViewportSize(OID id, int width, int height);
 
-        static int GetViewportColorTexture(int id);
+        static OID GetViewportColorTexture(OID id);
 
-        static int CreateTexture(int width, int height, TextureFormat format, TextureFilter filter, TextureWrapping wrapping, int mipmapCount);
+        static OID CreateTexture(int width, int height, TextureFormat format, TextureFilter filter, TextureWrapping wrapping, int mipmapCount);
 
-        static void DestroyTexture(int id);
+        static void DestroyTexture(OID id);
 
-        static bool IsTextureValid(int id);
+        static bool IsTextureValid(OID id);
 
-        static void SetTextureData(int id, int mipmap, const void* data);
+        static void SetTextureData(OID id, int mipmap, const void* data);
 
-        static Vector2 GetTextureSize(int id);
+        static Vector2 GetTextureSize(OID id);
 
-        static int GetWhiteTexture();
+        static OID GetWhiteTexture();
 
-        static int CreateMaterial();
+        static OID CreateMaterial();
 
-        static void DestroyMaterial(int id);
+        static void DestroyMaterial(OID id);
 
-        static bool IsMaterialValid(int id);
+        static bool IsMaterialValid(OID id);
 
-        static void SetMaterialBaseColor(int id, const Color4& color);
+        static void SetMaterialBaseColor(OID id, const Color4& color);
 
-        static void SetMaterialRoughness(int id, float roughness);
+        static void SetMaterialRoughness(OID id, float roughness);
 
-        static void SetMaterialMetallic(int id, float metallic);
+        static void SetMaterialMetallic(OID id, float metallic);
 
-        static void SetMaterialOcclusionStrength(int id, float strength);
+        static void SetMaterialOcclusionStrength(OID id, float strength);
 
-        static void SetMaterialAlbedoTexture(int id, int textureId);
+        static void SetMaterialAlbedoTexture(OID id, OID textureId);
 
-        static void SetMaterialNormalTexture(int id, int textureId);
+        static void SetMaterialNormalTexture(OID id, OID textureId);
 
-        static void SetMaterialMetallicRoughnessTexture(int id, int textureId);
+        static void SetMaterialMetallicRoughnessTexture(OID id, OID textureId);
 
-        static void SetMaterialEmissiveTexture(int id, int textureId);
+        static void SetMaterialEmissiveTexture(OID id, OID textureId);
 
-        static void SetMaterialOcclusionTexture(int id, int textureId);
+        static void SetMaterialOcclusionTexture(OID id, OID textureId);
 
-        static int CreateMesh(int vertexCount, int indexCount);
+        static OID CreateMesh(int vertexCount, int indexCount);
 
-        static void DestroyMesh(int id);
+        static void DestroyMesh(OID id);
 
-        static bool IsMeshValid(int id);
+        static bool IsMeshValid(OID id);
 
-        static void SetMeshData(int id, const ArrayView<const Vertex3D>& vertices, const ArrayView<const int>& indices);
+        static void SetMeshData(OID id, const ArrayView<const Vertex3D>& vertices, const ArrayView<const int>& indices);
 
-        static int CreateInstance();
+        static OID CreateInstance();
 
-        static void DestroyInstance(int id);
+        static void DestroyInstance(OID id);
 
-        static bool IsInstanceValid(int id);
+        static bool IsInstanceValid(OID id);
 
-        static void SetInstanceTransform(int id, const Matrix4& transform);
+        static void SetInstanceTransform(OID id, const Matrix4& transform);
 
-        static void SetInstanceMaterial(int id, int materialId);
+        static void SetInstanceMaterial(OID id, OID materialId);
 
-        static void SetInstanceMesh(int id, int meshId);
+        static void SetInstanceMesh(OID id, OID meshId);
 
-        static void SetInstanceViewport(int id, int viewportId);
+        static void SetInstanceViewport(OID id, OID viewportId);
 
-        static int CreateCanvasItem();
+        static OID CreateCanvasItem();
 
-        static void DestroyCanvasItem(int id);
+        static void DestroyCanvasItem(OID id);
 
-        static bool IsCanvasItemValid(int id);
+        static bool IsCanvasItemValid(OID id);
 
-        static void SetCanvasItemData(int id, const ArrayView<const Vertex2D>& vertices, const ArrayView<const int>& indices);
+        static void SetCanvasItemData(OID id, const ArrayView<const Vertex2D>& vertices, const ArrayView<const int>& indices);
 
-        static void SetCanvasItemTexture(int id, int textureId);
+        static void SetCanvasItemTexture(OID id, OID textureId);
 
-        static void DrawCanvasItem(int id, int vertexOffset, int indexOffset, int indexCount);
+        static void DrawCanvasItem(OID id, int vertexOffset, int indexOffset, int indexCount);
 
         static void Render();
 
@@ -105,7 +105,7 @@ namespace YAWN {
 
         static void LLSetIndexBufferData2D(const ArrayView<const unsigned short>& indices);
 
-        static void LLSetTexture2D(int textureId);
+        static void LLSetTexture2D(OID textureId);
 
         static void LLSetClipRect(const Rectangle& clipRect);
 

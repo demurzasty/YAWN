@@ -29,73 +29,73 @@ namespace YAWN {
 
         void SetCameraTransform(const Matrix4& transform) override;
 
-        int CreateViewport(int width, int height, bool directToScreen) override;
+        OID CreateViewport(int width, int height, bool directToScreen) override;
 
-        void DestroyViewport(int id) override;
+        void DestroyViewport(OID id) override;
 
-        void SetViewportSize(int id, int width, int height) override;
+        void SetViewportSize(OID id, int width, int height) override;
 
-        int GetViewportColorTexture(int id) const override;
+        OID GetViewportColorTexture(OID id) const override;
 
-        int CreateTexture(int width, int height, TextureFormat format, TextureFilter filter, TextureWrapping wrapping, int mipmapCount) override;
+        OID CreateTexture(int width, int height, TextureFormat format, TextureFilter filter, TextureWrapping wrapping, int mipmapCount) override;
 
-        void DestroyTexture(int id) override;
+        void DestroyTexture(OID id) override;
 
-        void SetTextureData(int id, int mipmap, const void* data) override;
+        void SetTextureData(OID id, int mipmap, const void* data) override;
 
-        Vector2 GetTextureSize(int id) const override;
+        Vector2 GetTextureSize(OID id) const override;
 
-        int GetWhiteTexture() override;
+        OID GetWhiteTexture() override;
 
-        int CreateMaterial() override;
+        OID CreateMaterial() override;
 
-        void DestroyMaterial(int id) override;
+        void DestroyMaterial(OID id) override;
 
-        void SetMaterialBaseColor(int id, const Color4& color) override;
+        void SetMaterialBaseColor(OID id, const Color4& color) override;
 
-        void SetMaterialRoughness(int id, float roughness) override;
+        void SetMaterialRoughness(OID id, float roughness) override;
 
-        void SetMaterialMetallic(int id, float metallic) override;
+        void SetMaterialMetallic(OID id, float metallic) override;
 
-        void SetMaterialOcclusionStrength(int id, float strength) override;
+        void SetMaterialOcclusionStrength(OID id, float strength) override;
 
-        void SetMaterialAlbedoTexture(int id, int textureId) override;
+        void SetMaterialAlbedoTexture(OID id, OID textureId) override;
 
-        void SetMaterialNormalTexture(int id, int textureId) override;
+        void SetMaterialNormalTexture(OID id, OID textureId) override;
 
-        void SetMaterialMetallicRoughnessTexture(int id, int textureId) override;
+        void SetMaterialMetallicRoughnessTexture(OID id, OID textureId) override;
 
-        void SetMaterialEmissiveTexture(int id, int textureId) override;
+        void SetMaterialEmissiveTexture(OID id, OID textureId) override;
 
-        void SetMaterialOcclusionTexture(int id, int textureId) override;
+        void SetMaterialOcclusionTexture(OID id, OID textureId) override;
 
-        int CreateMesh(int vertexCount, int indexCount) override;
+        OID CreateMesh(int vertexCount, int indexCount) override;
 
-        void DestroyMesh(int id) override;
+        void DestroyMesh(OID id) override;
 
-        void SetMeshData(int id, const ArrayView<const Vertex3D>& vertices, const ArrayView<const int>& indices) override;
+        void SetMeshData(OID id, const ArrayView<const Vertex3D>& vertices, const ArrayView<const int>& indices) override;
 
-        int CreateInstance() override;
+        OID CreateInstance() override;
 
-        void DestroyInstance(int id) override;
+        void DestroyInstance(OID id) override;
 
-        void SetInstanceTransform(int id, const Matrix4& transform) override;
+        void SetInstanceTransform(OID id, const Matrix4& transform) override;
 
-        void SetInstanceMaterial(int id, int materialId) override;
+        void SetInstanceMaterial(OID id, OID materialId) override;
 
-        void SetInstanceMesh(int id, int meshId) override;
+        void SetInstanceMesh(OID id, OID meshId) override;
 
-        void SetInstanceViewport(int id, int viewportId) override;
+        void SetInstanceViewport(OID id, OID viewportId) override;
 
-        int CreateCanvasItem() override;
+        OID CreateCanvasItem() override;
 
-        void DestroyCanvasItem(int id) override;
+        void DestroyCanvasItem(OID id) override;
 
-        void SetCanvasItemData(int id, const ArrayView<const Vertex2D>& vertices, const ArrayView<const int>& indices) override;
+        void SetCanvasItemData(OID id, const ArrayView<const Vertex2D>& vertices, const ArrayView<const int>& indices) override;
 
-        void SetCanvasItemTexture(int id, int textureId) override;
+        void SetCanvasItemTexture(OID id, OID textureId) override;
 
-        void DrawCanvasItem(int id, int vertexOffset, int indexOffset, int indexCount) override;
+        void DrawCanvasItem(OID id, int vertexOffset, int indexOffset, int indexCount) override;
 
         void Render() override;
 
@@ -104,7 +104,7 @@ namespace YAWN {
 
         void LLSetIndexBufferData2D(const ArrayView<const unsigned short>& indices) override;
 
-        void LLSetTexture2D(int textureId) override;
+        void LLSetTexture2D(OID textureId) override;
 
         void LLSetClipRect(const Rectangle& clipRect) override;
 
@@ -132,8 +132,8 @@ namespace YAWN {
 
         struct GPUViewportData {
             GLuint FramebufferId = 0;
-            int ColorTextureId = 0;
-            int DepthTextureId = 0;
+            OID ColorTextureId;
+            OID DepthTextureId;
             int Width = 0;
             int Height = 0;
         };
@@ -183,6 +183,6 @@ namespace YAWN {
 
         Array<CanvasDrawCommand> mCanvasDrawCommands;
 
-        int mWhiteTextureId = Pool::None;
+        OID mWhiteTextureId = Pool::None;
     };
 }

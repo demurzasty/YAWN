@@ -79,6 +79,6 @@ void Mesh::SetData(const ArrayView<const Vertex3D>& vertices, const ArrayView<co
     Renderer::SetMeshData(mId, vertices, indices);
 }
 
-int Mesh::GetId() const {
+OID Mesh::GetId() const {
     return mId;
 }

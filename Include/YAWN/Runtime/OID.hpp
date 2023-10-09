@@ -5,9 +5,7 @@ namespace YAWN {
     public:
         constexpr OID() noexcept = default;
 
-        constexpr OID(int index, int version) noexcept : mIndex(index), mVersion(version) {}
-
-        constexpr OID(decltype(nullptr)) noexcept : mIndex(-1), mVersion(-1) {}
+        constexpr OID(int index, int version) noexcept : mData((index & 0xFFFFF) | ((version & 0xFFF) << 20)) {}
 
         constexpr OID(const OID&) noexcept = default;
 
@@ -17,22 +15,27 @@ namespace YAWN {
 
         constexpr OID& operator=(OID&&) noexcept = default;
 
-        constexpr bool operator==(decltype(nullptr)) const noexcept { return !IsValid(); }
+        constexpr bool operator==(const OID& oid) const noexcept { return oid.mData == mData; }
 
-        constexpr bool operator!=(decltype(nullptr)) const noexcept { return IsValid(); }
+        constexpr bool operator!=(const OID& oid) const noexcept { return oid.mData != mData; }
 
-        constexpr operator bool() const noexcept { return IsValid(); }
+        constexpr bool operator>(const OID& oid) const noexcept { return mData > oid.mData; }
 
-        constexpr bool IsValid() const noexcept { return mIndex >= 0 && mVersion >= 0; }
+        constexpr bool operator<(const OID& oid) const noexcept { return mData < oid.mData; }
 
-        constexpr int GetIndex() const noexcept { return mIndex; }
+        constexpr explicit operator bool() const noexcept { return IsValid(); }
 
-        constexpr int GetVersion() const noexcept { return mVersion; }
+        constexpr int operator*() const noexcept { return GetIndex(); }
 
-        constexpr OID Bump() const noexcept { return OID(mIndex, mVersion + 1); }
+        constexpr bool IsValid() const noexcept { return mData != -1; }
+
+        constexpr int GetIndex() const noexcept { return mData & 0xFFFFF; }
+
+        constexpr int GetVersion() const noexcept { return (mData >> 20) & 0xFFF; }
+
+        constexpr OID Bump() const noexcept { return OID(GetIndex(), GetVersion() + 1); }
 
     private:
-        int mIndex = -1;
-        int mVersion = -1;
+        int mData = -1;
     };
 }

@@ -4,6 +4,7 @@
 #include "../Core/TypeTraits.hpp"
 
 namespace YAWN {
+    /*
     template<typename T>
     class Arena : protected Pool {
     public:
@@ -72,4 +73,5 @@ namespace YAWN {
     private:
         Array<Storage<T>> mData;
     };
+    */
 }

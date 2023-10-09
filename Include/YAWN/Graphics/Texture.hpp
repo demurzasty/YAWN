@@ -38,9 +38,9 @@ namespace YAWN {
 
         Vector2 GetSize() const;
 
-        int GetId() const;
+        OID GetId() const;
 
     private:
-        const int mId;
+        const OID mId;
     };
 }

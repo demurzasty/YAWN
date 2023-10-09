@@ -233,7 +233,7 @@ void Node::OnEnter() {
 void Node::OnReparent() {
 }
 
-void Node::DrawTexture(int textureId, const Rectangle& destination, const Rectangle& source, const Color4& color, bool flipY) {
+void Node::DrawTexture(OID textureId, const Rectangle& destination, const Rectangle& source, const Color4& color, bool flipY) {
     if (color.A == 0) {
         return;
     }
@@ -250,12 +250,10 @@ void Node::DrawTexture(int textureId, const Rectangle& destination, const Rectan
         Vertex2D(position + Vector2(size.X, 0.0f), Vector2(source.GetEnd().X / textureSize.X, source.Position.Y / textureSize.Y), color),
     };
 
-
     vertices[0].Position += Vector2(0.25f);
     vertices[1].Position += Vector2(0.25f);
     vertices[2].Position += Vector2(0.25f);
     vertices[3].Position += Vector2(0.25f);
-
 
     if (flipY) {
         vertices[0].UV.Y = 1.0f - vertices[0].UV.Y;
@@ -332,7 +330,7 @@ void Node::DrawText(const Ref<Font>& font, int size, const Vector2& destination,
     font->Validate();
 }
 
-void Node::AddDrawCommand(Topology topology, int textureId, const ArrayView<const Vertex2D>& vertices, const ArrayView<const unsigned short>& indices) {
+void Node::AddDrawCommand(Topology topology, OID textureId, const ArrayView<const Vertex2D>& vertices, const ArrayView<const unsigned short>& indices) {
     DrawCommand command;
     command.Topology = topology;
     command.TextureId = textureId;

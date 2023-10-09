@@ -18,9 +18,9 @@ namespace YAWN {
 
         void SetData(const ArrayView<const Vertex3D>& vertices, const ArrayView<const int>& indices);
 
-        int GetId() const;
+        OID GetId() const;
 
     private:
-        const int mId;
+        const OID mId;
     };
 }

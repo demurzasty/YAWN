@@ -32,7 +32,7 @@ namespace YAWN {
         virtual void OnTransformUpdate() override;
 
     private:
-        int mId = Pool::None;
+        OID mId;
         Ref<Mesh> mMesh;
         Ref<Material> mMaterial;
     };

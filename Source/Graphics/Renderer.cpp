@@ -45,7 +45,7 @@ void Renderer::SetCameraTransform(const Matrix4& transform) {
     sDriver->SetCameraTransform(transform);
 }
 
-int Renderer::CreateViewport(int width, int height, bool directToScreen) {
+OID Renderer::CreateViewport(int width, int height, bool directToScreen) {
     ExclusiveLock lock(sMutex);
 
     YAWN_ASSERT(sDriver);
@@ -53,7 +53,7 @@ int Renderer::CreateViewport(int width, int height, bool directToScreen) {
     return sDriver->CreateViewport(width, height, directToScreen);
 }
 
-void Renderer::DestroyViewport(int id) {
+void Renderer::DestroyViewport(OID id) {
     ExclusiveLock lock(sMutex);
 
     YAWN_ASSERT(sDriver);
@@ -62,7 +62,7 @@ void Renderer::DestroyViewport(int id) {
     sDriver->DestroyViewport(id);
 }
 
-bool Renderer::IsViewportValid(int id) {
+bool Renderer::IsViewportValid(OID id) {
     ExclusiveLock lock(sMutex);
 
     YAWN_ASSERT(sDriver);
@@ -70,7 +70,7 @@ bool Renderer::IsViewportValid(int id) {
     return sDriver->IsViewportValid(id);
 }
 
-void Renderer::SetViewportSize(int id, int width, int height) {
+void Renderer::SetViewportSize(OID id, int width, int height) {
     ExclusiveLock lock(sMutex);
 
     YAWN_ASSERT(sDriver);
@@ -79,7 +79,7 @@ void Renderer::SetViewportSize(int id, int width, int height) {
     sDriver->SetViewportSize(id, width, height);
 }
 
-int Renderer::GetViewportColorTexture(int id) {
+OID Renderer::GetViewportColorTexture(OID id) {
     ExclusiveLock lock(sMutex);
 
     YAWN_ASSERT(sDriver);
@@ -88,7 +88,7 @@ int Renderer::GetViewportColorTexture(int id) {
     return sDriver->GetViewportColorTexture(id);
 }
 
-int Renderer::CreateTexture(int width, int height, TextureFormat format, TextureFilter filter, TextureWrapping wrapping, int mipmapCount) {
+OID Renderer::CreateTexture(int width, int height, TextureFormat format, TextureFilter filter, TextureWrapping wrapping, int mipmapCount) {
     ExclusiveLock lock(sMutex);
 
     YAWN_ASSERT(sDriver);
@@ -96,7 +96,7 @@ int Renderer::CreateTexture(int width, int height, TextureFormat format, Texture
     return sDriver->CreateTexture(width, height, format, filter, wrapping, mipmapCount);
 }
 
-void Renderer::DestroyTexture(int id) {
+void Renderer::DestroyTexture(OID id) {
     ExclusiveLock lock(sMutex);
 
     YAWN_ASSERT(sDriver);
@@ -104,7 +104,7 @@ void Renderer::DestroyTexture(int id) {
     sDriver->DestroyTexture(id);
 }
 
-bool Renderer::IsTextureValid(int id) {
+bool Renderer::IsTextureValid(OID id) {
     ExclusiveLock lock(sMutex);
 
     YAWN_ASSERT(sDriver);
@@ -112,7 +112,7 @@ bool Renderer::IsTextureValid(int id) {
     return sDriver->IsTextureValid(id);
 }
 
-void Renderer::SetTextureData(int id, int mipmap, const void* data) {
+void Renderer::SetTextureData(OID id, int mipmap, const void* data) {
     ExclusiveLock lock(sMutex);
 
     YAWN_ASSERT(sDriver);
@@ -121,7 +121,7 @@ void Renderer::SetTextureData(int id, int mipmap, const void* data) {
     sDriver->SetTextureData(id, mipmap, data);
 }
 
-Vector2 Renderer::GetTextureSize(int id) {
+Vector2 Renderer::GetTextureSize(OID id) {
     ExclusiveLock lock(sMutex);
 
     YAWN_ASSERT(sDriver);
@@ -130,7 +130,7 @@ Vector2 Renderer::GetTextureSize(int id) {
     return sDriver->GetTextureSize(id);
 }
 
-int Renderer::GetWhiteTexture() {
+OID Renderer::GetWhiteTexture() {
     ExclusiveLock lock(sMutex);
 
     YAWN_ASSERT(sDriver);
@@ -138,7 +138,7 @@ int Renderer::GetWhiteTexture() {
     return sDriver->GetWhiteTexture();
 }
 
-int Renderer::CreateMaterial() {
+OID Renderer::CreateMaterial() {
     ExclusiveLock lock(sMutex);
 
     YAWN_ASSERT(sDriver);
@@ -146,7 +146,7 @@ int Renderer::CreateMaterial() {
     return sDriver->CreateMaterial();
 }
 
-void Renderer::DestroyMaterial(int id) {
+void Renderer::DestroyMaterial(OID id) {
     ExclusiveLock lock(sMutex);
 
     YAWN_ASSERT(sDriver);
@@ -154,7 +154,7 @@ void Renderer::DestroyMaterial(int id) {
     sDriver->DestroyMaterial(id);
 }
 
-bool Renderer::IsMaterialValid(int id) {
+bool Renderer::IsMaterialValid(OID id) {
     ExclusiveLock lock(sMutex);
 
     YAWN_ASSERT(sDriver);
@@ -162,7 +162,7 @@ bool Renderer::IsMaterialValid(int id) {
     return sDriver->IsMaterialValid(id);
 }
 
-void Renderer::SetMaterialBaseColor(int id, const Color4& color) {
+void Renderer::SetMaterialBaseColor(OID id, const Color4& color) {
     ExclusiveLock lock(sMutex);
 
     YAWN_ASSERT(sDriver);
@@ -171,7 +171,7 @@ void Renderer::SetMaterialBaseColor(int id, const Color4& color) {
     sDriver->SetMaterialBaseColor(id, color);
 }
 
-void Renderer::SetMaterialRoughness(int id, float roughness) {
+void Renderer::SetMaterialRoughness(OID id, float roughness) {
     ExclusiveLock lock(sMutex);
 
     YAWN_ASSERT(sDriver);
@@ -180,7 +180,7 @@ void Renderer::SetMaterialRoughness(int id, float roughness) {
     sDriver->SetMaterialRoughness(id, roughness);
 }
 
-void Renderer::SetMaterialMetallic(int id, float metallic) {
+void Renderer::SetMaterialMetallic(OID id, float metallic) {
     ExclusiveLock lock(sMutex);
 
     YAWN_ASSERT(sDriver);
@@ -189,7 +189,7 @@ void Renderer::SetMaterialMetallic(int id, float metallic) {
     sDriver->SetMaterialMetallic(id, metallic);
 }
 
-void Renderer::SetMaterialOcclusionStrength(int id, float strength) {
+void Renderer::SetMaterialOcclusionStrength(OID id, float strength) {
     ExclusiveLock lock(sMutex);
 
     YAWN_ASSERT(sDriver);
@@ -198,7 +198,7 @@ void Renderer::SetMaterialOcclusionStrength(int id, float strength) {
     sDriver->SetMaterialOcclusionStrength(id, strength);
 }
 
-void Renderer::SetMaterialAlbedoTexture(int id, int textureId) {
+void Renderer::SetMaterialAlbedoTexture(OID id, OID textureId) {
     ExclusiveLock lock(sMutex);
 
     YAWN_ASSERT(sDriver);
@@ -207,7 +207,7 @@ void Renderer::SetMaterialAlbedoTexture(int id, int textureId) {
     sDriver->SetMaterialAlbedoTexture(id, textureId);
 }
 
-void Renderer::SetMaterialNormalTexture(int id, int textureId) {
+void Renderer::SetMaterialNormalTexture(OID id, OID textureId) {
     ExclusiveLock lock(sMutex);
 
     YAWN_ASSERT(sDriver);
@@ -216,7 +216,7 @@ void Renderer::SetMaterialNormalTexture(int id, int textureId) {
     sDriver->SetMaterialNormalTexture(id, textureId);
 }
 
-void Renderer::SetMaterialMetallicRoughnessTexture(int id, int textureId) {
+void Renderer::SetMaterialMetallicRoughnessTexture(OID id, OID textureId) {
     ExclusiveLock lock(sMutex);
 
     YAWN_ASSERT(sDriver);
@@ -225,7 +225,7 @@ void Renderer::SetMaterialMetallicRoughnessTexture(int id, int textureId) {
     sDriver->SetMaterialMetallicRoughnessTexture(id, textureId);
 }
 
-void Renderer::SetMaterialEmissiveTexture(int id, int textureId) {
+void Renderer::SetMaterialEmissiveTexture(OID id, OID textureId) {
     ExclusiveLock lock(sMutex);
 
     YAWN_ASSERT(sDriver);
@@ -234,7 +234,7 @@ void Renderer::SetMaterialEmissiveTexture(int id, int textureId) {
     sDriver->SetMaterialEmissiveTexture(id, textureId);
 }
 
-void Renderer::SetMaterialOcclusionTexture(int id, int textureId) {
+void Renderer::SetMaterialOcclusionTexture(OID id, OID textureId) {
     ExclusiveLock lock(sMutex);
 
     YAWN_ASSERT(sDriver);
@@ -243,7 +243,7 @@ void Renderer::SetMaterialOcclusionTexture(int id, int textureId) {
     sDriver->SetMaterialOcclusionTexture(id, textureId);
 }
 
-int Renderer::CreateMesh(int vertexCount, int indexCount) {
+OID Renderer::CreateMesh(int vertexCount, int indexCount) {
     ExclusiveLock lock(sMutex);
 
     YAWN_ASSERT(sDriver);
@@ -251,7 +251,7 @@ int Renderer::CreateMesh(int vertexCount, int indexCount) {
     return sDriver->CreateMesh(vertexCount, indexCount);
 }
 
-void Renderer::DestroyMesh(int id) {
+void Renderer::DestroyMesh(OID id) {
     ExclusiveLock lock(sMutex);
 
     YAWN_ASSERT(sDriver);
@@ -259,7 +259,7 @@ void Renderer::DestroyMesh(int id) {
     sDriver->DestroyMesh(id);
 }
 
-bool Renderer::IsMeshValid(int id) {
+bool Renderer::IsMeshValid(OID id) {
     ExclusiveLock lock(sMutex);
 
     YAWN_ASSERT(sDriver);
@@ -267,7 +267,7 @@ bool Renderer::IsMeshValid(int id) {
     return sDriver->IsMeshValid(id);
 }
 
-void Renderer::SetMeshData(int id, const ArrayView<const Vertex3D>& vertices, const ArrayView<const int>& indices) {
+void Renderer::SetMeshData(OID id, const ArrayView<const Vertex3D>& vertices, const ArrayView<const int>& indices) {
     ExclusiveLock lock(sMutex);
 
     YAWN_ASSERT(sDriver);
@@ -276,7 +276,7 @@ void Renderer::SetMeshData(int id, const ArrayView<const Vertex3D>& vertices, co
     sDriver->SetMeshData(id, vertices, indices);
 }
 
-int Renderer::CreateInstance() {
+OID Renderer::CreateInstance() {
     ExclusiveLock lock(sMutex);
 
     YAWN_ASSERT(sDriver);
@@ -284,7 +284,7 @@ int Renderer::CreateInstance() {
     return sDriver->CreateInstance();
 }
 
-void Renderer::DestroyInstance(int id) {
+void Renderer::DestroyInstance(OID id) {
     ExclusiveLock lock(sMutex);
 
     YAWN_ASSERT(sDriver);
@@ -292,7 +292,7 @@ void Renderer::DestroyInstance(int id) {
     sDriver->DestroyInstance(id);
 }
 
-bool Renderer::IsInstanceValid(int id) {
+bool Renderer::IsInstanceValid(OID id) {
     ExclusiveLock lock(sMutex);
 
     YAWN_ASSERT(sDriver);
@@ -300,7 +300,7 @@ bool Renderer::IsInstanceValid(int id) {
     return sDriver->IsInstanceValid(id);
 }
 
-void Renderer::SetInstanceTransform(int id, const Matrix4& transform) {
+void Renderer::SetInstanceTransform(OID id, const Matrix4& transform) {
     ExclusiveLock lock(sMutex);
 
     YAWN_ASSERT(sDriver);
@@ -309,7 +309,7 @@ void Renderer::SetInstanceTransform(int id, const Matrix4& transform) {
     sDriver->SetInstanceTransform(id, transform);
 }
 
-void Renderer::SetInstanceMaterial(int id, int materialId) {
+void Renderer::SetInstanceMaterial(OID id, OID materialId) {
     ExclusiveLock lock(sMutex);
 
     YAWN_ASSERT(sDriver);
@@ -319,7 +319,7 @@ void Renderer::SetInstanceMaterial(int id, int materialId) {
     sDriver->SetInstanceMaterial(id, materialId);
 }
 
-void Renderer::SetInstanceMesh(int id, int meshId) {
+void Renderer::SetInstanceMesh(OID id, OID meshId) {
     ExclusiveLock lock(sMutex);
 
     YAWN_ASSERT(sDriver);
@@ -329,7 +329,7 @@ void Renderer::SetInstanceMesh(int id, int meshId) {
     sDriver->SetInstanceMesh(id, meshId);
 }
 
-void Renderer::SetInstanceViewport(int id, int viewportId) {
+void Renderer::SetInstanceViewport(OID id, OID viewportId) {
     ExclusiveLock lock(sMutex);
 
     YAWN_ASSERT(sDriver);
@@ -339,7 +339,7 @@ void Renderer::SetInstanceViewport(int id, int viewportId) {
     sDriver->SetInstanceViewport(id, viewportId);
 }
 
-int Renderer::CreateCanvasItem() {
+OID Renderer::CreateCanvasItem() {
     ExclusiveLock lock(sMutex);
 
     YAWN_ASSERT(sDriver);
@@ -347,7 +347,7 @@ int Renderer::CreateCanvasItem() {
     return sDriver->CreateCanvasItem();
 }
 
-void Renderer::DestroyCanvasItem(int id) {
+void Renderer::DestroyCanvasItem(OID id) {
     ExclusiveLock lock(sMutex);
 
     YAWN_ASSERT(sDriver);
@@ -355,13 +355,13 @@ void Renderer::DestroyCanvasItem(int id) {
     sDriver->DestroyCanvasItem(id);
 }
 
-bool Renderer::IsCanvasItemValid(int id) {
+bool Renderer::IsCanvasItemValid(OID id) {
     ExclusiveLock lock(sMutex);
 
     return sDriver->IsCanvasItemValid(id);
 }
 
-void Renderer::SetCanvasItemData(int id, const ArrayView<const Vertex2D>& vertices, const ArrayView<const int>& indices) {
+void Renderer::SetCanvasItemData(OID id, const ArrayView<const Vertex2D>& vertices, const ArrayView<const int>& indices) {
     ExclusiveLock lock(sMutex);
 
     YAWN_ASSERT(sDriver);
@@ -370,7 +370,7 @@ void Renderer::SetCanvasItemData(int id, const ArrayView<const Vertex2D>& vertic
     sDriver->SetCanvasItemData(id, vertices, indices);
 }
 
-void Renderer::SetCanvasItemTexture(int id, int textureId) {
+void Renderer::SetCanvasItemTexture(OID id, OID textureId) {
     ExclusiveLock lock(sMutex);
 
     YAWN_ASSERT(sDriver);
@@ -379,7 +379,7 @@ void Renderer::SetCanvasItemTexture(int id, int textureId) {
     sDriver->SetCanvasItemTexture(id, textureId);
 }
 
-void Renderer::DrawCanvasItem(int id, int vertexOffset, int indexOffset, int indexCount) {
+void Renderer::DrawCanvasItem(OID id, int vertexOffset, int indexOffset, int indexCount) {
     ExclusiveLock lock(sMutex);
 
     YAWN_ASSERT(sDriver);
@@ -420,7 +420,7 @@ void Renderer::LLSetIndexBufferData2D(const ArrayView<const unsigned short>& ind
     sDriver->LLSetIndexBufferData2D(indices);
 }
 
-void Renderer::LLSetTexture2D(int textureId) {
+void Renderer::LLSetTexture2D(OID textureId) {
     ExclusiveLock lock(sMutex);
 
     YAWN_ASSERT(sDriver);

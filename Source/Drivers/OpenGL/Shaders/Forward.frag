@@ -66,10 +66,10 @@ void main() {
     oColor = vec4(1.0, 1.0, 1.0, 1.0);
 
     if (uInstances.Data[vInstanceId].MaterialId > -1) {
-        int textureId = uMaterials.Data[uInstances.Data[vInstanceId].MaterialId].AlbedoTextureId;
+        int textureId = uMaterials.Data[uInstances.Data[vInstanceId].MaterialId & 0xFFFFF].AlbedoTextureId;
 
         if (textureId > -1) {
-            oColor.rgb = texture(uSamplers[textureId], vUV).rgb;
+            oColor.rgb = texture(uSamplers[textureId & 0xFFFFF], vUV).rgb;
         }
     }
 }

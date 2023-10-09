@@ -51,10 +51,10 @@ namespace YAWN {
 
         const Ref<Texture>& GetOcclusionTexture() const;
 
-        int GetId() const;
+        OID GetId() const;
 
     private:
-        const int mId;
+        const OID mId;
         Color4 mBaseColor = Color::White;
         float mRoughness = 0.8f;
         float mMetallic = 0.0f;

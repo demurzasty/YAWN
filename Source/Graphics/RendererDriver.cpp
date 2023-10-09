@@ -7,75 +7,75 @@ void RendererDriver::SetClearColor(const Color& color) {
     mClearColor = color;
 }
 
-int RendererDriver::CreateViewport(int width, int height, bool directToScreen) {
+OID RendererDriver::CreateViewport(int width, int height, bool directToScreen) {
     return mViewportPool.Acquire();
 }
 
-void RendererDriver::DestroyViewport(int id) {
+void RendererDriver::DestroyViewport(OID id) {
     mViewportPool.Dispose(id);
 }
 
-bool RendererDriver::IsViewportValid(int id) {
+bool RendererDriver::IsViewportValid(OID id) {
     return mViewportPool.IsValid(id);
 }
 
-int RendererDriver::CreateTexture(int width, int height, TextureFormat format, TextureFilter filter, TextureWrapping wrapping, int mipmapCount) {
+OID RendererDriver::CreateTexture(int width, int height, TextureFormat format, TextureFilter filter, TextureWrapping wrapping, int mipmapCount) {
     return mTexturePool.Acquire();
 }
 
-void RendererDriver::DestroyTexture(int id) {
+void RendererDriver::DestroyTexture(OID id) {
     mTexturePool.Dispose(id);
 }
 
-bool RendererDriver::IsTextureValid(int id) {
+bool RendererDriver::IsTextureValid(OID id) {
     return mTexturePool.IsValid(id);
 }
 
-int RendererDriver::CreateMaterial() {
+OID RendererDriver::CreateMaterial() {
     return mMaterialPool.Acquire();
 }
 
-void RendererDriver::DestroyMaterial(int id) {
+void RendererDriver::DestroyMaterial(OID id) {
     mMaterialPool.Dispose(id);
 }
 
-bool RendererDriver::IsMaterialValid(int id) {
+bool RendererDriver::IsMaterialValid(OID id) {
     return mMaterialPool.IsValid(id);
 }
 
-int RendererDriver::CreateMesh(int vertexCount, int indexCount) {
+OID RendererDriver::CreateMesh(int vertexCount, int indexCount) {
     return mMeshPool.Acquire();
 }
 
-void RendererDriver::DestroyMesh(int id) {
+void RendererDriver::DestroyMesh(OID id) {
     mMeshPool.Dispose(id);
 }
 
-bool RendererDriver::IsMeshValid(int id) {
+bool RendererDriver::IsMeshValid(OID id) {
     return mMeshPool.IsValid(id);
 }
 
-int RendererDriver::CreateInstance() {
+OID RendererDriver::CreateInstance() {
     return mInstancePool.Acquire();
 }
 
-void RendererDriver::DestroyInstance(int id) {
+void RendererDriver::DestroyInstance(OID id) {
     mInstancePool.Dispose(id);
 }
 
-bool RendererDriver::IsInstanceValid(int id) {
+bool RendererDriver::IsInstanceValid(OID id) {
     return mInstancePool.IsValid(id);
 }
 
-int RendererDriver::CreateCanvasItem() {
+OID RendererDriver::CreateCanvasItem() {
     return mCanvasItemPool.Acquire();
 }
 
-void RendererDriver::DestroyCanvasItem(int id) {
+void RendererDriver::DestroyCanvasItem(OID id) {
     mCanvasItemPool.Dispose(id);
 }
 
-bool RendererDriver::IsCanvasItemValid(int id) {
+bool RendererDriver::IsCanvasItemValid(OID id) {
     return mCanvasItemPool.IsValid(id);
 }
 

@@ -33,5 +33,5 @@ layout (std430, binding = 3) buffer uSampler {
 uniform int uSamplerId;
 
 void main() {
-    oColor = vColor * texture(uSamplers[uGlobal.Data.TextureId], vUV);
+    oColor = vColor * texture(uSamplers[uGlobal.Data.TextureId & 0xFFFFF], vUV);
 }

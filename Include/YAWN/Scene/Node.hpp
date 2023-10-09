@@ -111,7 +111,7 @@ namespace YAWN {
         //// Drawing Utilities ////
         ///////////////////////////
 
-        void DrawTexture(int textureId, const Rectangle& destination, const Rectangle& source, const Color4& color, bool flipY = false);
+        void DrawTexture(OID textureId, const Rectangle& destination, const Rectangle& source, const Color4& color, bool flipY = false);
 
         void DrawLine(const Vector2& from, const Vector2& to, const Color4& color);
 
@@ -121,7 +121,7 @@ namespace YAWN {
 
         void DrawText(const Ref<Font>& font, int size, const Vector2& destination, const String& text, const Color4& color);
 
-        void AddDrawCommand(Topology topology, int textureId, const ArrayView<const Vertex2D>& vertices, const ArrayView<const unsigned short>& indices);
+        void AddDrawCommand(Topology topology, OID textureId, const ArrayView<const Vertex2D>& vertices, const ArrayView<const unsigned short>& indices);
 
     private:
         void SetChildren(const Array<Ref<Node>>& children);
@@ -137,7 +137,7 @@ namespace YAWN {
 
         struct DrawCommand {
             Topology Topology;
-            int TextureId;
+            OID TextureId;
             int VertexOffset;
             int IndexOffset;
             int IndexCount;

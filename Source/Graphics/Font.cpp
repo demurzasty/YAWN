@@ -104,7 +104,7 @@ Vector2 Font::GetTextSize(const String& text, int size) const {
     return textSize;
 }
 
-int Font::GetTextureId() const {
+OID Font::GetTextureId() const {
     return mId;
 }
 

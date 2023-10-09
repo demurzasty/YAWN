@@ -24,6 +24,6 @@ Vector2 Texture::GetSize() const {
     return Renderer::GetTextureSize(mId);
 }
 
-int Texture::GetId() const {
+OID Texture::GetId() const {
     return mId;
 }

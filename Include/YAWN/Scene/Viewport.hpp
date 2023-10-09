@@ -28,10 +28,10 @@ namespace YAWN {
 
         const Ref<Control> GetFocus() const;
 
-        int GetId() const;
+        OID GetId() const;
 
     private:
-        int mViewportId = Pool::None;
+        OID mViewportId;
         bool mDirectToScreen = false;
         Vector2 mSize = Vector2(512.0f, 512.0f);
         bool mDirty = true;

@@ -2,6 +2,7 @@
 
 #include "Reference.hpp"
 #include "../Reflection/Meta.hpp"
+#include "../Runtime/OID.hpp"
 
 namespace YAWN {
     class Resource : public Reference {
