@@ -14,7 +14,7 @@ namespace YAWN {
 
         template<typename TResource>
         static Ref<TResource> Load(const Guid& guid) {
-            return CastTo<TResource>(Load(TypeID::Hash<TResource>(), guid));
+            return CastTo<TResource>(Load(TypeId::From<TResource>(), guid));
         }
 
         static Ref<Resource> Load(const String& resourceTypeName, const Guid& guid);
@@ -28,10 +28,10 @@ namespace YAWN {
     private:
         static void InitializeLoader(const Ref<Type>& type);
 
-        static Ref<Resource> Load(int resourceTypeId, const Guid& guid);
+        static Ref<Resource> Load(TypeId resourceTypeId, const Guid& guid);
 
     private:
-        static Map<int, Ref<Loader>> sLoaders;
+        static Map<TypeId, Ref<Loader>> sLoaders;
         static Map<Guid, Ref<Resource>> sResources;
     };
 }

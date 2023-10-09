@@ -32,6 +32,6 @@ Ref<Resource> MeshLoader::Load(const Path& path) {
     return mesh;
 }
 
-int MeshLoader::GetSupportedResourceTypeId() const {
-    return TypeID::Hash<Mesh>();
+TypeId MeshLoader::GetSupportedResourceTypeId() const {
+    return TypeId::From<Mesh>();
 }

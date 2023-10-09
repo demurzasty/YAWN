@@ -12,6 +12,6 @@ Ref<Resource> PrefabLoader::Load(const Path& path) {
     return new Prefab(File::ReadAllText(path));
 }
 
-int PrefabLoader::GetSupportedResourceTypeId() const {
-    return TypeID::Hash<Prefab>();
+TypeId PrefabLoader::GetSupportedResourceTypeId() const {
+    return TypeId::From<Prefab>();
 }

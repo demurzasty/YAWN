@@ -5,7 +5,7 @@ using namespace YAWN;
 
 static Guid DefaultThemeGuid = Guid(L"d90daf62-efb7-40c0-8f15-56a6333d3775");
 
-Map<int, Ref<Loader>> ResourceManager::sLoaders;
+Map<TypeId, Ref<Loader>> ResourceManager::sLoaders;
 Map<Guid, Ref<Resource>> ResourceManager::sResources;
 
 void ResourceManager::Initialize() {
@@ -46,7 +46,7 @@ Ref<Resource> ResourceManager::Load(const String& resourceTypeName, const Guid& 
     return nullptr;
 }
 
-Ref<Resource> ResourceManager::Load(int resourceTypeId, const Guid& guid) {
+Ref<Resource> ResourceManager::Load(TypeId resourceTypeId, const Guid& guid) {
     YAWN_ASSERT(sLoaders.Contains(resourceTypeId));
 
     Ref<Resource> resource;

@@ -2,9 +2,9 @@
 
 using namespace YAWN;
 
-Map<int, Ref<Type>> Types::sTypes;
+Map<TypeId, Ref<Type>> Types::sTypes;
 
-Ref<Type> Types::GetType(int id) {
+Ref<Type> Types::GetType(TypeId id) {
     Ref<Type> type;
     if (sTypes.TryGet(id, type)) {
         return type;
@@ -13,7 +13,7 @@ Ref<Type> Types::GetType(int id) {
 }
 
 Ref<Type> Types::GetTypeByName(const String& name) {
-    for (const KeyValue<int, Ref<Type>>& keyValue : sTypes) {
+    for (const KeyValue<TypeId, Ref<Type>>& keyValue : sTypes) {
         if (keyValue.Value->GetName() == name) {
             return keyValue.Value;
         }
@@ -22,17 +22,17 @@ Ref<Type> Types::GetTypeByName(const String& name) {
     return nullptr;
 }
 
-void Types::EnumerateTypesOfBase(int base, const Delegate<void(const Ref<Type>&)>& delegate) {
+void Types::EnumerateTypesOfBase(TypeId base, const Delegate<void(const Ref<Type>&)>& delegate) {
     YAWN_ASSERT(delegate);
 
-    for (const KeyValue<int, Ref<Type>>& type : sTypes) {
+    for (const KeyValue<TypeId, Ref<Type>>& type : sTypes) {
         if (type.Value->IsDerivedFrom(base)) {
             delegate(type.Value);
         }
     }
 }
 
-Ref<Type> Types::GetOrAddType(int id) {
+Ref<Type> Types::GetOrAddType(TypeId id) {
     if (Ref<Type> type = GetType(id); type) {
         return type;
     }

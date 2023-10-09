@@ -27,7 +27,7 @@ namespace YAWN {
 
         template<typename TBase>
         void SetBase() {
-            mType->SetBase(TypeID::Hash<TBase>());
+            mType->SetBase(TypeId::From<TBase>());
         }
 
         template<auto VField>

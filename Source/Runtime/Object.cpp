@@ -6,12 +6,12 @@ const wchar_t* Object::GetTypeName() const {
     return L"Object";
 }
 
-int Object::GetTypeId() const {
-    return TypeID::Hash<Object>();
+TypeId Object::GetTypeId() const {
+    return TypeId::From<Object>();
 }
 
-bool Object::_IsInstanceOf(int id) const {
-    constexpr int objectId = TypeID::Hash<Object>();
+bool Object::_IsInstanceOf(TypeId id) const {
+    constexpr TypeId objectId = TypeId::From<Object>();
 
     return id == objectId;
 }

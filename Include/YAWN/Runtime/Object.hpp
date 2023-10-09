@@ -1,6 +1,6 @@
 #pragma once 
 
-#include "../Reflection/TypeID.hpp"
+#include "../Reflection/TypeId.hpp"
 
 #define YAWN_OBJECT(TSelf, TBase) \
     public: \
@@ -9,33 +9,35 @@
         virtual const wchar_t* GetTypeName() const { \
             return L#TSelf; \
         } \
-        virtual int GetTypeId() const override { \
-            constexpr int typeId = YAWN::TypeID::Hash<TSelf>(); \
+        virtual TypeId GetTypeId() const override { \
+            constexpr TypeId typeId = YAWN::TypeId::From<TSelf>(); \
             return typeId; \
         } \
     protected: \
-        virtual bool _IsInstanceOf(int id) const override { \
-            constexpr int typeId = YAWN::TypeID::Hash<TSelf>(); \
+        virtual bool _IsInstanceOf(TypeId id) const override { \
+            constexpr TypeId typeId = YAWN::TypeId::From<TSelf>(); \
             return id == typeId || TBase::_IsInstanceOf(id); \
         } 
 
 namespace YAWN {
     class Object {
     public:
+        static constexpr wchar_t TypeName[] = L"Object"; \
+
         virtual ~Object() = default;
 
         virtual const wchar_t* GetTypeName() const;
 
-        virtual int GetTypeId() const;
+        virtual TypeId GetTypeId() const;
 
         template<typename T>
         bool IsInstanceOf() const {
-            constexpr int id = TypeID::Hash<T>();
+            constexpr TypeId id = TypeId::From<T>();
             return _IsInstanceOf(id);
         }
 
     protected:
-        virtual bool _IsInstanceOf(int id) const;
+        virtual bool _IsInstanceOf(TypeId id) const;
     };
 
     template<typename TTo>

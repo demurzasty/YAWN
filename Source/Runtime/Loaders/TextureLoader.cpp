@@ -33,6 +33,6 @@ Ref<Resource> TextureLoader::Load(const Path& path) {
     return texture;
 }
 
-int TextureLoader::GetSupportedResourceTypeId() const {
-    return TypeID::Hash<Texture>();
+TypeId TextureLoader::GetSupportedResourceTypeId() const {
+    return TypeId::From<Texture>();
 }

@@ -14,6 +14,6 @@ Ref<Resource> FontLoader::Load(const Path& path) {
     return new Font(File::ReadAll(path));
 }
 
-int FontLoader::GetSupportedResourceTypeId() const {
-    return TypeID::Hash<Font>();
+TypeId FontLoader::GetSupportedResourceTypeId() const {
+    return TypeId::From<Font>();
 }

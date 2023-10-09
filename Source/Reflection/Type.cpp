@@ -3,11 +3,11 @@
 
 using namespace YAWN;
 
-void Type::SetId(int id) {
+void Type::SetId(TypeId id) {
     mId = id;
 }
 
-int Type::GetId() const {
+TypeId Type::GetId() const {
     return mId;
 }
 
@@ -53,7 +53,7 @@ Ref<Field> Type::GetField(const String& name) {
         }
     }
 
-    if (mBase) {
+    if (mBase.IsValid()) {
         if (Ref<Type> base = Types::GetType(mBase); base) {
             return base->GetField(name);
         }
@@ -69,7 +69,7 @@ void Type::EnumerateFields(const Delegate<void(const Ref<Field>&)>& delegate) {
         delegate(field);
     }
 
-    if (mBase) {
+    if (mBase.IsValid()) {
         if (Ref<Type> base = Types::GetType(mBase); base) {
             Types::GetType(mBase)->EnumerateFields(delegate);
         }
@@ -85,20 +85,20 @@ Ref<Reference> Type::Construct() const {
     return mConstructor();
 }
 
-void Type::SetBase(int id) {
+void Type::SetBase(TypeId id) {
     mBase = id;
 }
 
-int Type::GetBase() const {
+TypeId Type::GetBase() const {
     return mBase;
 }
 
-bool Type::IsDerivedFrom(int id) const {
+bool Type::IsDerivedFrom(TypeId id) const {
     if (mBase == id) {
         return true;
     }
 
-    if (mBase) {
+    if (mBase.IsValid()) {
         if (Ref<Type> base = Types::GetType(mBase); base) {
             return base->IsDerivedFrom(id);
         }

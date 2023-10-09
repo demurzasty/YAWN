@@ -13,6 +13,6 @@ namespace YAWN {
 
         virtual Ref<Resource> Load(const Path& path) = 0;
 
-        virtual int GetSupportedResourceTypeId() const = 0;
+        virtual TypeId GetSupportedResourceTypeId() const = 0;
     };
 }

@@ -63,6 +63,6 @@ Ref<Resource> MaterialLoader::Load(const Path& path) {
     return material;
 }
 
-int MaterialLoader::GetSupportedResourceTypeId() const {
-    return TypeID::Hash<Material>();
+TypeId MaterialLoader::GetSupportedResourceTypeId() const {
+    return TypeId::From<Material>();
 }

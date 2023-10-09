@@ -14,9 +14,9 @@ namespace YAWN {
     public:
         virtual ~Type() = default;
 
-        void SetId(int id);
+        void SetId(TypeId id);
 
-        int GetId() const;
+        TypeId GetId() const;
 
         void SetName(const String& string);
 
@@ -38,18 +38,18 @@ namespace YAWN {
 
         Ref<Reference> Construct() const;
 
-        void SetBase(int id);
+        void SetBase(TypeId id);
 
-        int GetBase() const;
+        TypeId GetBase() const;
 
-        bool IsDerivedFrom(int id) const;
+        bool IsDerivedFrom(TypeId id) const;
 
     private:
         String mName;
         Array<String> mTags;
         Array<Ref<Field>> mFields;
         Ref<Reference>(*mConstructor)() = nullptr;
-        int mId = 0;
-        int mBase = 0;
+        TypeId mId;
+        TypeId mBase;
     };
 }

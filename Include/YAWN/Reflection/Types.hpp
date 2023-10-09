@@ -12,11 +12,11 @@ namespace YAWN {
     public:
         template<typename T>
         static Meta<T> Reflect() {
-            constexpr int hash = TypeID::Hash<T>();
+            constexpr TypeId hash = TypeId::From<T>();
 
             Ref<Type> type = GetOrAddType(hash);
             type->SetName(T::TypeName);
-            type->SetBase(TypeID::Hash<typename T::Base>());
+            type->SetBase(TypeId::From<typename T::Base>());
             type->SetId(hash);
             return Meta<T>(type);
         }
@@ -29,27 +29,27 @@ namespace YAWN {
 
         template<typename T>
         static Ref<Type> GetType() {
-            constexpr int hash = TypeID::Hash<T>();
+            constexpr TypeId hash = TypeId::From<T>();
 
             return GetType(hash);
         }
 
-        static Ref<Type> GetType(int id);
+        static Ref<Type> GetType(TypeId id);
 
         static Ref<Type> GetTypeByName(const String& name);
 
         template<typename T>
         static void EnumerateTypesOfBase(const Delegate<void(const Ref<Type>&)>& delegate) {
-            constexpr int hash = TypeID::Hash<T>();
+            constexpr TypeId typeId = TypeId::From<T>();
 
-            EnumerateTypesOfBase(hash, delegate);
+            EnumerateTypesOfBase(typeId, delegate);
         }
 
-        static void EnumerateTypesOfBase(int base, const Delegate<void(const Ref<Type>&)>& delegate);
+        static void EnumerateTypesOfBase(TypeId base, const Delegate<void(const Ref<Type>&)>& delegate);
 
     private:
-        static Ref<Type> GetOrAddType(int id);
+        static Ref<Type> GetOrAddType(TypeId id);
 
-        static Map<int, Ref<Type>> sTypes;
+        static Map<TypeId, Ref<Type>> sTypes;
     };
 }
