@@ -60,4 +60,59 @@ namespace YAWN {
     class Storage {
         unsigned char mData[sizeof(T)];
     };
+
+    template<typename T>
+    struct IsRef {
+        typedef char Yes[1];
+        typedef char No[2];
+
+        template<typename C, typename D = typename C::ReferenceType>
+        static Yes& Test(C*);
+
+        template<typename C>
+        static No& Test(...);
+
+    public:
+        static constexpr bool Value = sizeof(Test<T>(nullptr)) == sizeof(Yes);
+    };
+
+    template<typename T>
+    struct HasKeyType {
+        typedef char Yes[1];
+        typedef char No[2];
+
+        template<typename C, typename D = typename C::KeyType>
+        static Yes& Test(C*);
+
+        template<typename C>
+        static No& Test(...);
+
+    public:
+        static constexpr bool Value = sizeof(Test<T>(nullptr)) == sizeof(Yes);
+    };
+
+    template<typename T>
+    struct HasValueType {
+        typedef char Yes[1];
+        typedef char No[2];
+
+        template<typename C, typename D = typename C::ValueType>
+        static Yes& Test(C*);
+
+        template<typename C>
+        static No& Test(...);
+
+    public:
+        static constexpr bool Value = sizeof(Test<T>(nullptr)) == sizeof(Yes);
+    };
+
+    template<typename T>
+    struct IsArray {
+        static constexpr bool Value = HasValueType<T>::Value && !HasKeyType<T>::Value;
+    };
+
+    template<typename T>
+    struct IsMap {
+        static constexpr bool Value = HasValueType<T>::Value && HasKeyType<T>::Value;
+    };
 }

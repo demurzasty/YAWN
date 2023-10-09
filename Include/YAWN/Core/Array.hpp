@@ -7,6 +7,8 @@ namespace YAWN {
     template<typename T>
     class Array {
     public:
+        using ValueType = T;
+
         Array() = default;
 
         explicit Array(int size) : mSize(size), mCapacity(size) {

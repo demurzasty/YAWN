@@ -137,8 +137,26 @@ namespace YAWN {
         static constexpr VariantType Type = VariantType::Color;
     };
 
+    template<typename T, bool = IsRef<T>::Value, bool = IsArray<T>::Value, bool = IsMap<T>::Value>
+    struct VariantTypeDetector;
+
     template<typename T>
-    struct VariantTypeDetector {
+    struct VariantTypeDetector<T, true, false, false> {
+        static constexpr VariantType Type = VariantType::Object;
+    };
+
+    template<typename T>
+    struct VariantTypeDetector<T, false, true, false> {
+        static constexpr VariantType Type = VariantType::Array;
+    };
+
+    template<typename T>
+    struct VariantTypeDetector<T, false, false, true> {
+        static constexpr VariantType Type = VariantType::Map;
+    };
+
+    template<typename T>
+    struct VariantTypeDetector<T, false, false, false> {
         static constexpr VariantType Type = VariantTrait<typename RemoveConstReference<T>::Type>::Type;
     };
 

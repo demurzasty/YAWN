@@ -25,6 +25,8 @@ namespace YAWN {
         friend class Ref;
 
     public:
+        using ReferenceType = TReference;
+
         Ref() = default;
 
         constexpr Ref(decltype(nullptr)) : mReference(nullptr) {}

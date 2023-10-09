@@ -16,6 +16,9 @@ namespace YAWN {
     template<typename TKey, typename TValue>
     class Map {
     public:
+        using KeyType = TKey;
+        using ValueType = TValue;
+
         const TValue& operator[](const TKey& key) const {
             int index = BinarySearch(key);
             YAWN_ASSERT(index < mArray.GetSize() && mArray[index].Key == key);
