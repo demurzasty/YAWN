@@ -13,14 +13,17 @@ void BuildTree(const Ref<Tree>& tree, const Ref<Node>& node, Ref<TreeItem> item)
 void Initialize() {
     Scene::GetRoot()->AddChild(new Editor());
 
+#if 1
     Ref<Viewport> subViewport = new Viewport();
 
     Ref<Node3D> node3d = new Node3D();
     node3d->SetName(L"TestNode");
     node3d->SetLocalPosition(Vector3(0.4124f, 1.3452f, 312.455f));
 
+    Ref<Prefab> prefab = ResourceManager::Load<Prefab>(Guid(L"97b9dcf3-1894-cc03-e0d7-f4c4d2c9e800"));
+
     {
-         //prefab->Instantiate();
+        subViewport->AddChild(prefab->Instantiate());
 
         subViewport->AddChild(node3d);
 
@@ -166,6 +169,7 @@ void Initialize() {
     Ref<TreeItem> item = tree->CreateItem();
     item->SetText(L"Root");
     BuildTree(tree, subViewport, item);
+#endif
 }
 
 int Main(int argc, char* argv[]) {

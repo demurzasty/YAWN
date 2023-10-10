@@ -39,7 +39,7 @@ void ResourceManager::Set(const Guid& guid, const Ref<Resource>& resource) {
 }
 
 Ref<Resource> ResourceManager::Load(const String& resourceTypeName, const Guid& guid) {
-    if (Type* type = Types::GetTypeByName(resourceTypeName); type) {
+    if (Ref<Type> type = Types::GetTypeByName(resourceTypeName)) {
         return Load(type->GetId(), guid);
     }
 
@@ -55,6 +55,7 @@ Ref<Resource> ResourceManager::Load(TypeId resourceTypeId, const Guid& guid) {
     }
 
     Ref<Loader> loader = sLoaders[resourceTypeId];
+    YAWN_ASSERT(loader);
 
     resource = loader->Load(Path(L"Package") / guid.ToString());
     Set(guid, resource);
@@ -62,7 +63,7 @@ Ref<Resource> ResourceManager::Load(TypeId resourceTypeId, const Guid& guid) {
 }
 
 Ref<Theme> ResourceManager::GetDefaultTheme() {
-    if (Ref<Resource> theme = Get(DefaultThemeGuid); theme) {
+    if (Ref<Resource> theme = Get(DefaultThemeGuid)) {
         return CastTo<Theme>(theme);
     }
 

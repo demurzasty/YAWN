@@ -17,18 +17,31 @@ Ref<Resource> TextureLoader::Load(const Path& path) {
 
     int width = file.Read32();
     int height = file.Read32();
-    int channels = file.Read32();
+    TextureFormat format = (TextureFormat)file.Read32();
 
-    Array<char> data(width * height * channels);
-    file.Read(data.GetData(), data.GetSize());
+    Array<char> data;
 
-    TextureFormat format = TextureFormat::RGBA8;
-    switch (channels) {
-        case 1: format = TextureFormat::R8; break;
-        case 2: format = TextureFormat::RG8; break;
+    switch (format) {
+    case TextureFormat::R8:
+        data.Resize(width * height);
+        break;
+    case TextureFormat::RG8:
+        data.Resize(width * height * 2);
+        break;
+    case TextureFormat::RGBA8:
+        data.Resize(width * height * 4);
+        break;
+    case TextureFormat::BC1:
+        data.Resize(width * height / 2);
+        break;
+    case TextureFormat::BC3:
+        data.Resize(width * height);
+        break;
     }
 
-    Ref<Texture> texture = new Texture(width, height, TextureFormat::RGBA8, TextureFilter::Anisotropic, TextureWrapping::Repeat, 1);
+    file.Read(data.GetData(), data.GetSize());
+
+    Ref<Texture> texture = new Texture(width, height, format, TextureFilter::Anisotropic, TextureWrapping::Repeat, 1);
     texture->SetData(0, data.GetData());
     return texture;
 }

@@ -284,7 +284,7 @@ WindowDriverGLFW::WindowDriverGLFW() {
 
     glfwMakeContextCurrent(mWindow);
 
-    glfwSwapInterval(1);
+    glfwSwapInterval(0);
 
     glewInit();
 }
@@ -295,7 +295,7 @@ WindowDriverGLFW::~WindowDriverGLFW() {
 }
 
 void WindowDriverGLFW::PollEvents() {
-    glfwWaitEvents();
+    glfwPollEvents();
 }
 
 bool WindowDriverGLFW::IsOpen() const {
