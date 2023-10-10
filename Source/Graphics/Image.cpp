@@ -1,5 +1,6 @@
 #include <YAWN/Graphics/Image.hpp>
 #include <YAWN/Core/Memory.hpp>
+#include <YAWN/Math/Math.hpp>
 
 #include <stb_image.h>
 #include <stb_image_resize.h>
@@ -37,7 +38,7 @@ Ref<Image> Image::FromMemory(const ArrayView<const unsigned char>& data, int des
     return nullptr;
 }
 
-Ref<Image> Image::Resize(Ref<Image> image, int width, int height) {
+Ref<Image> Image::Resize(const Ref<Image>& image, int width, int height) {
     ImageInfo imageInfo(width, height, image->mInfo.GetChannels());
 
     unsigned char* data = (unsigned char*)Memory::Allocate(imageInfo.GetDataSize());
@@ -49,12 +50,37 @@ Ref<Image> Image::Resize(Ref<Image> image, int width, int height) {
     return nullptr;
 }
 
+Ref<Image> Image::ResizeToNextPowerOfTwo(const Ref<Image>& image) {
+    return Resize(image, Math::NextPowerOfTwo(image->GetInfo().GetWidth()), Math::NextPowerOfTwo(image->GetInfo().GetHeight()));
+}
+
 Image::Image(unsigned char* data, const ImageInfo& info)
     : mData(data), mInfo(info) {
 }
 
 Image::~Image() {
     Memory::Deallocate(mData);
+}
+
+int Image::CalculateMipmapCount() const {
+    // TODO: Do it much better with fast integer log2.
+
+    int width = mInfo.GetWidth();
+    int height = mInfo.GetHeight();
+
+    int mipmapCount = 0;
+    while (width > 4 && height > 4) {
+        mipmapCount++;
+
+        width /= 2;
+        height /= 2;
+    }
+
+    return mipmapCount;
+}
+
+bool Image::IsPowerOfTwo() const {
+    return Math::IsPowerOfTwo(mInfo.GetWidth()) && Math::IsPowerOfTwo(mInfo.GetHeight());
 }
 
 ArrayView<unsigned char> Image::GetData() const {

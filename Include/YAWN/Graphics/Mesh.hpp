@@ -12,6 +12,8 @@ namespace YAWN {
 
         static Ref<Mesh> CreateBox(const Vector3& extent);
 
+        static Ref<Mesh> CreatePlane(const Vector2& size, const Vector2& uvScale);
+
         Mesh(int vertexCount, int indexCount);
 
         virtual ~Mesh() override;

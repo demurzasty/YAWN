@@ -62,10 +62,6 @@ void Node::Redraw() {
 
         PostDraw();
 
-        for (const Ref<Node>& node : GetChildren()) {
-            node->RequestRedraw();
-        }
-
         mNeedRedraw = false;
     }
 
@@ -243,11 +239,13 @@ void Node::DrawTexture(OID textureId, const Rectangle& destination, const Rectan
 
     Vector2 textureSize = Renderer::GetTextureSize(textureId);
 
+    const Vector2 end = source.GetEnd();
+
     Vertex2D vertices[4] = {
         Vertex2D(position, Vector2(source.Position.X / textureSize.X, source.Position.Y / textureSize.Y), color),
-        Vertex2D(position + Vector2(0.0f, size.Y), Vector2(source.Position.X / textureSize.X, source.GetEnd().Y / textureSize.Y), color),
-        Vertex2D(position + Vector2(size.X, size.Y), Vector2(source.GetEnd().X / textureSize.X, source.GetEnd().Y / textureSize.Y), color),
-        Vertex2D(position + Vector2(size.X, 0.0f), Vector2(source.GetEnd().X / textureSize.X, source.Position.Y / textureSize.Y), color),
+        Vertex2D(position + Vector2(0.0f, size.Y), Vector2(source.Position.X / textureSize.X, end.Y / textureSize.Y), color),
+        Vertex2D(position + Vector2(size.X, size.Y), Vector2(end.X / textureSize.X, end.Y / textureSize.Y), color),
+        Vertex2D(position + Vector2(size.X, 0.0f), Vector2(end.X / textureSize.X, source.Position.Y / textureSize.Y), color),
     };
 
     vertices[0].Position += Vector2(0.25f);

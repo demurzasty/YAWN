@@ -17,9 +17,15 @@ namespace YAWN {
 
         static Ref<Image> FromMemory(const ArrayView<const unsigned char>& data, int desiredChannels = 0);
 
-        static Ref<Image> Resize(Ref<Image> image, int width, int height);
+        static Ref<Image> Resize(const Ref<Image>& image, int width, int height);
+
+        static Ref<Image> ResizeToNextPowerOfTwo(const Ref<Image>& image);
 
         ~Image();
+
+        int CalculateMipmapCount() const;
+
+        bool IsPowerOfTwo() const;
 
         ArrayView<unsigned char> GetData() const;
 

@@ -152,8 +152,8 @@ OID RendererDriverOpenGL::CreateViewport(int width, int height, bool directToScr
         mViewports[*id].DepthTextureId = CreateTexture(width, height, TextureFormat::D24, TextureFilter::Linear, TextureWrapping::ClampToEdge, 1);
 
         YAWN_GL_CHECK(glCreateFramebuffers(1, &mViewports[*id].FramebufferId));
-        YAWN_GL_CHECK(glNamedFramebufferTexture(mViewports[*id].FramebufferId, GL_COLOR_ATTACHMENT0, mTextureIds[*mViewports[*id].ColorTextureId], 0));
-        YAWN_GL_CHECK(glNamedFramebufferTexture(mViewports[*id].FramebufferId, GL_DEPTH_ATTACHMENT, mTextureIds[*mViewports[*id].DepthTextureId], 0));
+        YAWN_GL_CHECK(glNamedFramebufferTexture(mViewports[*id].FramebufferId, GL_COLOR_ATTACHMENT0, mTextures[*mViewports[*id].ColorTextureId].Id, 0));
+        YAWN_GL_CHECK(glNamedFramebufferTexture(mViewports[*id].FramebufferId, GL_DEPTH_ATTACHMENT, mTextures[*mViewports[*id].DepthTextureId].Id, 0));
 
         YAWN_ASSERT(glCheckNamedFramebufferStatus(mViewports[*id].FramebufferId, GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
     }
@@ -183,8 +183,8 @@ void RendererDriverOpenGL::SetViewportSize(OID id, int width, int height) {
         mViewports[*id].ColorTextureId = CreateTexture(width, height, TextureFormat::RGBA8, TextureFilter::Linear, TextureWrapping::ClampToEdge, 1);
         mViewports[*id].DepthTextureId = CreateTexture(width, height, TextureFormat::D24, TextureFilter::Linear, TextureWrapping::ClampToEdge, 1);
 
-        YAWN_GL_CHECK(glNamedFramebufferTexture(mViewports[*id].FramebufferId, GL_COLOR_ATTACHMENT0, mTextureIds[*mViewports[*id].ColorTextureId], 0));
-        YAWN_GL_CHECK(glNamedFramebufferTexture(mViewports[*id].FramebufferId, GL_DEPTH_ATTACHMENT, mTextureIds[*mViewports[*id].DepthTextureId], 0));
+        YAWN_GL_CHECK(glNamedFramebufferTexture(mViewports[*id].FramebufferId, GL_COLOR_ATTACHMENT0, mTextures[*mViewports[*id].ColorTextureId].Id, 0));
+        YAWN_GL_CHECK(glNamedFramebufferTexture(mViewports[*id].FramebufferId, GL_DEPTH_ATTACHMENT, mTextures[*mViewports[*id].DepthTextureId].Id, 0));
 
         YAWN_ASSERT(glCheckNamedFramebufferStatus(mViewports[*id].FramebufferId, GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
     }
@@ -197,52 +197,55 @@ OID RendererDriverOpenGL::GetViewportColorTexture(OID id) const {
 OID RendererDriverOpenGL::CreateTexture(int width, int height, TextureFormat format, TextureFilter filter, TextureWrapping wrapping, int mipmapCount) {
     OID id = Base::CreateTexture(width, height, format, filter, wrapping, mipmapCount);
 
-    mTextureIds.Expand(*id + 1, 0);
+    mTextures.Expand(*id + 1);
 
-    YAWN_GL_CHECK(glCreateTextures(GL_TEXTURE_2D, 1, &mTextureIds[*id]));
+    mTextures[*id].Width = width;
+    mTextures[*id].Height = height;
 
-    YAWN_GL_CHECK(glTextureParameteri(mTextureIds[*id], GL_TEXTURE_WRAP_S, GL_REPEAT));
-    YAWN_GL_CHECK(glTextureParameteri(mTextureIds[*id], GL_TEXTURE_WRAP_T, GL_REPEAT));
+    YAWN_GL_CHECK(glCreateTextures(GL_TEXTURE_2D, 1, &mTextures[*id].Id));
+
+    YAWN_GL_CHECK(glTextureParameteri(mTextures[*id].Id, GL_TEXTURE_WRAP_S, GL_REPEAT));
+    YAWN_GL_CHECK(glTextureParameteri(mTextures[*id].Id, GL_TEXTURE_WRAP_T, GL_REPEAT));
 
     switch (filter) {
     case TextureFilter::Nearest:
-        YAWN_GL_CHECK(glTextureParameteri(mTextureIds[*id], GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST));
-        YAWN_GL_CHECK(glTextureParameteri(mTextureIds[*id], GL_TEXTURE_MAG_FILTER, GL_NEAREST));
+        YAWN_GL_CHECK(glTextureParameteri(mTextures[*id].Id, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST));
+        YAWN_GL_CHECK(glTextureParameteri(mTextures[*id].Id, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
         break;
     case TextureFilter::Linear:
-        YAWN_GL_CHECK(glTextureParameteri(mTextureIds[*id], GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR));
-        YAWN_GL_CHECK(glTextureParameteri(mTextureIds[*id], GL_TEXTURE_MAG_FILTER, GL_LINEAR));
+        YAWN_GL_CHECK(glTextureParameteri(mTextures[*id].Id, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR));
+        YAWN_GL_CHECK(glTextureParameteri(mTextures[*id].Id, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
         break;
     case TextureFilter::Anisotropic:
-        YAWN_GL_CHECK(glTextureParameteri(mTextureIds[*id], GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR));
-        YAWN_GL_CHECK(glTextureParameteri(mTextureIds[*id], GL_TEXTURE_MAG_FILTER, GL_LINEAR));
-        // YAWN_GL_CHECK(glTextureParameterf(mTextureIds[id], GL_TEXTURE_MAX_ANISOTROPY_EXT, mMaxAnisotropy));
+        YAWN_GL_CHECK(glTextureParameteri(mTextures[*id].Id, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR));
+        YAWN_GL_CHECK(glTextureParameteri(mTextures[*id].Id, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
+        YAWN_GL_CHECK(glTextureParameterf(mTextures[*id].Id, GL_TEXTURE_MAX_ANISOTROPY_EXT, 16.0f));
         break;
     }
 
     switch (format) {
     case TextureFormat::D24:
-        YAWN_GL_CHECK(glTextureStorage2D(mTextureIds[*id], mipmapCount, GL_DEPTH_COMPONENT24, width, height));
+        YAWN_GL_CHECK(glTextureStorage2D(mTextures[*id].Id, mipmapCount, GL_DEPTH_COMPONENT24, width, height));
         break;
     case TextureFormat::R8:
-        YAWN_GL_CHECK(glTextureStorage2D(mTextureIds[*id], mipmapCount, GL_R8, width, height));
+        YAWN_GL_CHECK(glTextureStorage2D(mTextures[*id].Id, mipmapCount, GL_R8, width, height));
         break;
     case TextureFormat::RG8:
-        YAWN_GL_CHECK(glTextureStorage2D(mTextureIds[*id], mipmapCount, GL_RG8, width, height));
+        YAWN_GL_CHECK(glTextureStorage2D(mTextures[*id].Id, mipmapCount, GL_RG8, width, height));
         break;
     case TextureFormat::RGBA8:
-        YAWN_GL_CHECK(glTextureStorage2D(mTextureIds[*id], mipmapCount, GL_RGBA8, width, height));
+        YAWN_GL_CHECK(glTextureStorage2D(mTextures[*id].Id, mipmapCount, GL_RGBA8, width, height));
         break;
     case TextureFormat::BC1:
-        YAWN_GL_CHECK(glTextureStorage2D(mTextureIds[*id], mipmapCount, GL_COMPRESSED_RGBA_S3TC_DXT1_EXT, width, height));
+        YAWN_GL_CHECK(glTextureStorage2D(mTextures[*id].Id, mipmapCount, GL_COMPRESSED_RGBA_S3TC_DXT1_EXT, width, height));
         break;
     case TextureFormat::BC3:
-        YAWN_GL_CHECK(glTextureStorage2D(mTextureIds[*id], mipmapCount, GL_COMPRESSED_RGBA_S3TC_DXT5_EXT, width, height));
+        YAWN_GL_CHECK(glTextureStorage2D(mTextures[*id].Id, mipmapCount, GL_COMPRESSED_RGBA_S3TC_DXT5_EXT, width, height));
         break;
     }
 
     GLuint64 handle;
-    YAWN_GL_CHECK(handle = glGetTextureHandleARB(mTextureIds[*id]));
+    YAWN_GL_CHECK(handle = glGetTextureHandleARB(mTextures[*id].Id));
     YAWN_GL_CHECK(glMakeTextureHandleResidentARB(handle));
 
     YAWN_GL_CHECK(glNamedBufferSubData(mSamplerBufferId, sizeof(GLuint64) * id.GetIndex(), sizeof(GLuint64), &handle));
@@ -250,41 +253,38 @@ OID RendererDriverOpenGL::CreateTexture(int width, int height, TextureFormat for
 }
 
 void RendererDriverOpenGL::DestroyTexture(OID id) {
-    YAWN_GL_CHECK(glDeleteTextures(1, &mTextureIds[*id]));
+    YAWN_GL_CHECK(glDeleteTextures(1, &mTextures[*id].Id));
 
     Base::DestroyTexture(id);
 }
 
 void RendererDriverOpenGL::SetTextureData(OID id, int mipmap, const void* data) {
     int width, height, format;
-    YAWN_GL_CHECK(glGetTextureLevelParameteriv(mTextureIds[*id], mipmap, GL_TEXTURE_WIDTH, &width));
-    YAWN_GL_CHECK(glGetTextureLevelParameteriv(mTextureIds[*id], mipmap, GL_TEXTURE_HEIGHT, &height));
-    YAWN_GL_CHECK(glGetTextureLevelParameteriv(mTextureIds[*id], mipmap, GL_TEXTURE_INTERNAL_FORMAT, &format));
+    YAWN_GL_CHECK(glGetTextureLevelParameteriv(mTextures[*id].Id, mipmap, GL_TEXTURE_WIDTH, &width));
+    YAWN_GL_CHECK(glGetTextureLevelParameteriv(mTextures[*id].Id, mipmap, GL_TEXTURE_HEIGHT, &height));
+    YAWN_GL_CHECK(glGetTextureLevelParameteriv(mTextures[*id].Id, mipmap, GL_TEXTURE_INTERNAL_FORMAT, &format));
 
     switch (format) {
     case GL_R8:
-        YAWN_GL_CHECK(glTextureSubImage2D(mTextureIds[*id], mipmap, 0, 0, width, height, GL_RED, GL_UNSIGNED_BYTE, data));
+        YAWN_GL_CHECK(glTextureSubImage2D(mTextures[*id].Id, mipmap, 0, 0, width, height, GL_RED, GL_UNSIGNED_BYTE, data));
         break;
     case GL_RG8:
-        YAWN_GL_CHECK(glTextureSubImage2D(mTextureIds[*id], mipmap, 0, 0, width, height, GL_RG, GL_UNSIGNED_BYTE, data));
+        YAWN_GL_CHECK(glTextureSubImage2D(mTextures[*id].Id, mipmap, 0, 0, width, height, GL_RG, GL_UNSIGNED_BYTE, data));
         break;
     case GL_RGBA8:
-        YAWN_GL_CHECK(glTextureSubImage2D(mTextureIds[*id], mipmap, 0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, data));
+        YAWN_GL_CHECK(glTextureSubImage2D(mTextures[*id].Id, mipmap, 0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, data));
         break;
     case GL_COMPRESSED_RGBA_S3TC_DXT1_EXT:
-        YAWN_GL_CHECK(glCompressedTextureSubImage2D(mTextureIds[*id], mipmap, 0, 0, width, height, GL_COMPRESSED_RGBA_S3TC_DXT1_EXT, width * height / 2, data));
+        YAWN_GL_CHECK(glCompressedTextureSubImage2D(mTextures[*id].Id, mipmap, 0, 0, width, height, GL_COMPRESSED_RGBA_S3TC_DXT1_EXT, width * height / 2, data));
         break;
     case GL_COMPRESSED_RGBA_S3TC_DXT5_EXT:
-        YAWN_GL_CHECK(glCompressedTextureSubImage2D(mTextureIds[*id], mipmap, 0, 0, width, height, GL_COMPRESSED_RGBA_S3TC_DXT5_EXT, width * height, data));
+        YAWN_GL_CHECK(glCompressedTextureSubImage2D(mTextures[*id].Id, mipmap, 0, 0, width, height, GL_COMPRESSED_RGBA_S3TC_DXT5_EXT, width * height, data));
         break;
     }
 }
 
 Vector2 RendererDriverOpenGL::GetTextureSize(OID id) const {
-    float width, height;
-    YAWN_GL_CHECK(glGetTextureLevelParameterfv(mTextureIds[*id], 0, GL_TEXTURE_WIDTH, &width));
-    YAWN_GL_CHECK(glGetTextureLevelParameterfv(mTextureIds[*id], 0, GL_TEXTURE_HEIGHT, &height));
-    return Vector2(width, height);
+    return Vector2(float(mTextures[*id].Width), float(mTextures[*id].Height));
 }
 
 OID RendererDriverOpenGL::GetWhiteTexture() {

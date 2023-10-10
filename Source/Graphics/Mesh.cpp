@@ -67,6 +67,27 @@ Ref<Mesh> Mesh::CreateBox(const Vector3& extent) {
     return mesh;
 }
 
+Ref<Mesh> Mesh::CreatePlane(const Vector2& size, const Vector2& uvScale) {
+    Ref<Mesh> mesh = new Mesh(4, 6);
+
+    Vector2 extent = size / 2.0f;
+
+    Vertex3D vertices[4] = {
+        Vertex3D(Vector3(-extent.X, 0.0f, extent.Y), Vector2(0.0f, 0.0f) * uvScale, Vector3(0.0f, 1.0f, 0.0f)),
+        Vertex3D(Vector3(extent.X, 0.0f, extent.Y), Vector2(1.0f, 0.0f) * uvScale, Vector3(0.0f, 1.0f, 0.0f)),
+        Vertex3D(Vector3(extent.X, 0.0f, -extent.Y), Vector2(1.0f, 1.0f) * uvScale, Vector3(0.0f, 1.0f, 0.0f)),
+        Vertex3D(Vector3(-extent.X, 0.0f, -extent.Y), Vector2(0.0f, 1.0f) * uvScale, Vector3(0.0f, 1.0f, 0.0f)),
+    };
+
+    int indices[6] = {
+        0, 1, 2,
+        2, 3, 0,
+    };
+
+    mesh->SetData(vertices, indices);
+    return mesh;
+}
+
 Mesh::Mesh(int vertexCount, int indexCount)
     : mId(Renderer::CreateMesh(vertexCount, indexCount)) {
 }

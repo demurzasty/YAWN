@@ -138,6 +138,12 @@ namespace YAWN {
             int Height = 0;
         };
 
+        struct GPUTextureData {
+            GLuint Id = 0;
+            int Width = 0;
+            int Height = 0;
+        };
+
         struct CanvasDrawCommand {
             int CanvasItemId;
             int VertexOffset;
@@ -164,6 +170,7 @@ namespace YAWN {
         GLuint mCanvasProgramId = 0;
 
         GPUGlobalData mGlobalData;
+        Array<GPUTextureData> mTextures;
         Array<GPUInstanceData> mInstances;
         Array<GPUMeshData> mMeshes;
         Array<GPUMaterialData> mMaterials;
@@ -173,7 +180,6 @@ namespace YAWN {
         int mGlobalCanvasVertexOffset = 0;
         int mGlobalCanvasIndexOffset = 0;
 
-        Array<GLuint> mTextureIds;
 
         Array<GPUCanvasItemData> mCanvasItems;
         Array<GLuint> mCanvasVertexBuffers;
