@@ -136,6 +136,14 @@ bool Control::HasFocus() const {
     return viewport->GetFocus() == this;
 }
 
+Signal<>& Control::GetFocusGrabbedSignal() {
+    return mFocusGrabbedSignal;
+}
+
+Signal<>& Control::GetFocusLostSignal() {
+    return mFocusLostSignal;
+}
+
 void Control::OnReparent() {
     Base::OnReparent();
 

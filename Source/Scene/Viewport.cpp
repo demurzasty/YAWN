@@ -50,7 +50,17 @@ bool Viewport::IsRenderDirectToScreen() const {
 }
 
 void Viewport::SetFocus(const Ref<Control>& control) {
-	mFocus = control;
+	if (mFocus != control) {
+		if (mFocus) {
+			mFocus->GetFocusLostSignal().Emit();
+		}
+
+		mFocus = control;
+
+		if (mFocus) {
+			mFocus->GetFocusGrabbedSignal().Emit();
+		}
+	}
 }
 
 const Ref<Control> Viewport::GetFocus() const {

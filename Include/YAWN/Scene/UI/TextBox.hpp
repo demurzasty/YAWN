@@ -29,6 +29,9 @@ namespace YAWN {
         Signal<const String&>& GetValueChangedSignal();
 
     private:
+        void OnFocusLost();
+
+    private:
         String mText;
         int mFontSize = 16;
         float mCaretTime = 0.0f;

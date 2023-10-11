@@ -70,7 +70,7 @@ int Image::CalculateMipmapCount() const {
 
     int mipmapCount = 0;
     while (width > 4 && height > 4) {
-        mipmapCount++;
+        ++mipmapCount;
 
         width /= 2;
         height /= 2;

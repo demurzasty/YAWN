@@ -5,6 +5,7 @@
 #include "../../Math/Rectangle.hpp"
 #include "../../Graphics/Theme.hpp"
 #include "../../Math/Vector4.hpp"
+#include "../../Runtime/Signal.hpp"
 
 namespace YAWN {
     class Control : public Node2D {
@@ -63,6 +64,10 @@ namespace YAWN {
 
         bool HasFocus() const;
 
+        Signal<>& GetFocusGrabbedSignal();
+
+        Signal<>& GetFocusLostSignal();
+
     protected:
         virtual void OnReparent() override;
 
@@ -74,5 +79,7 @@ namespace YAWN {
         bool mHorizontalExpand = false;
         bool mVerticalExpand = false;
         Vector4 mPadding = 0.0f;
+        Signal<> mFocusGrabbedSignal;
+        Signal<> mFocusLostSignal;
     };
 }

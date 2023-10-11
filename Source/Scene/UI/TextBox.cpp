@@ -45,8 +45,6 @@ void TextBox::HandleEvent(const Event& event) {
 
             mText = mText + textInput.TextInput;
             mCaretTime = 0.0f;
-
-            mValueChangedSignal.Emit(mText);
         }
     } else if (event.Type == EventType::KeyDown) {
         if (HasFocus()) {
@@ -54,10 +52,10 @@ void TextBox::HandleEvent(const Event& event) {
             if (keyDown.Key == Key::Backspace) {
                 if (mText.GetSize() > 0) {
                     mText = mText.Substring(0, mText.GetSize() - 1);
-
-                    mValueChangedSignal.Emit(mText);
                 }
                 mCaretTime = 0.0f;
+            } else if (keyDown.Key == Key::Enter || keyDown.Key == Key::NumPadEnter) {
+                LoseFocus();
             }
         }
     }
@@ -116,4 +114,8 @@ int TextBox::GetFontSize() const {
 
 Signal<const String&>& TextBox::GetValueChangedSignal() {
     return mValueChangedSignal;
+}
+
+void TextBox::OnFocusLost() {
+    mValueChangedSignal.Emit(mText);
 }
